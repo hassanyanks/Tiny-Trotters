@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
+const PORT = process.env.NODE_ENV ? process.env.PORT : process.env.DEFAULT_PORT;
 const HOST = process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST;
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
@@ -23,7 +23,7 @@ export async function startHttpsServer() {
     https.createServer(options, app, (req, res) => {
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
       res.writeHead(200);
-    }).listen(PORT, HOST, () => { console.log(`server listening on port ${PORT}`); });
+    }).listen(PORT, HOST, () => { console.log(`host ${HOST} listening on port ${PORT}`); });
   } catch(err) {
     console.error(`HTTPS is disabled!!:  ${err}`);
   }
