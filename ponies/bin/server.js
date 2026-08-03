@@ -10,7 +10,7 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
 
-export async function startHttpsServer() {
+export async function startServer() {
   try {
     const __dirname = import.meta.dirname;
     const options = process.env.NODE_ENV === 'dev' ? {
@@ -19,13 +19,13 @@ export async function startHttpsServer() {
                                               rejectUnauthorized: false,
                                             } 
                                           : {};
-    const https = await import ('node:https');
+    const serverObj = process.env.NODE_ENV === 'dev' ? await import ('node:https') : await import ('node:http');
     console.log('starting server...')
-    https.createServer(options, app, (req, res) => {
+    serverObj.createServer(options, app, (req, res) => {
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
       res.writeHead(200);
     }).listen(PORT, HOST, () => { console.log(`host ${HOST} listening on port ${PORT}`); });
   } catch(err) {
-    console.error(`HTTPS is disabled!!:  ${err}`);
+    console.error(`protocol is disabled!!:  ${err}`);
   }
 }

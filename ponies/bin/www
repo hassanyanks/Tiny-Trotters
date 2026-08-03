@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
 import debug from 'debug';
-import { startHttpsServer } from './httpsServer.js';
+import { startServer } from './server.js';
 const log = debug('ponies:server');
-startHttpsServer();
+startServer();
