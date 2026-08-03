@@ -1,0 +1,6 @@
+extends layout
+
+block content
+    form(action="/forgot-password-email-send" method="post")
+        input.text-input(placeholder="Email" name="email" type="text" required autofocus)
+        button.text-input(type="submit") Reset
