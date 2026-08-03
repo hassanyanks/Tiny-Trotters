@@ -2,8 +2,9 @@
 import app from '../app.js'
 import { readFileSync } from 'node:fs';
 import path from 'path';
+import 'dotenv/config';
 
-const PORT = 443;
+const PORT = process.env.PORT || 10000;
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
