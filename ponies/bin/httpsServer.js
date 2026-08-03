@@ -5,6 +5,7 @@ import path from 'path';
 import 'dotenv/config';
 
 const PORT = process.env.PORT || 10000;
+const HOST = process.env.NODE_ENV === 'production' ? process.env.HOST : 'localhost';
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
@@ -22,7 +23,7 @@ export async function startHttpsServer() {
     https.createServer(options, app, (req, res) => {
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
       res.writeHead(200);
-    }).listen(PORT, () => { console.log(`server listening on port ${PORT}`); });
+    }).listen(PORT, HOST, () => { console.log(`server listening on port ${PORT}`); });
   } catch(err) {
     console.error(`HTTPS is disabled!!:  ${err}`);
   }
