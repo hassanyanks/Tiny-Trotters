@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT ? process.env.PORT : process.env.BACKUP_PORT;
 const HOST = process.env.NODE_ENV === 'production' ? process.env.HOST : 'localhost';
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
