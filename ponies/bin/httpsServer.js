@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
 
-const PORT = process.env.NODE_ENV ? process.env.PORT : process.env.DEFAULT_PORT;
+const PORT = process.env.NODE_ENV === 'production' ? process.env.DEFAULT_PORT : process.env.PORT;
 const HOST = process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST;
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
@@ -12,7 +12,6 @@ process.on('uncaughtException', (err) => {
 
 export async function startHttpsServer() {
   try {
-    const __dirname = import.meta.dirname;
     const options = {
       rejectUnauthorized: false,
     };

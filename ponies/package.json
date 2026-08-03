@@ -2,7 +2,7 @@
   "name": "ponies",
   "version": "0.0.0",
   "type": "module",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "node ./bin/www"
   },
