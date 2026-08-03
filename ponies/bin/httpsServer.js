@@ -14,8 +14,6 @@ export async function startHttpsServer() {
   try {
     const __dirname = import.meta.dirname;
     const options = {
-      key: readFileSync(path.join(__dirname, '../samsKey.key')),
-      cert: readFileSync(path.join(__dirname, '../samsCertificate.crt')),
       rejectUnauthorized: false,
     };
     const https = await import ('node:https');
