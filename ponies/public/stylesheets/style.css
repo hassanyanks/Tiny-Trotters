@@ -4,20 +4,25 @@ body {
   background-position: center;
   background-size: cover;
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+main {
+  flex-grow: 1; /* Expands to fill all remaining vertical space, pushing the footer down */
+  width: 90%;
 }
 
 a {
   color: #00B7FF;
 }
 
-.root-container {
+.page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  margin-top: 25px;
   width: 100%;
-  height: 100%;
+  min-height: 95vh;
 }
 
 /* Reset basic element margins and paddings */
@@ -29,12 +34,11 @@ a {
 }
 
 /* Navbar container styling */
-.navbar {
+.site-header {
     display: flex;
     width: 90%;
     justify-content: space-between;
     align-items: center;
-    margin-top: 50px;
     padding: 1rem 2rem;
     position: sticky;
     top: 0;
@@ -48,13 +52,21 @@ hr {
   width: 90%;
 }
 
-.logo-container {
+.logo-container .title-container {
   display: flex;
 }
 
-.logo-container h1 {
-  margin-left: 20px;
-  align-self: center;
+.title-container h1, .title-container h2 {
+  text-align: center;
+}
+
+h2 {
+  font-style: italic;
+}
+
+.logo-container img {
+  width: 125px; 
+  height: 125px;
 }
 
 /* Unordered list styling */
@@ -109,7 +121,7 @@ hr {
     width: 90%; 
     margin-left: auto;
     margin-right: auto;
-    margin-top: 50px; /* complements .top-grid margin-bottom value */
+    margin-top: 50px;
     margin-bottom: 20px;
     padding-bottom: 40px;
 }
@@ -123,7 +135,7 @@ hr {
 .service-portal {
   display: flex;
   padding: 20px;
-  font-size: 24px;
+  font-size: 20px;
   flex-direction: column;
   place-items: center;
   box-shadow: 0px 2px 5px #888;
@@ -145,6 +157,12 @@ hr {
   font-size: 20px;
   padding-right: 10px;
 }
+
+.sticky-footer img {
+  width: 75px;
+  height: 75px;
+}
+
 .socials {
   display: flex;
 }

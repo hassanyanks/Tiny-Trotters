@@ -1,30 +1,6 @@
 extends layout
 
 block content
-  div.root-container
-    nav.navbar
-      div.logo-container
-        a(href='/index'): img(src="/images/tiny_trotters_home.png", alt="Home")
-        h1 Miniature Horses for Hire
-      ul.nav-links 
-        li 
-          a.active(href='/index') Home
-        li 
-          button Log In
-    hr
-    div.services-portal-container
-      p.service-portal 
-        a(href="/request_form") Schedule Your Event
-    footer.sticky-footer
-      p
-        span Sydney Radford | 385-309-9979 |
-        span
-          a(href="mailto:sydneyradford913@gmail.com", style='padding-left:15px;') sydneyradford913@gmail.com
-      p.socials
-        span
-          a(href=`https://www.facebook.com/profile.php?id=${process.env.FACEBOOK_ID}` target="_blank")
-            img(src="/images/icon-logo-facebook.png" alt="Facebook")
-        span
-          a(href="https://www.instagram.com/tiny_trotters_pony_parties/" target="_blank")
-            img(src="/images/icon-logo-instagram.png" alt="Instagram")
-      img(src="/images/vet_owned_biz.png", alt="Vet Owned", style={width:'75px',height:'75px'})
+  div.services-portal-container
+    p.service-portal 
+      a(href="/request_form") Schedule Event
