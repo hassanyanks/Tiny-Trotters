@@ -4,6 +4,9 @@ body {
   background-size: cover;
   width: 100%;
   min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Optional: centers the main element itself */
 }
 
 main {
