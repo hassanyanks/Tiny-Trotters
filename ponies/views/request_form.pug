@@ -2,7 +2,7 @@ extends layout
 
 block content
     h1 Schedule Event
-    form.flex-container(action="/request_form?sort=asc", method='GET', target="_blank")
+    form.grid-container(action="/request_form?sort=asc", method='GET', target="_blank")
         div.field
             label Event Type
             select(name="event")
@@ -22,9 +22,12 @@ block content
             input(type="datetime-local") 
             label Event End 
             input(type="datetime-local") 
-        div.field 
+        div.field.full-width 
             label Event Address 
             input(type="text", maxlength="200", size="100") 
-        div.field
-            button.submit-button(type="submit") Submit
+        div.field.full-width 
+            label Contact Details
+            input(type="text", maxlength="100", size="100") 
+        div.field.full-width
+            button(type="submit") Submit
     script(src="../javascripts/formHelpers.js")

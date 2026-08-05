@@ -17,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 //const plusSign = process.env.NODE_ENV === 'production' ? '&#43;' : '+';
-const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';
+//const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';
 const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}/${process.env.DB_NAME}`;
 console.log(`mongodb string:  ${mongoDB}`)
 const client = new MongoClient(mongoDB);

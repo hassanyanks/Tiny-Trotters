@@ -9,12 +9,71 @@ body {
   align-items: center; /* Optional: centers the main element itself */
 }
 
-main {
-  flex-grow: 1; /* Expands to fill all remaining vertical space, pushing the footer down */
-  width: 90%;
+/* child of body */
+.page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 25px;
+  width: 90%;
+}
+
+/* child of .page-container */
+.navbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* child of .page-container */
+.services-portal-container {
+    display: grid;
+    /* CHANGED: auto-fit works best here to allow the dynamic centering logic */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* CRITICAL: This centers the active grid columns horizontally in the row */
+    justify-content: center;
+    /* Centers the cards within their individual grid cells */
+    place-items: center;
+    gap: 40px;
+    width: 100%; 
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    padding-bottom: 40px;
+}
+
+/* child of .services-portal-container */
+.service-portal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  place-items: center;
+  font-size: 20px;
+  box-shadow: 0px 2px 5px #888;
+  border-radius: 8px;
+  width: 100%;
+  /* CRITICAL: Prevents the card from stretching too wide when it centers */
+  max-width: 250px; 
+  height: 100%;
+  box-sizing: border-box; 
+}
+
+/* child of .page-container */
+.sticky-footer {
+  position:sticky;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 5px;
+  width: 100%;
+  background-color: #222;
+  color: #d3d4d6;
+  bottom: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 a {
@@ -35,76 +94,57 @@ a {
   background-color: #f0f0f0;
 }
 
-.flex-container {
-  /* We first create a flex layout context */
-  display: flex;
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
+  max-width: 75%;
+  margin: 0 auto;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  max-width: 50%;
-  
-  /* Then we define the flow direction 
-     and if we allow the items to wrap 
-   * Remember this is the same as:
-   * flex-direction: row;
-   * flex-wrap: wrap;
-  flex-flow: row wrap;
-   */
-  
-  /* Then we define how is distributed the remaining space */
-  /*justify-content: space-around;*/
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* Centers the whole row group */
-  gap: 20px;              /* Creates equal spacing around/between items */
-  
   list-style: none;
-}
-
-/*
-.event-schedule-form {
-  display:grid;
-  grid-template-columns: max-content fit-content(300px) 1fr;
-  gap: 16px;
+  padding: 0; 
   justify-content: center;
-  width:fit-content;
-  height: fit-content;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}*/
-
-.submit-button {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px;
-  margin: 5px;
-  font-size: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  justify-items: center;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  padding: 25px;
+  align-items: center;
+  padding: 5px 15px;
   text-align: center;
-  flex: 0 0; 
-  min-width: calc(33.33% - 20px); /* 20px is gap size */
-  max-width: calc((100% - (2 * 20px)) / 3); /* Prevents expanding past 3 columns; 20px is gap size */
+  width: 100%;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+  width: 100%; /* Keeps full width items spanning correctly */
+}
+
+button {
+  max-width: 100px;
+  box-sizing: border-box;
+  padding: 10px;
+  /* Fixed: Removed horizontal margin to prevent container overflow */
+  margin: 5px 0; 
+  font-size: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #007bff; /* Added default background color */
+  color: white;              /* Added readable text color */
+  cursor: pointer;           /* Changes cursor to a hand on hover */
+  transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+/* New Hover Effect */
+button:hover {
+  background-color: #0056b3; /* Darkens the button when hovered */
 }
 
 label {
   margin-top: 10px;
   margin-bottom: 5px;
   font-weight: bold;
-}
-
-.page-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 25px;
-  width: 100%;
-  min-height: 95vh;
 }
 
 /* Reset basic element margins and paddings 
@@ -116,15 +156,28 @@ label {
 }
 */
 
-/* Navbar container styling */
-.site-header {
-    display: flex;
-    width: 90%;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    position: sticky;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+/* Base style for all three columns */
+.nav-side, .nav-center {
+  flex: 1; /* Forces all three sections to be exactly equal width */
+  display: flex;
+  align-items: center;
+}
+
+/* Align center content perfectly in the middle */
+.nav-center {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nav-left {
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.nav-right {
+  justify-content: flex-end;
+  gap: 15px;
+  font-size: 20px;
 }
 
 hr {
@@ -145,99 +198,43 @@ h2 {
   font-style: italic;
 }
 
-.logo-container img {
+.navbar img {
   width: 125px; 
   height: 125px;
 }
 
-/* Unordered list styling */
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-}
-
-/* Individual link item styling */
-.nav-links a {
-    color: #cccccc;
-    text-decoration: none;
-    font-size: 25px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.nav-links button {
-  width: 125px;
-  height: 75px;
-  font-size: 25px;
-}
-
 /* Hover and active states */
-.nav-links a:hover,
-.nav-links a.active {
+a:hover,
+a.active {
     color: #00adb5;
 }
 
-/* Mobile responsive layout */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    .nav-links {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
-}
-
-.services-portal-container {
+@media screen and (min-width: 860px) {
+  .sticky-footer {
     display: flex;
-    justify-content: space-evenly;
-    align-content: space-evenly;
-    place-items: center;
-    gap: 120px;
-    width: 90%; 
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    padding-bottom: 40px;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
 }
 
-.service-portal {
-  display: flex;
-  padding: 20px;
-  font-size: 20px;
-  flex-direction: column;
-  box-shadow: 0px 2px 5px #888;
-  place-items: center;
-	border-radius: 8px;
-}
-
-.sticky-footer {
-  position:sticky;
-  display: inline-grid;
-  grid-template-columns: 10fr 2fr 1fr;
-  align-items: center;
-  margin-top: 20px;
-  padding: 5px;
-  width: 90%;
-  background-color: #222;
-  color: #d3d4d6;
-  bottom: 0;
+@media screen and (max-width: 859px){
+  .sticky-footer {
+      display:flow-root;
+      text-align: center;
+      padding: 10px;
+  }
 }
 
 .sticky-footer p span {
   font-size: 20px;
-  padding: 0 10px 0 10px;
+  padding: 0 5px 0 5px;
 }
 
 .sticky-footer img {
-  width: 75px;
+  width: 100px;
   height: 75px;
+  padding-top: 5px;
+  padding: 5px;
 }
 
 .socials {
