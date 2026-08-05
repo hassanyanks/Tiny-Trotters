@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
 import debug from 'debug';
-import { startServer } from './server.js';
+import { start } from './startServer.js';
 const log = debug('ponies:server');
-startServer();
+start();

@@ -1,6 +1,30 @@
 extends layout 
 
 block content
-    form(action="/forgot-password-email-send" method="post")
-        input.text-input(placeholder="Email" name="email" type="text" required autofocus)
-        button.text-input(type="submit") Reset
+    h1 Schedule Event
+    form.flex-container(action="/request_form?sort=asc", method='GET', target="_blank")
+        div.field
+            label Event Type
+            select(name="event")
+                if events && events.length > 0
+                    each event in events
+                        option(value=event.id)= event.name
+        div.field
+            label Event Accessories
+            select(title="Select up to 3 (Ctrl + Click selects/de-selects)" id="accessories-select" name="accessories" multiple size="5")
+                if accessories && accessories.length > 0
+                    each accessory in accessories
+                        option(value=accessory.id)= accessory.name
+            label Clear All Accessories
+            input(id="clear-accessories" type="checkbox")
+        div.field 
+            label Event Start
+            input(type="datetime-local") 
+            label Event End 
+            input(type="datetime-local") 
+        div.field 
+            label Event Address 
+            input(type="text", maxlength="200", size="100") 
+        div.field
+            button.submit-button(type="submit") Submit
+    script(src="../javascripts/formHelpers.js")

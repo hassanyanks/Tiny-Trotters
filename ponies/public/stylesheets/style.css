@@ -1,6 +1,5 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background: url(../images/bg-gradient.jpg) no-repeat ;
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -10,10 +9,90 @@ body {
 main {
   flex-grow: 1; /* Expands to fill all remaining vertical space, pushing the footer down */
   width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 a {
   color: #00B7FF;
+}
+
+.link-paragraph a {
+  display: block;    /* Makes the link fill the width of the paragraph */
+  padding: 15px;     /* Gives the clickable area some breathing room */
+  color: #333;       /* Sets text color */
+  text-decoration: none; /* Removes the default underline if desired */
+  color: inherit;
+  font: inherit;
+}
+
+/* Optional: Add a hover effect to signal interactivity */
+.link-paragraph a:hover {
+  background-color: #f0f0f0;
+}
+
+.flex-container {
+  /* We first create a flex layout context */
+  display: flex;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  max-width: 50%;
+  
+  /* Then we define the flow direction 
+     and if we allow the items to wrap 
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+  flex-flow: row wrap;
+   */
+  
+  /* Then we define how is distributed the remaining space */
+  /*justify-content: space-around;*/
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centers the whole row group */
+  gap: 20px;              /* Creates equal spacing around/between items */
+  
+  list-style: none;
+}
+
+/*
+.event-schedule-form {
+  display:grid;
+  grid-template-columns: max-content fit-content(300px) 1fr;
+  gap: 16px;
+  justify-content: center;
+  width:fit-content;
+  height: fit-content;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}*/
+
+.submit-button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 5px;
+  font-size: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  text-align: center;
+  flex: 0 0; 
+  min-width: calc(33.33% - 20px); /* 20px is gap size */
+  max-width: calc((100% - (2 * 20px)) / 3); /* Prevents expanding past 3 columns; 20px is gap size */
+}
+
+label {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .page-container {
@@ -25,13 +104,14 @@ a {
   min-height: 95vh;
 }
 
-/* Reset basic element margins and paddings */
+/* Reset basic element margins and paddings 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+*/
 
 /* Navbar container styling */
 .site-header {
@@ -41,8 +121,6 @@ a {
     align-items: center;
     padding: 1rem 2rem;
     position: sticky;
-    top: 0;
-    z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -126,36 +204,32 @@ h2 {
     padding-bottom: 40px;
 }
 
-.services-portal-container a {
-  text-decoration: none;
-  color: inherit;
-  font: inherit;
-}
-
 .service-portal {
   display: flex;
   padding: 20px;
   font-size: 20px;
   flex-direction: column;
-  place-items: center;
   box-shadow: 0px 2px 5px #888;
+  place-items: center;
 	border-radius: 8px;
 }
 
 .sticky-footer {
   position:sticky;
   display: inline-grid;
-  grid-template-columns: 10fr 2fr 0fr;
+  grid-template-columns: 10fr 2fr 1fr;
   align-items: center;
-  padding: 10px;
+  margin-top: 20px;
+  padding: 5px;
   width: 90%;
   background-color: #222;
   color: #d3d4d6;
+  bottom: 0;
 }
 
 .sticky-footer p span {
   font-size: 20px;
-  padding-right: 10px;
+  padding: 0 10px 0 10px;
 }
 
 .sticky-footer img {

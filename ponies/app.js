@@ -1,9 +1,13 @@
+import {MongoClient} from 'mongodb';
 import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
+import 'dotenv/config';
 import logger from 'morgan';
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+//import dataRouter from './routes/data.js'
+import Event from './models/event.js'
 
 const app = express();
 const __dirname = import.meta.dirname
@@ -11,6 +15,21 @@ const __dirname = import.meta.dirname
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
+const client = new MongoClient(mongoDB);
+app.get('/request_form', async(req,res) => {
+  try {
+      await client.connect();
+      const db = client.db(process.env.DB_NAME);
+      const events = await db.collection('events').find().sort({name: 1}).toArray();
+      const accessories = await db.collection('accessories').find().sort({name: 1}).toArray();
+      client.close();
+      res.render('request_form', { events: events, accessories: accessories });
+  } catch (err) {
+      res.status(500).send('Error getting data');
+  }
+})
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/index', indexRouter);
-app.use('/request_form', indexRouter);
+//app.use(dataRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler

@@ -10,8 +10,4 @@ router.get('/index', function(req, res, next) {
   res.render('index');
 });
 
-router.get('/request_form', function(req, res, next) {
-  res.render('request_form');
-});
-
 export default router;

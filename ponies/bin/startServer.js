@@ -3,6 +3,7 @@ import app from '../app.js'
 import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
+import mongoose from 'mongoose';
 
 const PORT = process.env.NODE_ENV === 'production' ? process.env.DEFAULT_PORT : process.env.DEV_PORT;
 const HOST = process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST;
@@ -10,7 +11,7 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
 
-export async function startServer() {
+export async function start() {
   try {
     const __dirname = import.meta.dirname;
     const options = process.env.NODE_ENV === 'dev' ? {
@@ -20,11 +21,16 @@ export async function startServer() {
                                             } 
                                           : {};
     const serverObj = process.env.NODE_ENV === 'dev' ? await import ('node:https') : await import ('node:http');
+    //const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
     console.log('starting server...')
-    serverObj.createServer(options, app, (req, res) => {
-      res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
-      res.writeHead(200);
-    }).listen(PORT, HOST, () => { console.log(`host ${HOST} listening on port ${PORT}`); });
+   // mongoose.connect(mongoDB)
+   //   .then(() => {
+        serverObj.createServer(options, app, (req, res) => {
+        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
+        res.writeHead(200);
+        }).listen(PORT, HOST, () => { console.log(`host ${HOST} listening on port ${PORT}`); });
+    //  })
+    //  .catch((err) => console.log(err));
   } catch(err) {
     console.error(`protocol is disabled!!:  ${err}`);
   }
