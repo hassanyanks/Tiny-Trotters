@@ -16,7 +16,9 @@ const __dirname = import.meta.dirname
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
+const plusSign = process.env.NODE_ENV === 'production' ? '&#43;' : '+';
+const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';
+const mongoDB = `mongodb${plusSign}srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
 console.log(`mongodb string:  ${mongoDB}`)
 const client = new MongoClient(mongoDB);
 app.get('/request_form', async(req,res) => {
