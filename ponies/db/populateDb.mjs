@@ -19,6 +19,8 @@ async function main() {
     await createEvents(eventsCollection);
     const accessoriesCollection = db.collection('accessories');
     await createAccessories(accessoriesCollection);
+    const poniesCollection = db.collection('ponies');
+    await createPonies(poniesCollection);
     console.log("Debug: Closing mongoose");
     client.close();
 }
@@ -58,6 +60,14 @@ async function createAccessories(collection) {
   ]);
 }
 
+async function createPonies(collection) {
+  console.log(`Adding ponies`);
+  await Promise.all([
+    ponyCreate(collection, 0, "Rooster", 'Rooster.png'),
+    ponyCreate(collection, 1, "Prince", 'Prince.png'),
+  ]);
+}
+
 async function eventCreate( collection, id, name, image ) {
     const updatedEvent = await collection.findOneAndUpdate(
         {id, name, image},
@@ -73,7 +83,21 @@ async function eventCreate( collection, id, name, image ) {
 }
 
 async function accessoryCreate( collection, id, name, image ) {
-    const updatedEvent = await collection.findOneAndUpdate(
+    const updatedAccessory = await collection.findOneAndUpdate(
+        {id, name, image},
+        { $setOnInsert: 
+            {
+                id,
+                name,
+                image,
+            }
+         },
+        { upsert: true, returnNewDocument: true }
+    );
+}
+
+async function ponyCreate( collection, id, name, image ) {
+    const updatedPony = await collection.findOneAndUpdate(
         {id, name, image},
         { $setOnInsert: 
             {

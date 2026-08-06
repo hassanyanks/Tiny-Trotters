@@ -4,10 +4,9 @@ import express from 'express';
 import path from 'path';
 import 'dotenv/config';
 import logger from 'morgan';
-import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
-//import dataRouter from './routes/data.js'
-import Event from './models/event.js'
+import indexRouter from './routes/indexRoutes.js';
+import ponyRouter from './routes/ponyRoutes.js';
+import {startServer} from './bin/startServer.js';
 
 const app = express();
 const __dirname = import.meta.dirname
@@ -15,6 +14,10 @@ const __dirname = import.meta.dirname
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'lib')));
+app.use(express.static(path.join(__dirname, 'scripts')));
 
 //const plusSign = process.env.NODE_ENV === 'production' ? '&#43;' : '+';
 //const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';
@@ -32,18 +35,28 @@ app.get('/request_form', async(req,res) => {
   } catch (err) {
       res.status(500).send('Error getting data');
   }
-})
+});
+
+app.get('/ponies', async(req,res) => {
+  try {
+      await client.connect();
+      const db = client.db(process.env.DB_NAME);
+      const ponies = await db.collection('ponies').find().sort({name: 1}).toArray();
+      client.close();
+      res.render('ponies', { ponies: ponies });
+  } catch (err) {
+      res.status(500).send('Error getting data');
+  }
+});
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/index', indexRouter);
-//app.use(dataRouter);
-app.use('/users', usersRouter);
+app.use('/ponies', ponyRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -60,5 +73,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+startServer();
 
 export default app;

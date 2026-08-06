@@ -62,6 +62,67 @@ body {
   box-sizing: border-box; 
 }
 
+.ponies-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  
+  /* Responsive Layout Fixes */
+  width: 100%;
+  max-width: 1200px;        /* Prevents the container from becoming too wide on large desktops */
+  gap: 16px;                 /* Native flexbox spacing instead of reliant margins */
+  margin: 0 auto 16px auto;  /* Centers the container horizontally and retains bottom spacing */
+  
+  padding: 10px;
+  height: auto;
+  border-radius: 8px;
+  box-sizing: border-box;    /* Ensures padding doesn't break the 100% width math */
+}
+
+/* Ensure the child elements scale responsively inside the container */
+.ponies-container > * {
+  flex: 1 1 250px;           /* Grow, shrink, and set a base width of 250px */
+  max-width: 100%;           /* Prevents child elements from clipping on tiny screens */
+}
+
+.pony-container img {
+  width: 200px;
+  height: 300px;
+}
+
+.pony-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  height: 50%;
+  
+  /* Spacing & Padding */
+  padding: 20px;
+  gap: 15px; /* Adds space between items inside the container */
+  
+  /* Hover Transition */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Effect */
+.product-container:hover {
+  transform: translateY(-5px); /* Lifts the card slightly */
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Darkens and grows the shadow */
+}
+
+/* Responsive Mobile Sizing */
+@media (max-width: 768px) {
+  .product-container {
+    height: auto; /* Lets content dictate height on small screens */
+    width: 100%;  /* Fills the screen width on mobile */
+    padding: 15px;
+  }
+}
+
 /* child of .page-container */
 .sticky-footer {
   position:sticky;
@@ -234,6 +295,8 @@ label {
 .nav-center {
   flex-direction: column;
   justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .nav-left {
