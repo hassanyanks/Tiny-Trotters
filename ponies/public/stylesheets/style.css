@@ -132,11 +132,37 @@ a {
   width: 100%;
 }
 
+/* Styles the select text color ONLY when the placeholder is active */
+.custom-select:invalid {
+  color: #999999; /* Your placeholder gray color */
+}
+
+.custom-select option[disabled] {
+  display: none;
+}
+
+/* Styles the actual options inside the dropdown menu back to standard dark text */
+.custom-select option {
+  color: #000000; 
+}
+
 .responsive-input {
   /* Scale width */
   width: clamp(100px, 50vw, 200px);
   /* Scale padding */
   padding: clamp(0.25rem, 1vw, 0.5rem);
+}
+
+#event-type-reset {
+  display: none;
+}
+
+#other-event-type {
+  display: none;
+}
+
+#other-accessory {
+  display: none;
 }
 
 .responsive-text-input {
