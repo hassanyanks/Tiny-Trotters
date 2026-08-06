@@ -19,6 +19,10 @@ block content
                 if accessories && accessories.length > 0
                     each accessory in accessories
                         option(value=accessory.id)= accessory.name
+            label#other-accessory-label(style="font-size: 14px; display: none") Other Accessory
+            input#other-accessory(type="text")
+            label(id="other-accessory-reset-label" style="font-size: 14px; display: none") Reset
+            input(id="other-accessory-reset-box" type="checkbox" style="display: none")
             label(style="font-size: 14px") Clear All Accessories
             input(id="clear-accessories" type="checkbox")
         div.field 
