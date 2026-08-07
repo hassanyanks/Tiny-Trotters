@@ -2,6 +2,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-position: center;
   background-size: cover;
+  background-color: #96bbab;
   width: 100%;
   min-height: 100dvh;
   display: flex;
@@ -334,9 +335,13 @@ label {
 */
 
 hr {
+  border: none;             /* Removes the default 3D border */
+  height: 1px;              /* Sets the thickness of your line */
+  background-color: rgba(0, 0, 0, 0.3); /* Changes the actual color */
+  opacity: 1;               /* Overrides any default browser transparency */
+  width: 90%;
   margin-top: 50px;
   margin-bottom: 50px;
-  width: 90%;
 }
 
 .logo-container .title-container {
