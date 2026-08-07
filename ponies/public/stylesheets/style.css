@@ -28,6 +28,41 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Base style for all three columns */
+.nav-side {
+  flex: 1; /* Forces all three sections to be exactly equal width */
+  display: flex;
+  align-items: center;
+}
+
+/* Align center content perfectly in the middle */
+.nav-center {
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  border:rgba(0, 0, 0, 0.3) 2px solid;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.nav-center h1, .nav-center h2, .nav-center h5 {
+  margin: 5px;
+}
+
+.nav-left {
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.nav-right {
+  justify-content: flex-end;
+  gap: 15px;
+  font-size: 20px;
+}
+
 /* child of .page-container */
 .services-portal-container {
     display: grid;
@@ -62,7 +97,7 @@ body {
   box-sizing: border-box; 
 }
 
-.ponies-container {
+.resources-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -72,28 +107,32 @@ body {
   width: 100%;
   max-width: 1200px;        /* Prevents the container from becoming too wide on large desktops */
   gap: 16px;                 /* Native flexbox spacing instead of reliant margins */
-  margin: 0 auto 16px auto;  /* Centers the container horizontally and retains bottom spacing */
+  margin: 0 auto 5px auto;  /* Centers the container horizontally and retains bottom spacing */
   
-  padding: 10px;
+  padding: 5px;
   height: auto;
   border-radius: 8px;
   box-sizing: border-box;    /* Ensures padding doesn't break the 100% width math */
 }
 
+.resource-narrow {
+  width:20%;
+  height: auto;
+}
+
 /* Ensure the child elements scale responsively inside the container */
-.ponies-container > * {
+.resources-container > * {
   flex: 1 1 250px;           /* Grow, shrink, and set a base width of 250px */
   max-width: 100%;           /* Prevents child elements from clipping on tiny screens */
 }
 
-.pony-container img {
+.resources-container img {
   width: 200px;
   height: 300px;
 }
 
-.pony-container {
+.resource-container {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   border-radius: 8px;
@@ -101,11 +140,21 @@ body {
   height: 50%;
   
   /* Spacing & Padding */
-  padding: 20px;
-  gap: 15px; /* Adds space between items inside the container */
+  padding: 10px;
   
   /* Hover Transition */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* child of .resource-container */
+.centered-list {
+  text-align: left;
+  list-style-position: inside;
+  padding-left: 0; /* Removes default browser spacing */
+}
+
+.centered-list li {
+  font-size: 20px;
 }
 
 /* Hover Effect */
@@ -283,32 +332,6 @@ label {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 */
-
-/* Base style for all three columns */
-.nav-side, .nav-center {
-  flex: 1; /* Forces all three sections to be exactly equal width */
-  display: flex;
-  align-items: center;
-}
-
-/* Align center content perfectly in the middle */
-.nav-center {
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.nav-left {
-  justify-content: flex-start;
-  gap: 15px;
-}
-
-.nav-right {
-  justify-content: flex-end;
-  gap: 15px;
-  font-size: 20px;
-}
 
 hr {
   margin-top: 50px;

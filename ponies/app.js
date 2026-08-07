@@ -49,6 +49,19 @@ app.get('/ponies', async(req,res) => {
   }
 });
 
+app.get('/services', async(req,res) => {
+  try {
+      await client.connect();
+      const db = client.db(process.env.DB_NAME);
+      const services = await db.collection('events').find().sort({name: 1}).toArray();
+      const accessories = await db.collection('accessories').find().sort({name: 1}).toArray();
+      client.close();
+      res.render('services', { services: services, accessories:  accessories });
+  } catch (err) {
+      res.status(500).send('Error getting data');
+  }
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -56,7 +69,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
 app.use('/index', indexRouter);
-app.use('/ponies', ponyRouter);
+//app.use('/ponies', ponyRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

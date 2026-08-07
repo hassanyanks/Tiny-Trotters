@@ -2,8 +2,8 @@ extends layout
 
 block content
     if ponies.length 
-        div.ponies-container 
+        div.resources-container 
             each pony in ponies
-                div.pony-container  
+                div.resource-container 
                     h2  #{pony.name}
                     img(src="/images/" + pony.image)
