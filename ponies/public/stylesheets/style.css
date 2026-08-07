@@ -1,13 +1,19 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: #B7CCC0  /* #B4CBBE #B5CBBD */;
+}
+
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-position: center;
-  background-size: cover;
-  background-color: #96bbab;
   width: 100%;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center; /* Optional: centers the main element itself */
+  margin: 0;
 }
 
 /* child of body */
@@ -188,7 +194,7 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: black;
 }
 
 .link-paragraph a {
@@ -308,6 +314,7 @@ button {
   font-size: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  background-image: url(/images/dark-green.png);
   background-color: #007bff; /* Added default background color */
   color: white;              /* Added readable text color */
   cursor: pointer;           /* Changes cursor to a hand on hover */
@@ -393,6 +400,10 @@ a.active {
   height: 75px;
   padding-top: 5px;
   padding: 5px;
+}
+
+.sticky-footer a {
+  color: lightgray;
 }
 
 .socials {
