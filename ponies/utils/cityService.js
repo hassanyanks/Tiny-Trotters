@@ -1,6 +1,6 @@
 import NodeCache from 'node-cache';
-import City from '../models/City.js'; 
-import State from '../models/State.js'; 
+import City from '../models/city.js'; 
+import State from '../models/state.js'; 
 
 // Cache items for 1 hour (3600 seconds) by default
 const cityCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
