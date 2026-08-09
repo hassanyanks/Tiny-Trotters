@@ -1,12 +1,11 @@
-import {MongoClient} from 'mongodb';
-import 'dotenv/config';
-import Event from "../models/event.js";
+import { cachedCitiesStr } from '../utils/cityService.js';
+import Picture from "../models/picture.js";
 
-export const events = async(req, res, next) => {
-    const events = await Event.find().exec().toArray();
-    res.render("request_form", {
-        events: events
-    });
+export const pictures = async(req, res, next) => {
+    const pictures = await Picture.find().sort({name: 1});
+    res.locals.citiesServed = cachedCitiesStr;
+    res.locals.pictures = pictures;
+    res.render("gallery");
 };
 
 /*
@@ -27,7 +26,7 @@ async function getData(collection, filter) {
 export const events = async(req, res, next) => {
     const allEvents = res ? await getData('events', {} ) : [];
     console.log(`allEvents:  ${allEvents}`)
-    res.render("request_form", {
+    res.render("schedule_event", {
         events: allEvents
     });
 };

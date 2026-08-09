@@ -1,13 +1,10 @@
 import express from 'express';
-var router = express.Router();
+import { index } from '../controllers/indexController.js';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index');
-});
+const router = express.Router();
 
-router.get('/index', function(req, res, next) {
-  res.render('index');
-});
+// Define clean GET routes
+router.get('/', index);
+router.get('/index', index);
 
 export default router;

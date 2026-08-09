@@ -2,14 +2,14 @@ extends layout
 
 block content
     h2.standard-underline Schedule Event
-    form.grid-container(action="/request_form", method='GET', target="_blank")
+    form.grid-container(action="/schedule_event", method='GET', target="_blank")
         div.field
             label Event Type
             select.responsive-input.custom-select(required name="event" id="event-type-select")
-                if events && events.length > 0
+                if eventTypes && eventTypes.length > 0
                     option(value="" disabled selected id="event-type-placeholder") Choose an option...
-                    each event in events
-                        option(value=event.id)= event.name
+                    each eventType in eventTypes
+                        option(value=eventType.id)= eventType.name
             input#other-event-type(type="text")
             label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
             input(id="event-type-reset-box" type="checkbox" style="display: none")

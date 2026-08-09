@@ -2,16 +2,17 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const PriceTypeSchema = new Schema({
+const CitySchema = new Schema({
   id: { type: Number, required: true, unique: true },
   name: { type: String, required: true, minLength:  3, maxLength: 100, unique: true },
+  stateId: { type: Schema.Types.ObjectId, ref: "State", required: true },
 });
 
-PriceTypeSchema.virtual("url").get(function () {
+CitySchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/price-type/${this._id}`;
+  return `/city/${this._id}`;
 });
 
 // Export model
-const PriceType = mongoose.model("PriceType", PriceTypeSchema);
-export default PriceType;
+const City = mongoose.model("City", CitySchema);
+export default City;

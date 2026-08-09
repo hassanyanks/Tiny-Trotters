@@ -1,24 +1,25 @@
 extends layout 
 
 block content
-    if services.length 
-        div.resources-container 
+    div.resources-container 
+        if eventTypes.length && eventTypes.length > 0
             div.resource-container
                 h2.standard-underline Events
                 ul.centered-list
-                    each service in services
-                        li  #{service.name}
+                    each eventType in eventTypes
+                        li  #{eventType.name}
+        if accessories.length && accessories.length > 0
             div.resource-container  
                 h2.standard-underline Pony Accessories
                 ul.centered-list
                     each accessory in accessories
                         li  #{accessory.name}
-            div.resource-container  
-                h2.standard-underline Other  
-                ul.centered-list
-                    li Pony Rides (60lbs limit)  
-            div.resource-container  
-                h2.standard-underline Prices  
-                ul.centered-list
-                    li Events:  $250/hr, per pony  
-                    li Accessories:  $25 each  
+        div.resource-container  
+            h2.standard-underline Other  
+            ul.centered-list
+                li Pony Rides (60lbs limit)  
+        div.resource-container  
+            h2.standard-underline Prices  
+            ul.centered-list
+                li Events:  $250/hr, per pony  
+                li Accessories:  $25 each  

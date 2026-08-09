@@ -5,6 +5,6 @@ var router = express.Router();
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json()); 
 
-router.get('/request_form', events );
+router.get('/schedule_event', events );
 
 export default router;

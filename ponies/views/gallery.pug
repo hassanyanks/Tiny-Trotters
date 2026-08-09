@@ -1,0 +1,8 @@
+extends layout 
+
+block content
+    if pictures.length 
+        div.resources-container 
+            each picture in pictures
+                div.resource-container#gallery 
+                    img(src="/images/" + picture .image)

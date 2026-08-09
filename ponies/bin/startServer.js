@@ -3,7 +3,6 @@ import app from '../app.js';
 import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
-import mongoose from 'mongoose';
 
 const PORT = process.env.NODE_ENV === 'production' ? process.env.DEFAULT_PORT : process.env.DEV_PORT;
 const HOST = process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST;

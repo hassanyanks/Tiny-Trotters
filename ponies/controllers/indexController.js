@@ -1,16 +1,11 @@
-import Pony from "../models/pony.js";
 import { cachedCitiesStr } from '../utils/cityService.js';
 
-export const ponies = async(req, res, next) => {
+export const index = async (req, res, next) => {
   try {    
-    const ponies = await Pony.find().sort({name: 1});
     // Attach to res.locals and render
     res.locals.citiesServed = cachedCitiesStr;
-    res.locals.ponies = ponies;
-    res.render("ponies");
+    res.render("index");
   } catch (error) {
     next(error);
   }
 };
-
-
