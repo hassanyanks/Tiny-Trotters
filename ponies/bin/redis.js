@@ -1,5 +1,6 @@
 import { createClientPool } from 'redis';
 import { BasicPooledClientSideCache } from 'redis';
+import 'dotenv/config';
 
 export class RedisClient {
 
@@ -11,7 +12,7 @@ export class RedisClient {
     });
     this.client = createClientPool({RESP: 3}, {
       socket: {
-          host: 'sams-redis',  // or 'localhost' from host
+          host: process.env.NODE_ENV === 'production' ? process.env.REDIS_URL : 'localhost',
           port: 6379,
         },
       clientSideCache: this.cache,
