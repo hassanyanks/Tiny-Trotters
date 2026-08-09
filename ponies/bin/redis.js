@@ -10,12 +10,8 @@ export class RedisClient {
       maxEntries: 0,
       evictPolicy: "LRU"
     });
-    this.client = createClientPool({RESP: 3}, {
-      socket: {
-          host: process.env.REDIS_URL,
-          url: process.env.REDIS_URL,
-          port: 6379,
-        },
+    this.client = createClient({
+      url: process.env.REDIS_URL, 
       clientSideCache: this.cache,
       minimum: 5
     });
