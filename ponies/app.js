@@ -26,25 +26,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'lib')));
 app.use(express.static(path.join(__dirname, 'scripts')));
 
-export const redisClient = new RedisClient();
+//export const redisClient = new RedisClient();
 
 try {
-    const [mongoDbInstance, redisStatus] = await Promise.all([initMongoDB(), redisClient.startRedis()]);
-    console.log(`promise all result:  ${mongoDbInstance}, ${redisStatus}`)
-    if( mongoDbInstance === 'tiny-trotters' && redisStatus === 'connected') {
+    const [mongoDbInstance] = await Promise.all([initMongoDB()]); //, redisClient.startRedis()]);
+    //console.log(`promise all result:  ${mongoDbInstance}, ${redisStatus}`)
+    if( mongoDbInstance === 'tiny-trotters') { //&& redisStatus === 'connected') {
       startServer();
     } else {
-      console.error(`Not starting server: mongodb connection: ${mongoDbInstance}, Redis status: ${redisStatus}`);
+      console.error(`Not starting server: mongodb connection: ${mongoDbInstance}`);
     }
 } catch (error) {
     console.error('Failed to start server:', error);
 }
 
+
 app.use(session({
   genid: (req) => {
     return uuid() // use UUIDs for session IDs
   },
-    store: new RedisStore({ client: redisClient.client }),
+    //store: new RedisStore({ client: redisClient.client }),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
@@ -54,6 +55,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 // Cookie expiration time (e.g., 1 day)
     },
 },));
+
 
 //const plusSign = process.env.NODE_ENV === 'production' ? '&#43;' : '+';
 //const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';

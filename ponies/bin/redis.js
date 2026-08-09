@@ -1,4 +1,4 @@
-import { createClientPool } from 'redis';
+import { createClientPool, createClient } from 'redis';
 import { BasicPooledClientSideCache } from 'redis';
 import 'dotenv/config';
 
