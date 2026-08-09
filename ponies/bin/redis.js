@@ -12,7 +12,7 @@ export class RedisClient {
     });
     this.client = createClientPool({RESP: 3}, {
       socket: {
-          host: process.env.NODE_ENV === 'production' ? 'tiny-trotters' : 'localhost',
+          host: process.env.REDIS_URL,
           url: process.env.REDIS_URL,
           port: 6379,
         },
