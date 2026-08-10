@@ -57,6 +57,7 @@ accessoriesSelectFields.forEach(field => {
         if(allCurrentlySelected[pony].includes('Other')) {
             otherAccessoryDiv[pony].style.display = 'block';
             otherAccessoryInput[pony].focus();
+            otherAccessoryInput[pony].setAttribute('required', '');
         } else {
             otherAccessoryDiv[pony].style.display = 'none';
         }
@@ -92,6 +93,7 @@ clearOtherAccessoriesCheckboxes.forEach(field => {
         //let otherAccessoryDiv = document.getElementById(`other-accessory-div-${pony}`);
         //let selectFieldOtherOption = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
         if (event.target.checked) {
+            otherAccessoryInput[pony].removeAttribute('required');
             otherAccessoryInput[pony].value = '';
             selectFieldOtherOption[pony].selected = false;
             otherAccessoryDiv[pony].style.display = 'none';
@@ -110,6 +112,7 @@ if(otherEventTypeTextField && eventTypeSelectField && resetOtherEventBox && rese
         console.log(`event type ${text} selected...`)
         if(text === 'Other') {
             selectElement.style.display = 'none';
+            otherEventTypeTextField.setAttribute('required', '');
             otherEventTypeTextField.style.display = 'block';
             otherEventTypeTextField.focus();
             resetOtherEventLabel.style.display = 'block';
@@ -123,6 +126,7 @@ if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
         event.preventDefault();
         event.stopPropagation();
         if(event.target.checked) {
+            otherEventTypeTextField.removeAttribute('required');
             resetOtherEventLabel.style.display = 'none';
             resetOtherEventBox.style.display = 'none';
             eventTypeSelectField.style.display = 'block';

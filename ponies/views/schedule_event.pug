@@ -18,9 +18,9 @@ block content
                     input(id="event-type-reset-box" type="checkbox" style="display: none")
             div.field 
                 label Event Start
-                input.responsive-input(type="datetime-local") 
+                input.responsive-input(required type="datetime-local") 
                 label Event End 
-                input.responsive-input(type="datetime-local")
+                input.responsive-input(required type="datetime-local")
         div.fields-container
             h3.standard-underline Select Ponies and Accessories
             if ponies && ponies.length > 0
@@ -45,9 +45,9 @@ block content
                             input(id=`clear-accessories-${pony.name}` type="checkbox")
         div.field.full-width 
             label Event Address 
-            input.responsive-text-input(type="text", maxlength="200") 
+            input.responsive-text-input(required type="text", maxlength="200") 
         div.field.full-width 
             label Contact Details
-            input.responsive-text-input(type="text", maxlength="100") 
+            input.responsive-text-input(required type="text", maxlength="100") 
         div.field.full-width
             button(type="submit") Submit
