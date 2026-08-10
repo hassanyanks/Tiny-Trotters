@@ -1,10 +1,11 @@
 import express from 'express';
-import { events } from '../controllers/dataController.js';
+import { eventSchedule } from '../controllers/scheduleEventControllers.js';
  
 var router = express.Router();
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json()); 
 
-router.get('/schedule_event', events );
+router.get('/', eventSchedule );
+router.get('/schedule_event', eventSchedule );
 
 export default router;

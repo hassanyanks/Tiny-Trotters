@@ -12,6 +12,7 @@ import indexRouter from './routes/indexRoutes.js';
 import ponyRouter from './routes/ponyRoutes.js';
 import servicesRouter from './routes/servicesRoutes.js';
 import galleryRouter from './routes/galleryRoutes.js';
+import scheduleEventRouter from './routes/scheduleEventRoutes.js';
 import { RedisStore } from 'connect-redis';
 
 const app = express();
@@ -24,8 +25,7 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'lib')));
-app.use(express.static(path.join(__dirname, 'scripts')));
-
+console.log(`**********dirname:  ${__dirname}`);
 //export const redisClient = new RedisClient();
 
 try {
@@ -71,6 +71,7 @@ app.use('/index', indexRouter);
 app.use('/ponies', ponyRouter);
 app.use('/services', servicesRouter);
 app.use('/gallery', galleryRouter);
+app.use('/schedule_event', scheduleEventRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -219,23 +219,28 @@ a {
 .link-paragraph a:hover {
   background-color: #f0f0f0;
 }
-
+/*
 .grid-container {
   display: grid;
-  /* Use auto-fill so columns do not stretch infinitely */
   grid-template-columns: repeat(auto-fill, minmax(250px, 350px));
-  max-width: 75%;
+  max-width: 100%;
   margin: 0 auto;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   list-style: none;
   padding: 0;
-  /* Scales font size between 14px (0.875rem) and 20px (1.25rem) */
   font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
-  /* This centers the actual column tracks inside the 75% container */
   justify-content: center; 
-  /* This centers the content inside each column track */
   justify-items: center;   
+}
+
+.fields-container {
+  display: flex;
+  justify-content: space-between;
+  width: auto;
+  margin: 20px;
+  border:rgba(0, 0, 0, 0.3) 2px solid;
+  border-radius: 8px;
 }
 
 .field {
@@ -244,9 +249,66 @@ a {
   align-items: center;
   padding: 5px 15px;
   text-align: center;
-  /* Ensure the child takes up full width of the centered track */
   width: 100%; 
   max-width: 350px; 
+}
+*/
+
+/* Parent Form Container */
+.grid-container {
+  display: grid;
+  /* 1 column on mobile, 2 columns on screens wider than 600px */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 800px; /* Limits overall width on desktop */
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
+}
+
+/* Individual Field Row (Label + Input Wrapper) */
+.fields-container {
+  display: flex;
+  flex-direction: column; /* Stack label above input on mobile */
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.fields-container h3 {
+  align-self: center;
+}
+/* Actual Form Controls (Inputs, Selects, etc.) */
+.field input, 
+.field select, 
+.field textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box; /* Prevents padding from breaking width */
+}
+
+input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+/* Desktop Adjustment for 2-Column enforcement */
+@media (min-width: 650px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 equal columns */
+  }
+}
+
+.clear-div {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center;
 }
 
 .no-full-width {
@@ -284,10 +346,6 @@ a {
 }
 
 #other-event-type {
-  display: none;
-}
-
-#other-accessory {
   display: none;
 }
 

@@ -3,33 +3,45 @@ extends layout
 block content
     h2.standard-underline Schedule Event
     form.grid-container(action="/schedule_event", method='GET', target="_blank")
-        div.field
-            label Event Type
-            select.responsive-input.custom-select(required name="event" id="event-type-select")
-                if eventTypes && eventTypes.length > 0
-                    option(value="" disabled selected id="event-type-placeholder") Choose an option...
-                    each eventType in eventTypes
-                        option(value=eventType.id)= eventType.name
-            input#other-event-type(type="text")
-            label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
-            input(id="event-type-reset-box" type="checkbox" style="display: none")
-        div.field
-            label Event Accessories
-            select.responsive-input(title="Select up to 3 (Ctrl + Click selects/de-selects)" id="accessories-select" name="accessories" multiple size="5")
-                if accessories && accessories.length > 0
-                    each accessory in accessories
-                        option(value=accessory.id)= accessory.name
-            label#other-accessory-label(style="font-size: 14px; display: none") Other Accessory
-            input#other-accessory(type="text")
-            label(id="other-accessory-reset-label" style="font-size: 14px; display: none") Reset
-            input(id="other-accessory-reset-box" type="checkbox" style="display: none")
-            label(style="font-size: 14px") Clear All Accessories
-            input(id="clear-accessories" type="checkbox")
-        div.field 
-            label Event Start
-            input.responsive-input(type="datetime-local") 
-            label Event End 
-            input.responsive-input(type="datetime-local")
+        div.fields-container
+            h3.standard-underline Event Details
+            div.field
+                label Event Type
+                select.responsive-input.custom-select(required name="event" id="event-type-select")
+                    if eventTypes && eventTypes.length > 0
+                        option(value="" disabled selected id="event-type-placeholder") Choose an option...
+                        each eventType in eventTypes
+                            option(value=eventType.id)= eventType.name
+                input#other-event-type(type="text")
+                label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
+                input(id="event-type-reset-box" type="checkbox" style="display: none")
+            div.field 
+                label Event Start
+                input.responsive-input(type="datetime-local") 
+                label Event End 
+                input.responsive-input(type="datetime-local")
+        div.fields-container
+            h3.standard-underline Select Ponies and Accessories
+            if ponies && ponies.length > 0
+                each pony in ponies
+                    div
+                        input(id=`pony-checkbox-${pony.name}` type="checkbox")
+                        label(id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;") #{pony.name}
+                    div.field(id=`${pony.name}`,  style="display: none;")
+                        label Event Accessories
+                        select.responsive-input(title="Select up to 3 (Ctrl + Click selects/de-selects)" id=`accessories-select-${pony.name}` name="accessories" multiple size="5")
+                            if accessories && accessories.length > 0
+                                each accessory in accessories
+                                    option(value=accessory.id)= accessory.name
+                        div(id=`other-accessory-div-${pony.name}` style="display: none")
+                            label(id=`other-accessory-label-${pony.name}` style="font-size: 14px;") Other Accessory
+                            input(id=`other-accessory-input-${pony.name}` type="text")
+                            div.clear-div 
+                                label(id=`other-accessory-reset-label-${pony.name}` style="font-size: 14px;") Clear Other Accessory
+                                input(id=`other-accessory-reset-box-${pony.name}` type="checkbox")
+                        div.clear-div
+                            label(style="font-size: 14px;") Clear All
+                            input(id=`clear-accessories-${pony.name}` type="checkbox")
         div.field.full-width 
             label Event Address 
             input.responsive-text-input(type="text", maxlength="200") 
@@ -38,4 +50,3 @@ block content
             input.responsive-text-input(type="text", maxlength="100") 
         div.field.full-width
             button(type="submit") Submit
-    script(src="../javascripts/formHelpers.js")
