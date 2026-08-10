@@ -57,7 +57,7 @@ body {
 }
 
 .nav-center h5 {
-  font-size: clamp(0.25rem, 1vw + 0.86rem, 0.86rem);  
+  font-size: clamp(0.25rem, 1vw + 0.50rem, 0.86rem);  
 }
 
 .nav-center h1, .nav-center h2, .nav-center h5 {
