@@ -270,6 +270,10 @@ input[type="checkbox"] {
   }
 }
 
+.form-submit-div {
+  margin-top: 10px;
+}
+
 .clear-div {
   display: flex; 
   flex-direction: column; 
@@ -364,15 +368,6 @@ label {
   margin-bottom: 5px;
   font-weight: bold;
 }
-
-/* Reset basic element margins and paddings 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-*/
 
 hr {
   border: none;             /* Removes the default 3D border */
