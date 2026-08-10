@@ -219,40 +219,6 @@ a {
 .link-paragraph a:hover {
   background-color: #f0f0f0;
 }
-/*
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 350px));
-  max-width: 100%;
-  margin: 0 auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  list-style: none;
-  padding: 0;
-  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
-  justify-content: center; 
-  justify-items: center;   
-}
-
-.fields-container {
-  display: flex;
-  justify-content: space-between;
-  width: auto;
-  margin: 20px;
-  border:rgba(0, 0, 0, 0.3) 2px solid;
-  border-radius: 8px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px 15px;
-  text-align: center;
-  width: 100%; 
-  max-width: 350px; 
-}
-*/
 
 /* Parent Form Container */
 .grid-container {

@@ -1,3 +1,8 @@
+var otherEventTypeTextField = document.getElementById('other-event-type');
+var eventTypeSelectField = document.getElementById('event-type-select');
+var eventTypePlaceholder = document.getElementById('event-type-placeholder');
+var resetOtherEventLabel = document.getElementById('event-type-reset-label');
+var resetOtherEventBox = document.getElementById('event-type-reset-box');
 var accessoriesSelectFields = document.querySelectorAll('[id^="accessories-select"]');
 var clearOtherAccessoriesCheckboxes = document.querySelectorAll('[id^="other-accessory-reset-box"]');
 var clearAllAccessoriesCheckboxes = document.querySelectorAll('input[id^="clear-accessories"]');
@@ -95,14 +100,42 @@ clearOtherAccessoriesCheckboxes.forEach(field => {
     });
 });
 
+if(otherEventTypeTextField && eventTypeSelectField && resetOtherEventBox && resetOtherEventLabel) {
+    eventTypeSelectField.addEventListener('change', function(event) {
+        console.log('event type selection field listener starting...');
+        event.preventDefault();
+        event.stopPropagation();
+        const selectElement = event.target;
+        const text = selectElement.options[selectElement.selectedIndex].text;
+        console.log(`event type ${text} selected...`)
+        if(text === 'Other') {
+            selectElement.style.display = 'none';
+            otherEventTypeTextField.style.display = 'block';
+            otherEventTypeTextField.focus();
+            resetOtherEventLabel.style.display = 'block';
+            resetOtherEventBox.style.display = 'block';
+        }
+    });
+}
+
+if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
+    resetOtherEventBox.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if(event.target.checked) {
+            resetOtherEventLabel.style.display = 'none';
+            resetOtherEventBox.style.display = 'none';
+            eventTypeSelectField.style.display = 'block';
+            otherEventTypeTextField.style.display = 'none';
+            otherEventTypeTextField.value = '';
+            eventTypeSelectField.selectedIndex = -1;
+        }
+    });
+}
+
 /*
 
 var clearAccessoriesCheckbox = document.getElementById('clear-accessories');
-var otherEventTypeTextField = document.getElementById('other-event-type');
-var eventTypeSelectField = document.getElementById('event-type-select');
-var eventTypePlaceholder = document.getElementById('event-type-placeholder');
-var resetOtherEventLabel = document.getElementById('event-type-reset-label');
-var resetOtherEventBox = document.getElementById('event-type-reset-box');
 var resetOtherAccessoryLabel = document.getElementById('other-accessory-reset-label');
 var resetOtherAccessoryBox = document.getElementById('other-accessory-reset-box');
 var otherAccessoryTextLabel = document.getElementById('other-accessory-label');
@@ -158,36 +191,7 @@ if(accessoriesSelectField && clearAccessoriesCheckbox) {
     });
 }
 
-if(otherEventTypeTextField && eventTypeSelectField && resetOtherEventBox && resetOtherEventLabel) {
-    eventTypeSelectField.addEventListener('change', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const selectElement = event.target;
-        const text = selectElement.options[selectElement.selectedIndex].text;
-        if(text === 'Other') {
-            selectElement.style.display = 'none';
-            otherEventTypeTextField.style.display = 'block';
-            otherEventTypeTextField.focus();
-            resetOtherEventLabel.style.display = 'block';
-            resetOtherEventBox.style.display = 'block';
-        }
-    });
-}
 
-if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
-    resetOtherEventBox.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if(event.target.checked) {
-            resetOtherEventLabel.style.display = 'none';
-            resetOtherEventBox.style.display = 'none';
-            eventTypeSelectField.style.display = 'block';
-            otherEventTypeTextField.style.display = 'none';
-            otherEventTypeTextField.value = '';
-            eventTypeSelectField.selectedIndex = -1;
-        }
-    });
-}
 
 */
 

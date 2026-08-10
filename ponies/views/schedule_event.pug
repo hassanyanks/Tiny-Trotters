@@ -13,8 +13,9 @@ block content
                         each eventType in eventTypes
                             option(value=eventType.id)= eventType.name
                 input#other-event-type(type="text")
-                label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
-                input(id="event-type-reset-box" type="checkbox" style="display: none")
+                div.clear-div
+                    label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
+                    input(id="event-type-reset-box" type="checkbox" style="display: none")
             div.field 
                 label Event Start
                 input.responsive-input(type="datetime-local") 
