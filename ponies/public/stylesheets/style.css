@@ -56,6 +56,10 @@ body {
   box-sizing: border-box;
 }
 
+.nav-center h5 {
+  font-size: clamp(0.25rem, 1vw + 1rem, 0.75rem);  
+}
+
 .nav-center h1, .nav-center h2, .nav-center h5 {
   margin: 5px;
 }

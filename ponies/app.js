@@ -56,53 +56,6 @@ app.use(session({
     },
 },));
 
-
-//const plusSign = process.env.NODE_ENV === 'production' ? '&#43;' : '+';
-//const colon = process.env.NODE_ENV === 'production' ? '&#58;' : ':';
-/*
-const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}/${process.env.DB_NAME}`;
-console.log(`mongodb string:  ${mongoDB}`)
-const client = new MongoClient(mongoDB);
-app.get('/schedule_event', async(req,res) => {
-  try {
-      await client.connect();
-      const db = client.db(process.env.DB_NAME);
-      const eventTypes = await db.collection('eventTypes').find().sort({name: 1}).toArray();
-      const accessories = await db.collection('accessories').find().sort({name: 1}).toArray();
-      client.close();
-      res.render('schedule_event', { eventTypes, accessories: accessories });
-  } catch (err) {
-      res.status(500).send('Error getting data');
-  }
-});
-
-app.get('/ponies', async(req,res) => {
-  try {
-      await client.connect();
-      const db = client.db(process.env.DB_NAME);
-      const ponies = await db.collection('ponies').find().sort({name: 1}).toArray();
-      const citiesStatesStr = cities.length && cities.length > 0 ? await buildCitiesStatesStr(cities, db) : "Serving Fresno, CA area"
-      client.close();
-      res.render('ponies', { ponies: ponies, citiesStatesStr: citiesStatesStr });
-  } catch (err) {
-      res.status(500).send('Error getting data');
-  }
-});
-
-app.get('/services', async(req,res) => {
-  try {
-      await client.connect();
-      const db = client.db(process.env.DB_NAME);
-      const eventTypes = await db.collection('eventTypes').find().sort({name: 1}).toArray();
-      const accessories = await db.collection('accessories').find().sort({name: 1}).toArray();
-      client.close();
-      res.render('services', { eventTypes: eventTypes, accessories:  accessories });
-  } catch (err) {
-      res.status(500).send('Error getting data');
-  }
-});
-*/
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
