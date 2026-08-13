@@ -25,7 +25,7 @@ export async function sendScheduledEventEmail( email, eventDetails, accessories 
   //property names here must match those used by route controller
   const htmlContent = compiledFunction( {
     eventDetails: eventDetails,
-    ponyAccessories: accessories
+    ponyAccessoriesData: accessories
   }
 
   );

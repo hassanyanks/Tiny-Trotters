@@ -373,7 +373,7 @@ input[type="checkbox"] {
 }
 
 .read-only {
-  
+
 }
 
 .styled-border {
@@ -393,7 +393,7 @@ outline: none;
   text-decoration: underline;
 }
 
-button {
+button, a.cancel-button {
   max-width: 100px;
   box-sizing: border-box;
   padding: 10px;
@@ -405,6 +405,10 @@ button {
   color: white;             
   cursor: pointer;           /* Changes cursor to a hand on hover */
   transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+a.cancel-button {
+  text-decoration: none;
 }
 
 .submit-button {
