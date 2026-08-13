@@ -2,26 +2,57 @@
 //import crypto, { hash } from 'crypto';
 //import User from '../models/user.js';
 //import {SALT_ROUNDS} from '../config/config.js';
-import nodemailer from 'nodemailer';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { MailtrapClient } from 'mailtrap';
 import path from 'path';
 import fs from 'fs';
 import pug from 'pug';
+import nodemailer from 'nodemailer';
+import mg from 'nodemailer-mailgun-transport';
+
+// Configure Mailgun transport
+const auth = {
+  auth: {
+    api_key: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN
+  }
+};
+
+const transporter = nodemailer.createTransport(mg(auth));
 
 const __dirname = import.meta.dirname
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-export async function sendScheduledEventEmail( email, eventDetails, accessories ) {
+export async function sendScheduledEventEmail( email, eventDetails, accessories, locals ) {
 
   const TOKEN = process.env.MAILTRAP_TOKEN;
   const TEST_INBOX_ID = process.env.MAILTRAP_INBOX_ID;
   const SENDER_EMAIL = "support@gmail.com";
   const RECIPIENT_EMAIL = email;
-  const htmlPath = path.join('.', 'views', 'scheduled_event.pug');
-  const compiledFunction = pug.compileFile(htmlPath);
+  const templatePath = path.join('.', 'views', 'scheduled_event.pug');
+  const compiledFunction = pug.compileFile(templatePath);
+  const htmlContent = compiledFunction(locals);
 
+  const mailOptions = {
+    from: 'tinytrottersponyparties@gmail.com',
+    to: RECIPIENT_EMAIL,
+    subject: 'Tiny Trotters Event Scheduled--yay!!',
+    html: htmlContent
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error('Error sending email:', err);
+    } else {
+      console.log('Email sent successfully!', info);
+    }
+  });
+
+}
+
+
+/*
   //property names here must match those used by route controller
   const htmlContent = compiledFunction( {
     eventDetails: eventDetails,
@@ -39,20 +70,14 @@ export async function sendScheduledEventEmail( email, eventDetails, accessories 
   })
   .then(console.log)
   .catch(console.error); 
-
+*/
   /*
   const nodemailer = require('nodemailer');
 const mg = require('nodemailer-mailgun-transport');
 const pug = require('pug');
 const path = require('path');
 
-// Configure Mailgun transport
-const auth = {
-  auth: {
-    api_key: process.env.MAILGUN_API_KEY,
-    domain: process.env.MAILGUN_DOMAIN
-  }
-};
+
 
 const transporter = nodemailer.createTransport(mg(auth));
 
@@ -79,7 +104,6 @@ transporter.sendMail(mailOptions, (err, info) => {
 });
 */
 
-}
 
 export function sendEmailWithToken(user) {
 

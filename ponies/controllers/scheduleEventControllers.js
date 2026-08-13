@@ -113,7 +113,6 @@ export const eventSchedulePost = async(req, res, next) => {
     }
 
     formatTime(eventDetails);
-    sendScheduledEventEmail(req.body['Event Email'], eventDetails, ponyAccessories);
 
     res.locals.citiesServed = cachedCitiesStr;
     res.locals.eventDetails = eventDetails;
@@ -124,6 +123,9 @@ export const eventSchedulePost = async(req, res, next) => {
     res.locals.other_contact_details = req.body.other_contact_details,
     res.locals.email = req.body.email,
     res.locals.address = req.body.address
+
+    sendScheduledEventEmail(req.body['Event Email'], eventDetails, ponyAccessories, res.locals);
+    
     res.render('scheduled_event', { 
       url: '/scheduled-event',
     });   

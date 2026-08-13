@@ -6,10 +6,11 @@ block content
     div.grid-container
         div.fields-container
             h3.standard-underline Event Details
-            each fieldValue, fieldName in eventDetails
-                div.field.styled-border
-                    span(style="font-weight: bold; margin: 10px;") #{fieldName}:  
-                    span(style="margin: 10px 10px 10px 3px;") #{fieldValue}
+            each [fieldName,fieldValue] of Object.entries(eventDetails)
+                if fieldName && fieldValue
+                    div.field.styled-border
+                        span(style="font-weight: bold; margin: 10px;") #{fieldName}:  
+                        span(style="margin: 10px 10px 10px 3px;") #{fieldValue}
         div.fields-container
             h3.standard-underline #{'Ponies & Accessories'}
             each pony in Object.keys(ponyAccessoriesData)
