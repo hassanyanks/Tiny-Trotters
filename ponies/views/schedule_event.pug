@@ -19,9 +19,9 @@ block content
                         input(id="event-type-reset-box" type="checkbox" style="display: none")
                 div.field 
                     label Event Start
-                    input#event-start.responsive-input(name="Event Start" required type="datetime-local") 
+                    input#event-start.responsive-input(name="Event Start" required type="datetime-local" min="09:00" max="19:00" ) 
                     label Event End 
-                    input#event-end.responsive-input(name="Event End" required type="datetime-local")
+                    input#event-end.responsive-input(name="Event End" required type="datetime-local" min="09:00" max="19:00" ) 
             div.fields-container
                 h3.standard-underline Select Ponies and Accessories
                 if ponies && ponies.length > 0

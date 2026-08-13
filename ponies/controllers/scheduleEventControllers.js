@@ -22,15 +22,29 @@ export const eventScheduleGet = async(req, res, next) => {
   }
 };
 
-function formatTime(generatedDatetimeValue) {
-                console.log(`**************************generatedDatetimeValue:  ${generatedDatetimeValue}`);
-            const [day,time] = generatedDatetimeValue.split('T')
-                console.log(`**************************day, time:  ${day}//${time}`);
+function formatTime(eventDetailsData) {
+  console.log(`**************************start eventDetailsData:  ${JSON.stringify(eventDetailsData)}`);
+  const eventTimeData = Object.fromEntries( Object.entries(eventDetailsData).filter(([key]) => key.includes('Start') || key.includes('End'))); //pulling in all fields data with name attribute containing 'Event'
+  console.log(`**************************eventTimeData:  ${JSON.stringify(eventTimeData)}`);
+  for(const[key,value] of Object.entries(eventTimeData) ) {
+    console.log(`**************************eventTimeData keys/values:  ${key}//${value}`);
+    const [day,time] = value.split('T');
+    console.log(`**************************eventTimeData day/time:  ${day}//${time}`);
+    const hour = parseInt(time.split(':')[0]);
+    const minutes = time.split(':')[1]
+    const time12HrFormatted =  hour > 12  ? `${hour-12}:${minutes} PM` 
+                            : hour === 12 ? `${hour}:${minutes} PM` 
+                            : `${hour}:${minutes} AM`
+    console.log(`time12HrFormatted: ${time12HrFormatted}`) 
+    eventDetailsData[key] = time12HrFormatted;
+  }
 
-            const [hour,minutes] = time.split(':');
-                console.log(`**************************hour, minutes:  ${hour}//${minutes}`);
-            let hour12HrFormat = parseInt(hour) > 12 ? `${parseInt(hour) - 12} PM` : hour;
-                console.log(`**************************hour12HrFormat:  ${hour12HrFormat}`);
+  console.log(`**************************end eventDetailsData:  ${JSON.stringify(eventDetailsData)}`);
+
+  //const [hour,minutes] = time.split(':');
+  //console.log(`**************************hour, minutes:  ${hour}//${minutes}`);
+  //let hour12HrFormat = parseInt(hour) > 12 ? `${parseInt(hour) - 12} PM` : hour;
+  //console.log(`**************************hour12HrFormat:  ${hour12HrFormat}`);
 
 }
 
@@ -98,7 +112,7 @@ export const eventSchedulePost = async(req, res, next) => {
 
     }
 
-    //formatTime(generatedDatetimeValue)
+    formatTime(eventDetails);
     sendScheduledEventEmail(req.body['Event Email'], eventDetails, ponyAccessories);
 
     res.locals.citiesServed = cachedCitiesStr;
