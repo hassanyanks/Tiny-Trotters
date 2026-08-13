@@ -1,12 +1,16 @@
-var otherEventTypeTextField = document.getElementById('other-event-type');
-var eventTypeSelectField = document.getElementById('event-type-select');
-var eventTypePlaceholder = document.getElementById('event-type-placeholder');
-var resetOtherEventLabel = document.getElementById('event-type-reset-label');
-var resetOtherEventBox = document.getElementById('event-type-reset-box');
-var accessoriesSelectFields = document.querySelectorAll('[id^="accessories-select"]');
-var clearOtherAccessoriesCheckboxes = document.querySelectorAll('[id^="other-accessory-reset-box"]');
-var clearAllAccessoriesCheckboxes = document.querySelectorAll('input[id^="clear-accessories"]');
-var ponyCheckboxes = document.querySelectorAll('input[id^="pony-checkbox"]');
+const otherEventTypeTextField = document.getElementById('other-event-type');
+const eventTypeSelectField = document.getElementById('event-type-select');
+const eventTypePlaceholder = document.getElementById('event-type-placeholder');
+const resetOtherEventLabel = document.getElementById('event-type-reset-label');
+const resetOtherEventBox = document.getElementById('event-type-reset-box');
+const accessoriesSelectFields = document.querySelectorAll('[id^="accessories-select"]');
+const clearOtherAccessoriesCheckboxes = document.querySelectorAll('[id^="other-accessory-reset-box"]');
+const clearAllAccessoriesCheckboxes = document.querySelectorAll('input[id^="clear-accessories"]');
+const ponyCheckboxes = document.querySelectorAll('input[id^="pony-checkbox"]');
+const submitButton = document.getElementById('submit-button');
+const eventStartField = document.getElementById('event-start');
+const eventEndField = document.getElementById('event-end');
+//const datetimeFields = [eventStartField, eventEndField];
 
 let allCurrentlySelected = {};
 let otherAccessoryDiv = {};
@@ -18,6 +22,56 @@ let selectFieldOtherOption = {};
 
 function getPony(event) {
     return event.target.id.split('-').pop();
+}
+
+/*
+submitButton.addEventListener('click', function(event) {
+    event.preventDefault();
+});
+*/
+
+/*
+datetimeFields.forEach((field) => {
+    if(field) {
+        field.addEventListener('blur', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const generatedDatetimeValue = event.target.value;
+                console.log(`**************************generatedDatetimeValue:  ${generatedDatetimeValue}`);
+            const [day,time] = generatedDatetimeValue.split('T')
+                console.log(`**************************day, time:  ${day}//${time}`);
+
+            const [hour,minutes] = time.split(':');
+                console.log(`**************************hour, minutes:  ${hour}//${minutes}`);
+            let hour12HrFormat = parseInt(hour) > 12 ? `${parseInt(hour) - 12} PM` : hour;
+                console.log(`**************************hour12HrFormat:  ${hour12HrFormat}`);
+
+        });
+    }
+});    
+*/
+
+if( eventEndField ) {
+    eventEndField.addEventListener('blur', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let eventStartDate = document.getElementById('event-start').value;
+        let eventEndDate = event.target.value;
+        if (eventStartDate && eventEndDate) {
+            // Convert string inputs to Date objects
+            const startDateTime = new Date(eventStartDate);
+            const endDateTime = new Date(eventEndDate);
+
+            // Extract numerical millisecond values for precise comparison
+            const startTime = startDateTime.getTime();
+            const endTime = endDateTime.getTime();
+
+            if (startTime > endTime) {
+                console.log("Start time is later than end time.");
+                alert("end date/time is before start date/time")
+            }
+        }
+    });
 }
 
 ponyCheckboxes.forEach((checkbox) => {
@@ -54,15 +108,18 @@ accessoriesSelectFields.forEach(field => {
         let pony = getPony(event);
         allCurrentlySelected[pony] = Array.from(event.target.selectedOptions).map(opt => opt.text);
         console.log(`pony ${pony}, currently selected:  ${allCurrentlySelected[pony]}`)
-        if(allCurrentlySelected[pony].includes('Other')) {
+        if(allCurrentlySelected[pony].includes('Other') && otherAccessoryDiv[pony].style.display === 'none') {
             otherAccessoryDiv[pony].style.display = 'block';
             otherAccessoryInput[pony].focus();
             otherAccessoryInput[pony].setAttribute('required', '');
-        } else {
+            otherAccessoryInput[pony].value = '';
+            otherAccessoryResetBox[pony].checked = false;
+        } else if(!allCurrentlySelected[pony].includes('Other')) {
             otherAccessoryDiv[pony].style.display = 'none';
+            otherAccessoryInput[pony].removeAttribute('required');
+            otherAccessoryInput[pony].value = '';
+            otherAccessoryResetBox[pony].checked = false;
         }
-        otherAccessoryInput[pony].value = '';
-        otherAccessoryResetBox[pony].checked = false;
     });
 });
 
@@ -71,12 +128,11 @@ clearAllAccessoriesCheckboxes.forEach(field => {
         event.preventDefault();
         event.stopPropagation();
         let pony = getPony(event);
-        //let selectField = document.querySelector(`#accessories-select-${pony}`);
-        //let otherAccessoryInput = document.getElementById(`other-accessory-input-${pony}`);
-        //let otherAccessoryDiv = document.getElementById(`other-accessory-div-${pony}`);
         if (event.target.checked) {
             selectField[pony].selectedIndex = -1;
+            otherAccessoryInput[pony].removeAttribute('required');
             otherAccessoryInput[pony].value = '';
+            otherAccessoryResetBox[pony].checked = false;
             otherAccessoryDiv[pony].style.display = 'none';
             setTimeout(() => { event.target.checked = false; }, 2000);
         }
@@ -89,9 +145,6 @@ clearOtherAccessoriesCheckboxes.forEach(field => {
         event.preventDefault();
         event.stopPropagation();
         let pony = event.target.id.split('-').pop();
-        //let otherAccessoryInput = document.getElementById(`other-accessory-input-${pony}`);
-        //let otherAccessoryDiv = document.getElementById(`other-accessory-div-${pony}`);
-        //let selectFieldOtherOption = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
         if (event.target.checked) {
             otherAccessoryInput[pony].removeAttribute('required');
             otherAccessoryInput[pony].value = '';

@@ -6,7 +6,7 @@ const PonyEventAccessorySchema = new Schema({
   id: { type: Number, required: true, unique: true },
   pony: { type: Schema.Types.ObjectId, ref: "Pony", required: true },
   event: { type: Schema.Types.ObjectId, ref: "ScheduledEvent", required: true },
-  accessory: { type: Schema.Types.ObjectId, ref: "Accessory", required: true },
+  accessories: { type: String, required: true },
 });
 
 // Virtual for product sample URL

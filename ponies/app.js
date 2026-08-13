@@ -25,7 +25,6 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'lib')));
-console.log(`**********dirname:  ${__dirname}`);
 //export const redisClient = new RedisClient();
 
 try {
@@ -71,7 +70,9 @@ app.use('/index', indexRouter);
 app.use('/ponies', ponyRouter);
 app.use('/services', servicesRouter);
 app.use('/gallery', galleryRouter);
-app.use('/schedule_event', scheduleEventRouter);
+app.use('/', scheduleEventRouter);
+app.use('/schedule-event', scheduleEventRouter);
+app.use('/scheduled-event', scheduleEventRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

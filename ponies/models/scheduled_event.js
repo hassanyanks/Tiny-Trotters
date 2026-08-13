@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const ScheduledEventSchema = new Schema({
   id: { type: Number, required: true, unique: true },
   date: { type: String, required: true, minLength:  20, maxLength: 100, unique: false },
-  eventAccessories: { type: Schema.Types.ObjectId, ref: "PonyEventAccessory", required: true },
-  customer: { type: Schema.Types.ObjectId, ref: "CustomerAccount", required: true },
+  accessories: { type: Schema.Types.ObjectId, ref: "PonyEventAccessory", required: true },
+  customer: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 // Virtual for product sample URL

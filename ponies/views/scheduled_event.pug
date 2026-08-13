@@ -1,0 +1,23 @@
+extends layout 
+
+block content
+    div.standard-underline(style="align-self: center; margin-bottom: 20px;")
+        h2(style="margin-bottom: 10px;") Event Scheduled Pending Confirmation Callback
+    div.grid-container
+        div.fields-container
+            h3.standard-underline Event Details
+            each fieldValue, fieldName in eventDetails
+                div.field.styled-border
+                    span(style="font-weight: bold; margin: 10px;") #{fieldName}:  
+                    span(style="margin: 10px 10px 10px 3px;") #{fieldValue}
+        div.fields-container
+            h3.standard-underline #{'Ponies & Accessories'}
+            each pony in Object.keys(ponyAccessoriesData)
+                if pony
+                    div.field.styled-border
+                        h4(style="margin-left: 5px;") #{pony}
+                        if ponyAccessoriesData[pony].accessories && ponyAccessoriesData[pony].accessories.length > 0
+                            each accessory in ponyAccessoriesData[pony].accessories.flat() 
+                                ul 
+                                    li #{accessory}
+

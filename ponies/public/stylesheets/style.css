@@ -220,13 +220,19 @@ a {
   background-color: #f0f0f0;
 }
 
+.buttons-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px;
+}
+
 /* Parent Form Container */
 .grid-container {
-  display: grid;
-  /* 1 column on mobile, 2 columns on screens wider than 600px */
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: grid; /* Changed from inline-grid to occupy full available width */
+  /* Dynamically fits columns based on content size, wraps automatically on mobile */
+  grid-template-columns: repeat(auto-fit, minmax(max-content, 1fr)); 
+  grid-template-rows: auto; 
   gap: 20px;
-  max-width: 800px; /* Limits overall width on desktop */
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
@@ -234,20 +240,60 @@ a {
   font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
 }
 
-/* Individual Field Row (Label + Input Wrapper) */
+#schedule-event {
+  max-width: 800px; 
+}
+
+/* child of .grid-container*/
 .fields-container {
   display: flex;
-  flex-direction: column; /* Stack label above input on mobile */
+  flex-direction: column; /* Stack label above input */
   gap: 8px;
   padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 6px;
   background-color: #ffffff;
+  /* Removed conflicting 'flex: auto' and 'min-width: 0' */
 }
+
+/* Parent Form Container */
+/*
+.grid-container {
+  display: inline-grid;
+   1 column on mobile, 2 columns on screens wider than 600px 
+  *grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  *grid-template-columns: repeat(3, max-content); 
+  grid-template-rows: auto; 
+  gap: 20px;
+  max-width: 800px; 
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
+}
+*/
+
+/* child of .grid-container*/
+/*
+.fields-container {
+  display: flex;
+  flex: auto;
+  flex-direction: column; 
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background-color: #ffffff;
+  min-width: 0;
+}
+
+*/
 
 .fields-container h3 {
   align-self: center;
 }
+
 /* Actual Form Controls (Inputs, Selects, etc.) */
 .field input, 
 .field select, 
@@ -326,11 +372,16 @@ input[type="checkbox"] {
   padding: clamp(0.25rem, 1vw, 0.5rem);
 }
 
+.read-only {
+  
+}
+
 .styled-border {
   /* Standard styling borders */
   border: 2px solid #ccc;
   border-radius: 6px;
   box-sizing: border-box;
+  padding: 5px;
 }
 
 .responsive-input:focus {
@@ -351,11 +402,17 @@ button {
   font-size: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background-image: url(/images/dark-green.png);
-  background-color: #007bff; /* Added default background color */
-  color: white;              /* Added readable text color */
+  color: white;             
   cursor: pointer;           /* Changes cursor to a hand on hover */
   transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+.submit-button {
+  background-image: url(/images/dark-green.png);
+}
+
+.cancel-button {
+  background-color: gray; 
 }
 
 /* New Hover Effect */
