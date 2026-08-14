@@ -23,29 +23,16 @@ export const eventScheduleGet = async(req, res, next) => {
 };
 
 function formatTime(eventDetailsData) {
-  console.log(`**************************start eventDetailsData:  ${JSON.stringify(eventDetailsData)}`);
   const eventTimeData = Object.fromEntries( Object.entries(eventDetailsData).filter(([key]) => key.includes('Start') || key.includes('End'))); //pulling in all fields data with name attribute containing 'Event'
-  console.log(`**************************eventTimeData:  ${JSON.stringify(eventTimeData)}`);
   for(const[key,value] of Object.entries(eventTimeData) ) {
-    console.log(`**************************eventTimeData keys/values:  ${key}//${value}`);
     const [day,time] = value.split('T');
-    console.log(`**************************eventTimeData day/time:  ${day}//${time}`);
     const hour = parseInt(time.split(':')[0]);
     const minutes = time.split(':')[1]
     const time12HrFormatted =  hour > 12  ? `${hour-12}:${minutes} PM` 
                             : hour === 12 ? `${hour}:${minutes} PM` 
                             : `${hour}:${minutes} AM`
-    console.log(`time12HrFormatted: ${time12HrFormatted}`) 
-    eventDetailsData[key] = time12HrFormatted;
+    eventDetailsData[key] = `${day} ${time12HrFormatted}`;
   }
-
-  console.log(`**************************end eventDetailsData:  ${JSON.stringify(eventDetailsData)}`);
-
-  //const [hour,minutes] = time.split(':');
-  //console.log(`**************************hour, minutes:  ${hour}//${minutes}`);
-  //let hour12HrFormat = parseInt(hour) > 12 ? `${parseInt(hour) - 12} PM` : hour;
-  //console.log(`**************************hour12HrFormat:  ${hour12HrFormat}`);
-
 }
 
 function addOtherAccessories(accessoriesList, ponyNonStandardAccessories) {
@@ -61,18 +48,21 @@ export const eventSchedulePost = async(req, res, next) => {
     const jsonData = JSON.stringify(req.body);
     const eventDetails = Object.fromEntries( Object.entries(req.body).filter(([key]) => key.includes('Event'))); //pulling in all fields data with name attribute containing 'Event'
     const ponyAccessoriesData = Object.fromEntries( Object.entries(req.body).filter(([key]) => key.includes('Pony'))); //pulling in all fields data with name attribute containing 'Pony'
+    const ponyRolesData = Object.fromEntries( Object.entries(ponyAccessoriesData).filter(([key]) => key.includes('Role')))
     const ponies = Object.fromEntries( Object.entries(ponyAccessoriesData).filter(([key,value]) => value === 'on')); //strip <pony name> from key/value pair '<pony name>:"[on|off]"'
     const ponyAccessories = {};
 
     if(eventDetails['Event Type'] === "Other") {
       eventDetails['Event Type'] = eventDetails['Event Other Type']
     } 
-
     delete eventDetails['Event Other Type'];
 
-    console.log(`event details:  ${JSON.stringify(eventDetails)}`);
+    //change this checkbox value to better syntax; this particular code needed because unchecked checkbox is not included in req.body data
+    eventDetails['Event Active Military/Veteran'] ? eventDetails['Event Active Military/Veteran'] = 'Yes' : eventDetails['Event Active Military/Veteran'] = 'No'
 
-    console.log(`\t********************************************ponyAccessoriesData: ${JSON.stringify(ponyAccessoriesData)}`)
+    console.log(`\n\nevent details:  ${JSON.stringify(eventDetails)}`);
+
+    console.log(`\t********************************************ponyRolesData: ${JSON.stringify(ponyRolesData)}`)
 
     //stripping <pony name> from string 'Pony <pony name>'
     for(const[key,value] of Object.entries(ponies)) {
@@ -117,6 +107,7 @@ export const eventSchedulePost = async(req, res, next) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.locals.eventDetails = eventDetails;
     res.locals.ponyAccessoriesData = ponyAccessories;
+    res.locals.ponyRolesData = ponyRolesData;
     console.log(`res.locals.ponyAccessoriesData ${JSON.stringify(res.locals.ponyAccessoriesData)}`);
     res.locals.event_start = req.body.event_start,
     res.locals.event_end = req.body.event_end,
@@ -125,7 +116,7 @@ export const eventSchedulePost = async(req, res, next) => {
     res.locals.address = req.body.address
 
     sendScheduledEventEmail(req.body['Event Email'], eventDetails, ponyAccessories, res.locals);
-    
+
     res.render('scheduled_event', { 
       url: '/scheduled-event',
     });   

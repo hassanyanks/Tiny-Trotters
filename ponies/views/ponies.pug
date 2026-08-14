@@ -6,4 +6,6 @@ block content
             each pony in ponies
                 div.resource-container 
                     h2  #{pony.name}
-                    img(src="/images/" + pony.image)
+                    if pony.image.length && pony.image.length > 0
+                        each picture in pony.image
+                            img.img-our-ponies(src="/images/" + picture)

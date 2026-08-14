@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const PonySchema = new Schema({
   id: { type: Number, required: true, unique: true },
   name: { type: String, required: true, minLength:  3, maxLength: 100, unique: true },
-  image: { type: String, required: true, minLength:  5, maxLength: 100 }
+  image: { type: [String], required: true, minLength:  5, maxLength: 100 }
 });
 
 PonySchema.virtual("url").get(function () {

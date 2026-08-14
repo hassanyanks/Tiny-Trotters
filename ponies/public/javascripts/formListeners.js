@@ -19,37 +19,11 @@ let otherAccessoryInput = {};
 let otherAccessoryResetBox = {};
 let selectField = {};
 let selectFieldOtherOption = {};
+let ponyRoleInput = {};
 
 function getPony(event) {
     return event.target.id.split('-').pop();
 }
-
-/*
-submitButton.addEventListener('click', function(event) {
-    event.preventDefault();
-});
-*/
-
-/*
-datetimeFields.forEach((field) => {
-    if(field) {
-        field.addEventListener('blur', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            const generatedDatetimeValue = event.target.value;
-                console.log(`**************************generatedDatetimeValue:  ${generatedDatetimeValue}`);
-            const [day,time] = generatedDatetimeValue.split('T')
-                console.log(`**************************day, time:  ${day}//${time}`);
-
-            const [hour,minutes] = time.split(':');
-                console.log(`**************************hour, minutes:  ${hour}//${minutes}`);
-            let hour12HrFormat = parseInt(hour) > 12 ? `${parseInt(hour) - 12} PM` : hour;
-                console.log(`**************************hour12HrFormat:  ${hour12HrFormat}`);
-
-        });
-    }
-});    
-*/
 
 if( eventEndField ) {
     eventEndField.addEventListener('blur', function(event) {
@@ -83,6 +57,7 @@ ponyCheckboxes.forEach((checkbox) => {
     otherAccessoryResetBox[pony] = document.getElementById(`other-accessory-reset-box-${pony}`);
     selectField[pony] = document.querySelector(`#accessories-select-${pony}`);
     selectFieldOtherOption[pony] = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
+    ponyRoleInput[pony] = document.getElementById(`pony-role-input-${pony}`);
 });
 
 ponyCheckboxes.forEach(field => {
@@ -97,6 +72,7 @@ ponyCheckboxes.forEach(field => {
         } else {
             ponyDiv.style.display = 'none';
             selectField[pony].selectedIndex = -1;
+            ponyRoleInput[pony].value = '';
         }
     });
 });
@@ -189,67 +165,3 @@ if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
         }
     });
 }
-
-/*
-
-var clearAccessoriesCheckbox = document.getElementById('clear-accessories');
-var resetOtherAccessoryLabel = document.getElementById('other-accessory-reset-label');
-var resetOtherAccessoryBox = document.getElementById('other-accessory-reset-box');
-var otherAccessoryTextLabel = document.getElementById('other-accessory-label');
-var otherAccessoryTextField = document.getElementById('other-accessory');
-var poniesSelectField = document.getElementById('ponies-select');
-
-function hideOtherAccessoryElements() {
-    otherAccessoryTextLabel.style.display = 'none';
-    otherAccessoryTextField.style.display = 'none';
-    otherAccessoryTextField.value = '';
-}
-
-if(clearAccessoriesCheckbox && accessoriesSelectField && otherAccessoryTextLabel && otherAccessoryTextField) {
-    clearAccessoriesCheckbox.addEventListener('change', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (event.target.checked) {
-            console.log('Checkbox is checked! ✅');
-            accessoriesSelectField.selectedIndex = -1;
-            hideOtherAccessoryElements();
-            lastSelectedAccessory = [];
-            setTimeout(() => { event.target.checked = false; }, 2000);
-        }
-    });
-}
-
-if(accessoriesSelectField && otherAccessoryTextLabel && otherAccessoryTextField) {
-    accessoriesSelectField.addEventListener('change', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const currentSelected = Array.from(event.target.selectedOptions).map(opt => opt.text);
-        const newlySelected = currentSelected.find(text => !lastSelectedAccessory.includes(text));
-        console.log(`current selected:  ${currentSelected}, newly selected: ${newlySelected}`)
-        if(newlySelected === 'Other') {
-            otherAccessoryTextLabel.style.display = 'block';
-            otherAccessoryTextField.style.display = 'block';
-            otherAccessoryTextField.focus();
-        } else if(!currentSelected.includes('Other')) {
-            hideOtherAccessoryElements();
-        }
-        lastSelectedAccessory = currentSelected;
-    });
-}
-*/
-
-
-/*
-if(accessoriesSelectField && clearAccessoriesCheckbox) {
-    accessoriesSelectField.addEventListener('change', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        clearAccessoriesCheckbox.checked = false;
-    });
-}
-
-
-
-*/
-
-

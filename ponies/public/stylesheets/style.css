@@ -138,7 +138,15 @@ body {
   max-width: 100%;           /* Prevents child elements from clipping on tiny screens */
 }
 
-.resources-container img {
+.img-our-ponies {
+  margin: 10px 0px;
+  width: 200px;
+  height: auto;           /* Allows the height to be calculated by the aspect ratio */
+  aspect-ratio: 1 / 1;   /* Sets your desired ratio (e.g., 1:1, 4:3, 16:9) */
+  object-fit: cover;      /* Crops the image to fit the container without distortion */
+}
+
+#gallery img {
   width: 200px;
   height: 300px;
 }
@@ -365,15 +373,12 @@ input[type="checkbox"] {
   display: none;
 }
 
-.responsive-text-input {
+.responsive-text-input, .responsive-text-label {
+  margin: 5px 0px 5px 0px;
   /* Scale width */
   width: clamp(250px, 50vw, 800px);
   /* Scale padding */
   padding: clamp(0.25rem, 1vw, 0.5rem);
-}
-
-.read-only {
-
 }
 
 .styled-border {

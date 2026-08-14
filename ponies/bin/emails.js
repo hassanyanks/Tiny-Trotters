@@ -2,7 +2,7 @@
 //import crypto, { hash } from 'crypto';
 //import User from '../models/user.js';
 //import {SALT_ROUNDS} from '../config/config.js';
-import axios from 'axios';
+import 'dotenv/config';
 import dotenv from 'dotenv';
 import { MailtrapClient } from 'mailtrap';
 import path from 'path';
@@ -28,16 +28,16 @@ export async function sendScheduledEventEmail( email, eventDetails, accessories,
 
   const TOKEN = process.env.MAILTRAP_TOKEN;
   const TEST_INBOX_ID = process.env.MAILTRAP_INBOX_ID;
-  const SENDER_EMAIL = "support@gmail.com";
-  const RECIPIENT_EMAIL = email;
+  const SENDER_EMAIL = email;
+  const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
   const templatePath = path.join('.', 'views', 'scheduled_event.pug');
   const compiledFunction = pug.compileFile(templatePath);
   const htmlContent = compiledFunction(locals);
 
   const mailOptions = {
-    from: 'tinytrottersponyparties@gmail.com',
-    to: RECIPIENT_EMAIL,
-    subject: 'Tiny Trotters Event Scheduled--yay!!',
+    from: SENDER_EMAIL,
+    to: RECIPIENTS,
+    subject: 'Tiny Trotters Event Scheduled',
     html: htmlContent
   };
 

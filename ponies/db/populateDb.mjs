@@ -52,6 +52,8 @@ async function createEventTypes(collection) {
     eventTypeCreate(collection, 9, "Halloween", null),
     eventTypeCreate(collection, 10, "Graduation", null),
     eventTypeCreate(collection, 11, "Other", null),
+    eventTypeCreate(collection, 12, "Photo Shoot", null),
+    eventTypeCreate(collection, 13, "Pony Ride (65 lbs limit)", null),
   ]);
 }
 
@@ -72,8 +74,8 @@ async function eventTypeCreate( collection, id, name, image ) {
 async function createPonies(collection) {
   console.log(`Adding ponies`);
   await Promise.all([
-    ponyCreate(collection, 0, "Rooster", 'Rooster.png'),
-    ponyCreate(collection, 1, "Prince", 'Prince.png'),
+    ponyCreate(collection, 0, "Rooster", ['Rooster.png','rooster_in_stable.jpg']),
+    ponyCreate(collection, 1, "Prince", ['Prince.png','prince_in_stable.jpg']),
   ]);
 }
 
@@ -264,8 +266,8 @@ async function createPictures(collection) {
     pictureCreate(collection, 22, "480436370_640282948367392_983983383008453716_n.jpg"),
     pictureCreate(collection, 23, "480551934_640282895034064_4961069943548715204_n.jpg"),
     pictureCreate(collection, 24, "480558030_640283268367360_395762167447618808_n.jpg"),
-    pictureCreate(collection, 25, "738570770_1029201386142211_158399490484059553_n.jpg"),
-    pictureCreate(collection, 26, "740858840_1029200739475609_3744607818712128523_n.jpg"),
+    pictureCreate(collection, 25, "prince_in_stable.jpg"),
+    pictureCreate(collection, 26, "rooster_in_stable.jpg"),
     pictureCreate(collection, 27, "742020374_1031753579220325_3780952901091891710_n.jpg"),
     pictureCreate(collection, 28, "746909373_1037222842006732_4355158734739058564_n.jpg"),
     pictureCreate(collection, 29, "747653178_1034136365648713_7598095087113839530_n.jpg"),
