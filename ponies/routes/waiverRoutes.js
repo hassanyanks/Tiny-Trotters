@@ -32,7 +32,7 @@ router.post('/sign-waiver', async (req, res) => {
         const imageBuffer = Buffer.from(base64Data, 'base64');
 
         // 2. Read and load your existing waiver template file
-        const templateBuffer = process.env.NODE_ENV === 'dev' ? fs.readFileSync('./test_signable.pdf') : fs.readFileSync('./tiny_trotters_signable.pdf') ;
+        const templateBuffer = fs.readFileSync(process.env.WAIVER_FORM);
         const pdfDoc = await PDFDocument.load(templateBuffer);
 
         // 3. Append a new blank page to the end of the document
