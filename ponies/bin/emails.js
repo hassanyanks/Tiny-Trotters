@@ -4,7 +4,7 @@
 //import {SALT_ROUNDS} from '../config/config.js';
 import 'dotenv/config';
 import dotenv from 'dotenv';
-import { MailtrapClient } from 'mailtrap';
+import { MailtrapClient } from 'mailtrap'; //for dev purposes only
 import path from 'path';
 import fs from 'fs';
 import pug from 'pug';
@@ -37,7 +37,8 @@ export async function sendScheduledEventEmail( email, eventDetails, accessories,
   const mailOptions = {
     from: SENDER_EMAIL,
     to: RECIPIENTS,
-    subject: 'Tiny Trotters Event Scheduled',
+    cc: SENDER_EMAIL,
+    subject: 'Tiny Trotters Pony Parties Schedule Event Completion',
     html: htmlContent
   };
 
@@ -50,60 +51,6 @@ export async function sendScheduledEventEmail( email, eventDetails, accessories,
   });
 
 }
-
-
-/*
-  //property names here must match those used by route controller
-  const htmlContent = compiledFunction( {
-    eventDetails: eventDetails,
-    ponyAccessoriesData: accessories
-  }
-
-  );
-  const client = new MailtrapClient({ token: TOKEN, sandbox: true, testInboxId: TEST_INBOX_ID });
-
-  client.send({
-  from: { name: "Pony Event Customer", email: SENDER_EMAIL },
-  to: [{ email: RECIPIENT_EMAIL }],
-  subject: "Pony Event Scheduled",
-  html: htmlContent,
-  })
-  .then(console.log)
-  .catch(console.error); 
-*/
-  /*
-  const nodemailer = require('nodemailer');
-const mg = require('nodemailer-mailgun-transport');
-const pug = require('pug');
-const path = require('path');
-
-
-
-const transporter = nodemailer.createTransport(mg(auth));
-
-// Compile Pug file with dynamic data variables
-const htmlContent = pug.renderFile(path.join(__dirname, 'email.pug'), {
-  name: 'Alice'
-});
-
-// Setup mail options
-const mailOptions = {
-  from: 'you@yourdomain.com',
-  to: 'recipient@example.com',
-  subject: 'Hello from Pug and Mailgun!',
-  html: htmlContent
-};
-
-// Send the email
-transporter.sendMail(mailOptions, (err, info) => {
-  if (err) {
-    console.log('Error:', err);
-  } else {
-    console.log('Response:', info);
-  }
-});
-*/
-
 
 export function sendEmailWithToken(user) {
 
