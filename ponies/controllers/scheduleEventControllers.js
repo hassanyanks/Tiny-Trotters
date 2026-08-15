@@ -4,7 +4,6 @@ import Pony from '../models/pony.js'
 import { cachedCitiesStr } from '../utils/cityService.js';
 import { sendScheduledEventEmail } from "../bin/emails.js";
 
-//controllers
 export const eventScheduleGet = async(req, res, next) => {
   try {    
     const [eventTypes, accessories, ponies] = await Promise.all([

@@ -1,0 +1,13 @@
+extends layout 
+
+block content
+    div(style="width: 100%").waiver-container
+        h2 Sign agreement after reading waiver form 
+        iframe(src="/templates/test_signable.pdf" width="75%" height="400px")
+        label(for="signer-name") Full Name
+        input(type="text" id="name" placeholder="John Doe" required)
+        label Draw Your Signature Below
+        canvas#sig-canvas
+        div(style="display: flex; flex-direction: column;")
+            button.submit-button#sig-submit-btn(style="max-width: 250px; background-color: #007bff; color: white; border: none;") Submit/Download PDF
+            button(style="align-self: center;").cancel-button#sig-clear-btn Clear Canvas

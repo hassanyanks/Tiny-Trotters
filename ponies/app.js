@@ -13,6 +13,7 @@ import ponyRouter from './routes/ponyRoutes.js';
 import servicesRouter from './routes/servicesRoutes.js';
 import galleryRouter from './routes/galleryRoutes.js';
 import scheduleEventRouter from './routes/scheduleEventRoutes.js';
+import waiverRouter from './routes/waiverRoutes.js'
 import { RedisStore } from 'connect-redis';
 
 const app = express();
@@ -24,6 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'templates')));
 app.use(express.static(path.join(__dirname, 'lib')));
 //export const redisClient = new RedisClient();
 
@@ -73,6 +75,8 @@ app.use('/gallery', galleryRouter);
 app.use('/', scheduleEventRouter);
 app.use('/schedule-event', scheduleEventRouter);
 app.use('/scheduled-event', scheduleEventRouter);
+app.use('/', waiverRouter);
+app.use('/sign-waiver', waiverRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -10,7 +10,9 @@ const ponyCheckboxes = document.querySelectorAll('input[id^="pony-checkbox"]');
 const submitButton = document.getElementById('submit-button');
 const eventStartField = document.getElementById('event-start');
 const eventEndField = document.getElementById('event-end');
-//const datetimeFields = [eventStartField, eventEndField];
+const canvas = document.getElementById('sig-canvas');
+const sigClearButton = document.getElementById('sig-clear-btn');
+const sigSubmitButton = document.getElementById('sig-submit-btn');
 
 let allCurrentlySelected = {};
 let otherAccessoryDiv = {};
@@ -23,6 +25,58 @@ let ponyRoleInput = {};
 
 function getPony(event) {
     return event.target.id.split('-').pop();
+}
+
+if(canvas && sigClearButton && sigSubmitButton) {
+
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+
+    // Configure drawing style
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+
+    // Canvas drawing event listeners
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mousemove', (e) => { if (isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+    window.addEventListener('mouseup', () => isDrawing = false);
+
+    // Clear signature canvas
+    sigClearButton.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Package data and submit to server
+    sigSubmitButton.addEventListener('click', async () => {
+        const nameInput = document.getElementById('name').value;
+        if (!nameInput) return alert('Please enter your name.');
+
+        // Convert canvas drawing to base64 encoded PDF
+        const signatureImage = canvas.toDataURL('images/png');
+        const response = await fetch('/sign-waiver', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: nameInput, signatureImage })
+        });
+
+        if (response.ok) {
+            // Trigger automatic file download of the server-generated PDF blob
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'signed_document.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } else {
+            alert('Error processing signature.');
+        }
+    });
+
+} else {
+    console.log('no canvas object');
 }
 
 if( eventEndField ) {
@@ -59,6 +113,7 @@ ponyCheckboxes.forEach((checkbox) => {
     selectFieldOtherOption[pony] = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
     ponyRoleInput[pony] = document.getElementById(`pony-role-input-${pony}`);
 });
+
 
 ponyCheckboxes.forEach(field => {
     field.addEventListener('change', function(event) {

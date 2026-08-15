@@ -1,5 +1,5 @@
 import express from 'express';
-import { eventScheduleGet, eventSchedulePost, scheduleEventCanceledPost } from '../controllers/scheduleEventControllers.js';
+import { eventScheduleGet, eventSchedulePost, scheduleEventCanceledPost} from '../controllers/scheduleEventControllers.js';
 
 //routes
 var router = express.Router();

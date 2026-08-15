@@ -7,7 +7,9 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "@dropbox/sign": "^1.11.0",
     "axios": "^1.19.0",
+    "body-parser": "^2.3.0",
     "connect-redis": "^10.0.0",
     "consolidate": "^1.0.0",
     "cookie-parser": "~1.4.4",
@@ -26,6 +28,8 @@
     "nodemailer": "^9.0.5",
     "nodemailer-mailgun-transport": "^2.1.5",
     "path": "^0.12.7",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.19.1",
     "pug": "^3.0.4",
     "qrcode": "^1.5.4",
     "redis": "^6.2.0",
