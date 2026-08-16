@@ -2,12 +2,19 @@ extends layout
 
 block content
     div(style="width: 100%").waiver-container
-        h2 Sign agreement after reading waiver form 
-        iframe(src="/templates/test_signable.pdf" width="75%" height="400px")
-        label(for="signer-name") Full Name
-        input(type="text" id="name" placeholder="John Doe" required)
+        h2 Sign agreement after reading waiver form
+        iframe(src=`/templates/${process.env.WAIVER_FORM}` id="waiver-form-iframe" width="75%" height="400px")
+        h4(style="font-style: italic;").standard-underline Make corrections below as needed
+        label(for="customerName") Full Name
+        input(type="text" id="customerName" name=hostName value=hostName size=50 required)
+        label(for="customerAddress") Your Address
+        input(type="text" id="customerAddress" name=hostAddress value=hostAddress size=100 required)
+        label(for="customerPhone") Phone Number
+        input(type="text" id="customerPhone" name=hostPhone value=hostPhone size=25 required)
+        label(for="customerPhone") Names and Ages of Children to be Present
+        textarea(type="text" id="customerChildren" name="Host-Children" rows="5" style="width: 25%;" required)
         label Draw Your Signature Below
-        canvas#sig-canvas
+        canvas(style="width: 35%; height: 125px;")#sig-canvas
         div(style="display: flex; flex-direction: column;")
             button.submit-button#sig-submit-btn(style="max-width: 250px; background-color: #007bff; color: white; border: none;") Submit/Download PDF
             button(style="align-self: center;").cancel-button#sig-clear-btn Clear Canvas

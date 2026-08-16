@@ -1,3 +1,4 @@
+
 const otherEventTypeTextField = document.getElementById('other-event-type');
 const eventTypeSelectField = document.getElementById('event-type-select');
 const eventTypePlaceholder = document.getElementById('event-type-placeholder');
@@ -49,15 +50,27 @@ if(canvas && sigClearButton && sigSubmitButton) {
 
     // Package data and submit to server
     sigSubmitButton.addEventListener('click', async () => {
-        const nameInput = document.getElementById('name').value;
-        if (!nameInput) return alert('Please enter your name.');
+        //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
+        const iframe = document.getElementById('waiver-form-iframe');
+        const customerName = document.getElementById('customerName').value;
+        const customerAddress = document.getElementById('customerAddress').value;
+        const customerPhone = document.getElementById('customerPhone').value;
+        const iframeSrcElements = iframe.src.split('/');
+        const waiverForm = iframeSrcElements[iframeSrcElements.length-1];
+        if (!customerName) return alert('Please enter your name.');
+        if (!customerAddress) return alert('Please enter your address.');
+        if (!customerPhone) return alert('Please enter your phone.');
 
         // Convert canvas drawing to base64 encoded PDF
         const signatureImage = canvas.toDataURL('images/png');
         const response = await fetch('/sign-waiver', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: nameInput, signatureImage })
+            body: JSON.stringify({ customerName,
+                                   customerAddress,
+                                   customerPhone,
+                                   waiverForm,
+                                   signatureImage })
         });
 
         if (response.ok) {
@@ -69,7 +82,14 @@ if(canvas && sigClearButton && sigSubmitButton) {
             a.download = 'signed_document.pdf';
             document.body.appendChild(a);
             a.click();
+            window.URL.revokeObjectURL(url);
             a.remove();
+
+            const redirectUrl = response.headers.get('X-Redirect-To');            
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+
         } else {
             alert('Error processing signature.');
         }

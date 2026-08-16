@@ -1,67 +1,82 @@
 import express from 'express';
 import path from 'path';
 import 'dotenv/config';
-import { signWaiverGet } from '../controllers/waiverControllers.js';
 import bodyParser from 'body-parser';
 import {PDFDocument, rgb} from 'pdf-lib';
 import fs from 'fs';
+import { signWaiverGet } from '../controllers/waiverController.js';
 
 const STORAGE_DIR = './stored_waivers';
 if (!fs.existsSync(STORAGE_DIR)) {
     fs.mkdirSync(STORAGE_DIR, { recursive: true });
 }
 
+const __dirname = import.meta.dirname
+const FILE_PATH = path.join(__dirname, '../public/templates');
+
 var router = express.Router();
+router.use(express.static(FILE_PATH));
+console.log(`***************** file path:  ${FILE_PATH}`)
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json({limit: '10mb'}));
 router.use(express.static('public'));
 router.use(bodyParser.json({limit: '10mb'}));
 
-router.get('/sign-waiver', signWaiverGet );
+
+router.get('/', signWaiverGet );
+router.get('/sign-waiver', signWaiverGet);
 
 router.post('/sign-waiver', async (req, res) => {
     try {
-        const { name, signatureImage } = req.body;
 
-        if (!name || !signatureImage) {
+        //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
+        const { customerName, customerAddress, customerPhone, signatureImage } = req.body;
+
+        console.log(`***********************req.body:  ${JSON.stringify(req.body)}`);
+
+        if (!customerName || !customerAddress || !customerPhone || !signatureImage) {
             return res.status(400).json({ error: 'Missing required fields.' });
         }
+        console.log('*********************/sign-waiver POST got here');
 
         // 1. Process the incoming Base64 image
         const base64Data = signatureImage.replace(/^data:image\/png;base64,/, "");
         const imageBuffer = Buffer.from(base64Data, 'base64');
 
         // 2. Read and load your existing waiver template file
-        const templateBuffer = fs.readFileSync(process.env.WAIVER_FORM);
-        const pdfDoc = await PDFDocument.load(templateBuffer);
+        const templateBuffer = fs.readFileSync(`${FILE_PATH}/${process.env.WAIVER_FORM}`);
+        const sourcePdfDoc = await PDFDocument.load(templateBuffer);
+
+        // Create a new PDF and copy only the first page (index 0)
+        const pdfDoc = await PDFDocument.create();
+        const [copiedPage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
 
         // 3. Append a new blank page to the end of the document
         // By default, this matches the size of standard letters/A4 pages
-        const newPage = pdfDoc.addPage();
+        const newPage = pdfDoc.addPage(copiedPage);
 
         // 4. Embed the PNG signature
         const embeddedSignature = await pdfDoc.embedPng(imageBuffer);
 
         // 5. Draw text and signature on the newly appended page
-        newPage.drawText('Acknowledgment and Signature', { x: 50, y: 750, size: 20 });
-        newPage.drawText(`I, ${name}, agree to the terms above.`, { x: 50, y: 700, size: 12 });
-        newPage.drawText(`Date: ${new Date().toLocaleDateString()}`, { x: 50, y: 670, size: 12 });
-        
-        // Draw the signature line and image
-        newPage.drawText('Signature:', { x: 50, y: 600, size: 12 });
+        newPage.drawText("VENUE SIGNATURE:", { x: 50, y: 750, size: 12 });
         newPage.drawImage(embeddedSignature, {
-            x: 50,
-            y: 480,
-            width: 200,
+            x: 250,
+            y: 700,
+            width: 300,
             height: 100,
         });
+        
+        newPage.drawText(`Printed Name:  ${customerName} Date:  ${new Date().toLocaleDateString()}`, { x: 50, y: 725, size: 12 });
+        newPage.drawText(`Address:  ${customerAddress}`, { x: 50, y: 700, size: 12 });
+        newPage.drawText(`Phone Number:  ${customerPhone}`, { x: 50, y: 700, size: 12 });
 
         // 6. Save document and stream bytes to client
         const pdfBytes = await pdfDoc.save();
         const pdfBuffer = Buffer.from(pdfBytes);
 
         // 7. Save the file to the backend server
-        const safeName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase(); // Sanitize input
+        const safeName = customerName.replace(/[^a-z0-9]/gi, '_').toLowerCase(); // Sanitize input
         const filename = `${safeName}_${Date.now()}.pdf`;                 // Unique filename
         const filePath = path.join(STORAGE_DIR, filename);
         
@@ -70,6 +85,7 @@ router.post('/sign-waiver', async (req, res) => {
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=signed_waiver.pdf');
+        res.set('X-Redirect-To', '/index');
         return res.send(Buffer.from(pdfBytes));
 
     } catch (error) {

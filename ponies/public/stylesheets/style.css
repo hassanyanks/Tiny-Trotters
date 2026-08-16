@@ -372,6 +372,10 @@ input[type="checkbox"] {
   padding: 5px;
 }
 
+.downstream-req-body-data {
+  display: none;
+}
+
 .responsive-input:focus {
 border-color: #0066cc;
 outline: none;
@@ -386,7 +390,7 @@ canvas {
   border-radius: 4px; 
   background: #fafafa; 
   cursor: crosshair; 
-  width: 450; 
+  width: 600; 
   height: 150;
 }
 
@@ -399,7 +403,7 @@ button, a.cancel-button {
   /* Fixed: Removed horizontal margin to prevent container overflow */
   margin: 5px 0; 
   font-size: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #03362a;
   border-radius: 8px;
   color: white;             
   cursor: pointer;           /* Changes cursor to a hand on hover */
@@ -407,23 +411,32 @@ button, a.cancel-button {
 }
 
 button a {
-  color: white;             
+  color: #03362a;             
 }
 a.cancel-button, button a {
   text-decoration: none;
 }
 
+.submit-button span {
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
+}
+
 .submit-button {
-  background-image: url(/images/dark-green.png);
+  background-color: pink;
+  color: #03362a;
+  border: 1px solid #03362a;
+  border-radius: 8px;
+  text-decoration: none;
 }
 
 .cancel-button {
   background-color: gray; 
 }
 
-/* New Hover Effect */
-button:hover {
-  background-color: #0056b3; /* Darkens the button when hovered */
+button span:hover {
+  color: #00adb5;
+  transition: color 0.2s ease-in-out; /* Smooth hover transition */
 }
 
 label {

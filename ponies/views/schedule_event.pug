@@ -8,20 +8,20 @@ block content
                 h3.standard-underline Event Details
                 div.field
                     label Event Type
-                    select.responsive-input.custom-select(required name="Event Type" id="event-type-select")
+                    select.responsive-input.custom-select(required name="Event-Type" id="event-type-select")
                         if eventTypes && eventTypes.length > 0
                             option(value="" disabled selected id="event-type-placeholder") Choose an option...
                             each eventType in eventTypes
                                 option(value=eventType.name)= eventType.name
-                    input#other-event-type(type="text" name="Event Other Type")
+                    input#other-event-type(type="text" name="Event-Other-Type")
                     div.clear-div
                         label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
                         input(id="event-type-reset-box" type="checkbox" style="display: none")
                 div.field 
                     label Event Start
-                    input#event-start.responsive-input(name="Event Start" required type="datetime-local" min="09:00" max="19:00" ) 
+                    input#event-start.responsive-input(name="Event-Start" required type="datetime-local") 
                     label Event End 
-                    input#event-end.responsive-input(name="Event End" required type="datetime-local" min="09:00" max="19:00" ) 
+                    input#event-end.responsive-input(name="Event-End" required type="datetime-local") 
             div.fields-container
                 h3.standard-underline Select Ponies and Accessories
                 span(style="display: flex; align-items: flex-start; justify-content: center; font-size: 20px; font-style: italic;" ) Select one or more ponies
@@ -49,20 +49,20 @@ block content
                                 input(id=`clear-accessories-${pony.name}` type="checkbox")
             div.field.full-width 
                 label.responsive-text-label Event Theme 
-                input.responsive-text-input(name="Event Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text", maxlength="200") 
+                input.responsive-text-input(name="Event-Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text", maxlength="200") 
                 label.responsive-text-label Event Color Scheme 
-                input.responsive-text-input(name="Event Color Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text", maxlength="200") 
+                input.responsive-text-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text", maxlength="200") 
                 label.responsive-text-label Event Address 
-                input.responsive-text-input(name="Event Address" placeholder=" 123 street [apt/unit #], city, zipcode" required type="text", maxlength="200") 
+                input.responsive-text-input(name="Event-Address" placeholder=" 123 street [apt/unit #], city, zipcode" required type="text", maxlength="200") 
                 label.responsive-text-label Name
-                input.responsive-text-input(name="Event Name" placeholder="at minimum, first and last" required type="text", maxlength="100") 
+                input.responsive-text-input(name="Event-Name" id="Event-Name" placeholder="at minimum, first and last" required type="text", maxlength="100") 
                 label.responsive-text-label Email
-                input.responsive-text-input(name="Event Email" required type="text", maxlength="200") 
+                input.responsive-text-input(name="Event-Email" required type="text", maxlength="200") 
                 label.responsive-text-label Phone
-                input.responsive-text-input(name="Event Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
-                input(name="Event Active Military/Veteran" type="checkbox")
+                input.responsive-text-input(name="Event-Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
+                input(name="Event-Active-Military/Veteran" type="checkbox")
                 label(style="margin-left: 5px;") Active Military/Veteran
         div.buttons-container
-            button.submit-button(type="submit") Submit
-            a.cancel-button.button-style(href='/index') Cancel
-            //button.cancel-button(href='/index' formnovalidate) Cancel
+            button.submit-button(type="submit")
+                span Submit
+            a.cancel-button(href='/index') Cancel

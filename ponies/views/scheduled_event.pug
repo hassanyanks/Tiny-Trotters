@@ -4,15 +4,16 @@ block content
     div.standard-underline(style="align-self: center; margin-bottom: 20px;")
         h2(style="margin-bottom: 10px;") Event Scheduled Pending Confirmation Callback
     div(style="margin-bottom: 20px;").service-portal
-        button.submit-button(type="submit" style="align-self: center;") 
-            a(href='/sign-waiver') Sign Waiver
+        form(action="/sign-waiver", method='GET', target="_blank")
+            button.submit-button(type="submit" style="align-self: center;") 
+                a(href=`/sign-waiver?hostName=${encodeURIComponent(hostName)}&hostAddress=${encodeURIComponent(hostAddress)}&hostPhone=${encodeURIComponent(hostPhone)}`) Sign Waiver
     div.grid-container
         div.fields-container
             h3.standard-underline Event Details
             each [fieldName,fieldValue] of Object.entries(eventDetails)
                 if fieldName && fieldValue
                     div.field.styled-border
-                        span(style="font-weight: bold; margin: 10px;") #{fieldName}:  
+                        span(style="font-weight: bold; margin: 10px;") #{fieldName.replace('Event-','').replaceAll('-',' ')}:
                         span(style="margin: 10px 10px 10px 3px;") #{fieldValue}
         div.fields-container
             h3.standard-underline Pony Details
