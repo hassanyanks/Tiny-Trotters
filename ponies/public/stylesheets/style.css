@@ -385,13 +385,18 @@ outline: none;
   text-decoration: underline;
 }
 
+/* used with canvas */
+.actions {
+  margin-top: 10px;
+}
+
 canvas { 
   border: 2px dashed #ccc; 
   border-radius: 4px; 
   background: #fafafa; 
   cursor: crosshair; 
-  width: 600; 
-  height: 150;
+  max-width: 100%; 
+  touch-action: none;
 }
 
 .sig-controls { margin-top: 10px; margin-bottom: 20px; }

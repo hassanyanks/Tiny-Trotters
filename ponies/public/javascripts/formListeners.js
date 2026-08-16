@@ -23,25 +23,76 @@ let otherAccessoryResetBox = {};
 let selectField = {};
 let selectFieldOtherOption = {};
 let ponyRoleInput = {};
+let isDrawing = false;
+let ctx = null;
+
+if(canvas) {
+    ctx = canvas.getContext('2d');
+}
 
 function getPony(event) {
     return event.target.id.split('-').pop();
 }
 
-if(canvas && sigClearButton && sigSubmitButton) {
+function startDrawing(e) {
+  isDrawing = true;
+  const { x, y } = getCoordinates(e);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  e.preventDefault(); // Suppresses default scrolling behavior
+}
 
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
+function draw(e) {
+  if (!isDrawing) return;
+  const { x, y } = getCoordinates(e);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  e.preventDefault();
+}
+
+function stopDrawing() {
+  isDrawing = false;
+  ctx.closePath();
+}
+
+// Helper: Extract actual X/Y coordinates relative to the canvas container
+function getCoordinates(e) {
+  const rect = canvas.getBoundingClientRect();
+  
+  // Use changedTouches for touch devices, otherwise fallback to mouse client coordinates
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
+if(canvas && sigClearButton && sigSubmitButton) {
 
     // Configure drawing style
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
-    // Canvas drawing event listeners
-    canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
-    canvas.addEventListener('mousemove', (e) => { if (isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
-    window.addEventListener('mouseup', () => isDrawing = false);
+    // Desktop Mouse Event Listeners
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    // Mobile/Tablet Touch Event Listeners 
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+
+
+    //canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    //canvas.addEventListener('mousemove', (e) => { if (isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); e.preventDefault();} });
+    //window.addEventListener('mouseup', () => stopDrawing());
+    //window.addEventListener('mouseleave', () => stopDrawing());
 
     // Clear signature canvas
     sigClearButton.addEventListener('click', () => {
@@ -55,11 +106,13 @@ if(canvas && sigClearButton && sigSubmitButton) {
         const customerName = document.getElementById('customerName').value;
         const customerAddress = document.getElementById('customerAddress').value;
         const customerPhone = document.getElementById('customerPhone').value;
+        const customerChildData = document.getElementById('customerChildData').value;
         const iframeSrcElements = iframe.src.split('/');
         const waiverForm = iframeSrcElements[iframeSrcElements.length-1];
         if (!customerName) return alert('Please enter your name.');
         if (!customerAddress) return alert('Please enter your address.');
         if (!customerPhone) return alert('Please enter your phone.');
+        if (!customerChildData) return alert('Please enter your child data.');
 
         // Convert canvas drawing to base64 encoded PDF
         const signatureImage = canvas.toDataURL('images/png');
@@ -70,10 +123,13 @@ if(canvas && sigClearButton && sigSubmitButton) {
                                    customerAddress,
                                    customerPhone,
                                    waiverForm,
+                                   customerChildData,
                                    signatureImage })
         });
 
-        if (response.ok) {
+        if (!response.ok) {
+            throw new Error('Download failed');
+        } else if (response.ok) {
             // Trigger automatic file download of the server-generated PDF blob
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
