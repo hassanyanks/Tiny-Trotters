@@ -145,7 +145,6 @@ if(canvas && sigClearButton && sigSubmitButton) {
             if (redirectUrl) {
                 window.location.href = redirectUrl;
             }
-
         } else {
             alert('Error processing signature.');
         }
