@@ -6,7 +6,7 @@ block content
         h3(style="margin-bottom: 10px; text-align: center;") An email is on the way-it may be treated as SPAM
         h4(style="margin-bottom: 10px; text-align: center;") While you await it, please sign our safety waiver
     div(style="margin-bottom: 20px;").service-portal
-        form(action="/sign-waiver", method='GET', target="_blank")
+        form(action="/sign-waiver", method='GET')
             button.submit-button(type="submit" style="align-self: center;") 
                 a(href=`/sign-waiver?hostName=${encodeURIComponent(hostName)}&hostAddress=${encodeURIComponent(hostAddress)}&hostPhone=${encodeURIComponent(hostPhone)}`) Sign Waiver
     div.grid-container
