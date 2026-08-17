@@ -88,7 +88,7 @@ router.post('/sign-waiver', async (req, res) => {
         newPage.drawText(`Address:  ${customerAddress}`, { x: 50, y: 450, size: 12 });
         newPage.drawText(`Phone Number:  ${customerPhone}`, { x: 50, y: 435, size: 12 });
         newPage.drawText('Names and ages of children in vicinity of ponies:', { x: 50, y: 420, size: 12 });
-        newPage.drawText(customerChildData, { x: 60, y: 405, size: 12 });
+        newPage.drawText(customerChildData, { x: 60, y: 395, size: 12 });
 
         // 6. Save document and stream bytes to client
         const pdfBytes = await pdfDoc.save();
