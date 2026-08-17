@@ -6,10 +6,6 @@
   "scripts": {
     "start": "node app.js"
   },
-  "overrides": {
-    "extract-zip": "^2.0.1",
-    "uuid": "^11.1.1"
-  },
   "dependencies": {
     "@dropbox/sign": "^1.11.0",
     "axios": "^1.19.0",
@@ -38,6 +34,10 @@
     "qrcode": "^1.5.4",
     "redis": "^6.2.0",
     "uuid": "^14.0.1"
+  },
+  "overrides": {
+    "extract-zip": "^2.0.1",
+    "uuid": "^$uuid"
   },
   "allowScripts": {
     "bcrypt": true,
