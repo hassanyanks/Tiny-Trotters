@@ -37,7 +37,7 @@
   },
   "overrides": {
     "extract-zip": "^2.0.1",
-    "uuid": "^$uuid"
+    "uuid": "$uuid"
   },
   "allowScripts": {
     "bcrypt": true,
