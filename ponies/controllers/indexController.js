@@ -23,7 +23,6 @@ async function pngToSvg(pngPath, svgOutputPath) {
     numberofcolors: 16 // Higher numbers capture more detail but make huge files
   });
 
-  // 4. Save file
   fs.writeFileSync(svgOutputPath, svgString);
 }
 

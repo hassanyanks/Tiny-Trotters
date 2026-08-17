@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "https": "^1.0.0",
+    "imagetracerjs": "^1.2.6",
     "mailtrap": "^4.8.0",
     "mongodb": "^7.5.0",
     "mongoose": "^9.9.1",
@@ -37,7 +38,8 @@
   },
   "overrides": {
     "extract-zip": "^2.0.1",
-    "uuid": "$uuid"
+    "uuid": "$uuid",
+    "semver": "^7.5.2"
   },
   "allowScripts": {
     "bcrypt": true,
