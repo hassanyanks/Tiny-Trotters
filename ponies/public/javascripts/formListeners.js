@@ -11,7 +11,7 @@ const ponyCheckboxes = document.querySelectorAll('input[id^="pony-checkbox"]');
 const submitButton = document.getElementById('submit-button');
 const eventStartField = document.getElementById('event-start');
 const eventEndField = document.getElementById('event-end');
-const canvas = document.getElementById('sig-canvas');
+const canvas = document.querySelector('.signature-canvas');
 const sigClearButton = document.getElementById('sig-clear-btn');
 const sigSubmitButton = document.getElementById('sig-submit-btn');
 
@@ -69,6 +69,19 @@ function getCoordinates(e) {
   };
 }
 
+function handleResize() {
+  // 1. Back up existing signature paths if needed before the wipe
+  
+  // 2. Sync internal resolution to the new responsive CSS dimensions
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  
+  // 3. Optional: Reconfigure context styles after canvas wipe
+  ctx.strokeStyle = '#000000';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+}
+
 if(canvas && sigClearButton && sigSubmitButton) {
 
     // Configure drawing style
@@ -76,6 +89,11 @@ if(canvas && sigClearButton && sigSubmitButton) {
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
+
+
+    // Listen for window size shifts and mobile orientation flips
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initialize on load
 
     // Desktop Mouse Event Listeners
     canvas.addEventListener('mousedown', startDrawing);
@@ -87,12 +105,6 @@ if(canvas && sigClearButton && sigSubmitButton) {
     canvas.addEventListener('touchstart', startDrawing);
     canvas.addEventListener('touchmove', draw);
     canvas.addEventListener('touchend', stopDrawing);
-
-
-    //canvas.addEventListener('mousedown', (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
-    //canvas.addEventListener('mousemove', (e) => { if (isDrawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); e.preventDefault();} });
-    //window.addEventListener('mouseup', () => stopDrawing());
-    //window.addEventListener('mouseleave', () => stopDrawing());
 
     // Clear signature canvas
     sigClearButton.addEventListener('click', () => {

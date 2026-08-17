@@ -14,7 +14,9 @@ block content
         label(for="customerPhone") Names and Ages of Children to be Present
         textarea(type="text" id="customerChildData" name="Host-ChildData" rows="5" style="width: 25%;" required)
         label Draw Your Signature Below
-        canvas.actions#sig-canvas(style="width: 35%; height: 200px;")
-        div(style="display: flex; flex-direction: column;")
-            button.submit-button#sig-submit-btn(style="max-width: 250px; background-color: #007bff; color: white; border: none;") Submit/Download PDF
-            button(style="align-self: center;").cancel-button#sig-clear-btn Clear Canvas
+        div.signature-wrapper
+            div.signature-container
+                canvas.signature-canvas
+            div(style="display: flex; flex-direction: column;")
+                button.submit-button#sig-submit-btn(style="margin-top: 10px; max-width: 250px;") Submit/Download PDF
+                button(style="align-self: center;").cancel-button#sig-clear-btn Clear Canvas
