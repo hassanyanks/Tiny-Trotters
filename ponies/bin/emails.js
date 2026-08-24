@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport(mg(auth));
 const __dirname = import.meta.dirname
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-export async function sendScheduledEventEmail( email, eventDetails, accessories, locals ) {
+export async function sendScheduledEventEmail( email, locals ) {
 
   const TOKEN = process.env.MAILTRAP_TOKEN;
   const TEST_INBOX_ID = process.env.MAILTRAP_INBOX_ID;

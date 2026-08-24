@@ -4,7 +4,7 @@ import 'dotenv/config';
 import bodyParser from 'body-parser';
 import {PDFDocument, rgb} from 'pdf-lib';
 import fs from 'fs';
-import { signWaiverGet } from '../controllers/waiverController.js';
+import { signWaiverGet, waiverDone } from '../controllers/waiverControllers.js';
 
 const STORAGE_DIR = './stored_waivers';
 if (!fs.existsSync(STORAGE_DIR)) {
@@ -24,9 +24,18 @@ router.use(bodyParser.json({limit: '10mb'}));
 
 
 router.get('/', signWaiverGet );
-router.get('/sign-waiver', signWaiverGet);
+router.get('/waiver', signWaiverGet);
 
-router.post('/sign-waiver', async (req, res) => {
+router.post('/waiver-done', async (req, res) => {
+    try {
+        
+    } catch (error) {
+        console.error('Error processing waiver:', error);
+        return res.status(500).json({ error: 'Failed to process waiver.' });
+    }
+});
+
+router.post('/waiver', async (req, res) => {
     try {
 
         //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
@@ -85,10 +94,10 @@ router.post('/sign-waiver', async (req, res) => {
             height: 100,
         });       
         newPage.drawText(`Printed Name:  ${customerName} Date:  ${new Date().toLocaleDateString()}`, { x: 50, y: 475, size: 12 });
-        newPage.drawText(`Address:  ${customerAddress}`, { x: 50, y: 450, size: 12 });
-        newPage.drawText(`Phone Number:  ${customerPhone}`, { x: 50, y: 435, size: 12 });
-        newPage.drawText('Names and ages of children in vicinity of ponies:', { x: 50, y: 420, size: 12 });
-        newPage.drawText(customerChildData, { x: 60, y: 395, size: 12 });
+        newPage.drawText(`Address:  ${customerAddress}`, { x: 50, y: 460, size: 12 });
+        newPage.drawText(`Phone Number:  ${customerPhone}`, { x: 50, y: 445, size: 12 });
+        newPage.drawText('Names and ages of children in vicinity of ponies:', { x: 50, y: 430, size: 12 });
+        newPage.drawText(customerChildData, { x: 60, y: 405, size: 12 });
 
         // 6. Save document and stream bytes to client
         const pdfBytes = await pdfDoc.save();

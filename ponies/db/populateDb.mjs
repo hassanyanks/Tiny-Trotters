@@ -1,12 +1,14 @@
 #! /usr/bin/env node
 import {MongoClient} from 'mongodb';
 import 'dotenv/config';
+import ScheduledEvent from '../models/scheduled_event.js';
 
 var ponies = [];
 var accessories = [];
 var eventTypes = [];
 var scheduledEvents = [];
-const states = [];
+var states = [];
+var cities = [];
 
 const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
 console.log(`mongodb url:  ${mongoDB}`)
@@ -18,6 +20,7 @@ async function main() {
     console.log("Debug: Should be connected?");
     console.log("hydrating DB...");
     const db = client.db(process.env.DB_NAME);
+/*
     const eventTypesCollection = db.collection('eventtypes');
     await createEventTypes(eventTypesCollection);
     const poniesCollection = db.collection('ponies');
@@ -32,9 +35,103 @@ async function main() {
     await createCityAddresses(cityAddressesCollection);
     const picturesCollection = db.collection('pictures');
     await createPictures(picturesCollection);
+    const usersCollection = db.collection('users');
+    await createUsers(usersCollection);
+*/
+    const scheduledEventsCollection = db.collection('scheduledevents');
+    await insertScheduledEvent(scheduledEventsCollection);
     console.log("Debug: Closing MongoClient");
     client.close();
 }
+
+async function insertScheduledEvent(collection) {
+  try {
+    // Construct data respecting the nested structures and hyphenated keys
+    const eventData = {
+      details: { 'Event-Type': 'Birthday' },
+      ponies: [
+        {
+          name: "Starlight",
+          role: "Grand Marshal",
+          accessories: ["Golden Tiara", "Silk Cape"]
+        },
+        {
+          name: "Buttercup",
+          role: "Banner Bearer",
+          accessories: ["Golden Tiara", "Silk Cape"]
+        }
+      ]
+      // Optional: Replace with a real user ID string if available
+      //customer: new mongoose.Types.ObjectId(), 
+      // Optional: Store binary data like a PDF or text signature
+      //waiverForm: Buffer.from("Sample waiver signature confirmation") 
+    };
+
+    // Insert into database
+    const savedEvent = await collection.insertOne(eventData);
+    
+    console.log("Successfully inserted document:");
+    console.log(JSON.stringify(savedEvent, null, 2));
+    return savedEvent;
+  } catch (error) {
+    console.error("Insertion failed:", error.message);
+  }
+}
+
+/*
+async function createScheduledEvents(collection) {
+  console.log(`Adding scheduled events`);
+  const today11am = new Date();
+  today11am.setHours(11,0,0,0)
+  const today12am = new Date();
+  today12am.setHours(12,0,0,0)
+  const today1pm = new Date();
+  today1pm.setHours(13,0,0,0)
+  const today3pm = new Date();
+  today3pm.setHours(15,0,0,0)
+  const today4pm = new Date();
+  today4pm.setHours(16,0,0,0)
+  const today5pm = new Date();
+  today5pm.setHours(17,0,0,0)
+  await Promise.all([
+    scheduledEventCreate(collection, 1, {}),
+    //scheduledEventCreate(collection, 1, today1pm, today3pm, 'America/Chicago', 'Birthday', 'my street address', 'my zip'),
+    //scheduledEventCreate(collection, 2, today4pm, today5pm, 'America/Chicago', 'Baby Shower', 'my street address', 'my zip'),
+  ]);
+}
+
+async function scheduledEventCreate( collection, _id, details) {
+    const updatedScheduledEvent = await collection.findOneAndUpdate(
+        { _id: _id},
+        { $set: 
+            {
+                details,
+            }
+         },
+        { upsert: true, returnDocument: 'after' }
+    );
+}
+*/
+/*
+async function createUsers(collection) {
+  console.log(`Adding users`);
+ await Promise.all([
+    userCreate(collection, 0, ),
+  ]);
+}
+
+async function userCreate( collection, _id, start, end, timeZone, type, streetAddress, city, state, zipcode ) {
+    const updatedUser = await collection.findOneAndUpdate(
+        {_id: _id},
+        { $set: 
+            {
+                start, end, timeZone, type, streetAddress, city, state, zipcode,
+            }
+         },
+        { upsert: true, returnDocument: 'after' }
+    );
+}
+
 
 async function createEventTypes(collection) {
   console.log(`Adding event types`);
@@ -173,53 +270,54 @@ async function cityCreate( collection, id, name, stateId ) {
          },
         { upsert: true, returnDocument: 'after' }
     );
+    cities[id] = updatedCity;
 }
 
 async function createCityAddresses(collection) {
   console.log(`Adding city addresses`);
   await Promise.all([
-    cityAddressCreate(collection, 0, "93230", 0, states[0]), //only state is CA at this writing
-    cityAddressCreate(collection, 1, "93232", 0, states[0]),
-    cityAddressCreate(collection, 2, "93286", 1, states[0]),
-    cityAddressCreate(collection, 3, "93662", 2, states[0]),
-    cityAddressCreate(collection, 4, "93247", 3, states[0]),
-    cityAddressCreate(collection, 5, "93274", 4, states[0]),
-    cityAddressCreate(collection, 6, "93275", 4, states[0]),
-    cityAddressCreate(collection, 7, "93277", 5, states[0]),
-    cityAddressCreate(collection, 8, "93278", 5, states[0]),
-    cityAddressCreate(collection, 9, "93279", 5, states[0]),
-    cityAddressCreate(collection, 10, "93290", 5, states[0]),
-    cityAddressCreate(collection, 11, "93291", 5, states[0]),
-    cityAddressCreate(collection, 12, "93292", 5, states[0]),
-    cityAddressCreate(collection, 13, "93611", 7, states[0]),
-    cityAddressCreate(collection, 14, "93612", 7, states[0]),
-    cityAddressCreate(collection, 15, "93613", 7, states[0]),
-    cityAddressCreate(collection, 16, "93619", 7, states[0]),
-    cityAddressCreate(collection, 17, "93245", 8, states[0]),
-    cityAddressCreate(collection, 18, "93246", 8, states[0]),
-    cityAddressCreate(collection, 19, "93701", 6, states[0]),
-    cityAddressCreate(collection, 20, "93702", 6, states[0]),
-    cityAddressCreate(collection, 21, "93703", 6, states[0]),
-    cityAddressCreate(collection, 22, "93704", 6, states[0]),
-    cityAddressCreate(collection, 23, "93705", 6, states[0]),
-    cityAddressCreate(collection, 24, "93706", 6, states[0]),
-    cityAddressCreate(collection, 25, "93707", 6, states[0]),
-    cityAddressCreate(collection, 26, "93708", 6, states[0]),
-    cityAddressCreate(collection, 27, "93709", 6, states[0]),
-    cityAddressCreate(collection, 28, "93710", 6, states[0]),
-    cityAddressCreate(collection, 29, "93711", 6, states[0]),
-    cityAddressCreate(collection, 30, "93712", 6, states[0]),
-    cityAddressCreate(collection, 31, "93720", 6, states[0]),
-    cityAddressCreate(collection, 32, "93721", 6, states[0]),
-    cityAddressCreate(collection, 33, "93722", 6, states[0]),
-    cityAddressCreate(collection, 34, "93723", 6, states[0]),
-    cityAddressCreate(collection, 35, "93724", 6, states[0]),
-    cityAddressCreate(collection, 36, "93725", 6, states[0]),
-    cityAddressCreate(collection, 37, "93726", 6, states[0]),
-    cityAddressCreate(collection, 38, "93727", 6, states[0]),
-    cityAddressCreate(collection, 39, "93728", 6, states[0]),
-    cityAddressCreate(collection, 40, "93730", 6, states[0]),
-    cityAddressCreate(collection, 41, "93737", 6, states[0])
+    cityAddressCreate(collection, 0, "93230", cities[0], states[0]), //only state is CA at this writing
+    cityAddressCreate(collection, 1, "93232", cities[0], states[0]),
+    cityAddressCreate(collection, 2, "93286", cities[1], states[0]),
+    cityAddressCreate(collection, 3, "93662", cities[2], states[0]),
+    cityAddressCreate(collection, 4, "93247", cities[3], states[0]),
+    cityAddressCreate(collection, 5, "93274", cities[4], states[0]),
+    cityAddressCreate(collection, 6, "93275", cities[4], states[0]),
+    cityAddressCreate(collection, 7, "93277", cities[5], states[0]),
+    cityAddressCreate(collection, 8, "93278", cities[5], states[0]),
+    cityAddressCreate(collection, 9, "93279", cities[5], states[0]),
+    cityAddressCreate(collection, 10, "93290", cities[5], states[0]),
+    cityAddressCreate(collection, 11, "93291", cities[5], states[0]),
+    cityAddressCreate(collection, 12, "93292", cities[5], states[0]),
+    cityAddressCreate(collection, 13, "93611", cities[7], states[0]),
+    cityAddressCreate(collection, 14, "93612", cities[7], states[0]),
+    cityAddressCreate(collection, 15, "93613", cities[7], states[0]),
+    cityAddressCreate(collection, 16, "93619", cities[7], states[0]),
+    cityAddressCreate(collection, 17, "93245", cities[8], states[0]),
+    cityAddressCreate(collection, 18, "93246", cities[8], states[0]),
+    cityAddressCreate(collection, 19, "93701", cities[6], states[0]),
+    cityAddressCreate(collection, 20, "93702", cities[6], states[0]),
+    cityAddressCreate(collection, 21, "93703", cities[6], states[0]),
+    cityAddressCreate(collection, 22, "93704", cities[6], states[0]),
+    cityAddressCreate(collection, 23, "93705", cities[6], states[0]),
+    cityAddressCreate(collection, 24, "93706", cities[6], states[0]),
+    cityAddressCreate(collection, 25, "93707", cities[6], states[0]),
+    cityAddressCreate(collection, 26, "93708", cities[6], states[0]),
+    cityAddressCreate(collection, 27, "93709", cities[6], states[0]),
+    cityAddressCreate(collection, 28, "93710", cities[6], states[0]),
+    cityAddressCreate(collection, 29, "93711", cities[6], states[0]),
+    cityAddressCreate(collection, 30, "93712", cities[6], states[0]),
+    cityAddressCreate(collection, 31, "93720", cities[6], states[0]),
+    cityAddressCreate(collection, 32, "93721", cities[6], states[0]),
+    cityAddressCreate(collection, 33, "93722", cities[6], states[0]),
+    cityAddressCreate(collection, 34, "93723", cities[6], states[0]),
+    cityAddressCreate(collection, 35, "93724", cities[6], states[0]),
+    cityAddressCreate(collection, 36, "93725", cities[6], states[0]),
+    cityAddressCreate(collection, 37, "93726", cities[6], states[0]),
+    cityAddressCreate(collection, 38, "93727", cities[6], states[0]),
+    cityAddressCreate(collection, 39, "93728", cities[6], states[0]),
+    cityAddressCreate(collection, 40, "93730", cities[6], states[0]),
+    cityAddressCreate(collection, 41, "93737", cities[6], states[0])
   ]);
 }
 
@@ -289,3 +387,4 @@ async function pictureCreate( collection, id, image ) {
         { upsert: true, returnDocument: 'after' }
     );
 }
+*/

@@ -1,5 +1,8 @@
 extends layout 
 
+block scripts 
+    script(src="/javascripts/formListeners.js", type="module")
+
 block content
     h2.standard-underline Schedule Event
     form(action="/scheduled-event", method='POST')
@@ -49,16 +52,24 @@ block content
                                 input(id=`clear-accessories-${pony.name}` type="checkbox")
             div.field.full-width 
                 label.responsive-text-label Event Theme 
-                input.responsive-text-input(name="Event-Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text", maxlength="200") 
+                input.responsive-text-input(name="Event-Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text" maxlength="200") 
                 label.responsive-text-label Event Color Scheme 
-                input.responsive-text-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text", maxlength="200") 
-                label.responsive-text-label Event Address 
-                input.responsive-text-input(name="Event-Address" placeholder=" 123 street [apt/unit #], city, zipcode" required type="text", maxlength="200") 
-                label.responsive-text-label Name
+                input.responsive-text-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text" maxlength="200") 
+                //div.autocomplete-container
+                    label.responsive-text-label(for="address-input") Event Address
+                    input.responsive-text-input#address-input(type="text" required maxlength="200" placeholder="Start typing your address..." autocomplete="off")
+                    ul.suggestions-hidden(id="suggestions-list")                
+                label.responsive-text-label Venue Street Address 
+                input.responsive-text-input(name="Event-Venue-Street-Address" placeholder=" 123 street [apt/unit #]" required type="text" maxlength="200") 
+                label.responsive-text-label Venue Zipcode 
+                input.responsive-text-input#zipcode(name="Event-Venue-Zipcode" placeholder=" 12345" required type="text" minlength="5" maxlength="5") 
+                input.responsive-text-input#event-city(name="Event-City" type="text" value="" maxlength="200" style="display: none;") 
+                input.responsive-text-input#event-state(name="Event-State" type="text" value="" maxlength="200" style="display: none;") 
+                label.responsive-text-label Contact Name
                 input.responsive-text-input(name="Event-Name" id="Event-Name" placeholder="at minimum, first and last" required type="text", maxlength="100") 
-                label.responsive-text-label Email
+                label.responsive-text-label Contact Email
                 input.responsive-text-input(name="Event-Email" required type="text", maxlength="200") 
-                label.responsive-text-label Phone
+                label.responsive-text-label Contact Phone
                 input.responsive-text-input(name="Event-Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
                 input(name="Event-Active-Military/Veteran" type="checkbox")
                 label(style="margin-left: 5px;") Active Military/Veteran

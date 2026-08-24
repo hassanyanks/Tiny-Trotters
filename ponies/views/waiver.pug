@@ -1,0 +1,29 @@
+extends layout 
+
+block content
+    form(action="/waiver-done", method='POST')
+        div(style="width: 100%").waiver-container
+            h2.standard-underline Read waiver and fill out/correct data in displayed fields
+            //FUTURE DEV:  iframe(src=`/templates/${process.env.WAIVER_FORM}` id="waiver-form-iframe" width="75%" height="400px")
+            label(for="customerName") Your Full Name
+            input(type="text" id="customerName" name=hostName value=hostName size=50 required)
+            label(for="customerPhone") Your Phone
+            input(type="text" id="customerPhone" name=hostPhone value=hostPhone size=25 required)
+            label(for="customerAddress") Venue Address
+            input(type="text" id="customerAddress" name=venueAddress value=`${venueAddress}` size=100 required)
+            label(for="customerPhone") Venue Phone (if different from above)
+            input(type="text" id="customerPhone" name=venuePhone value=venuePhone size=25)
+            label(for="customerPhone") Names and Ages of Children to be Present
+            textarea(type="text" id="customerChildData" name="Host-ChildData" rows="5" style="width: 25%;" required)
+            input(type="text" style="display: none;" id="eventMongoDbId" name="eventMongoDbId" value=eventMongoDbId size=25)
+        div.buttons-container
+            button.submit-button(type="submit")
+                span Submit
+            a.cancel-button(href='/index') Cancel
+            //FUTURE DEV:  label Draw Your Signature Below   eventMongoDbId
+            //FUTURE DEV:  div.signature-wrapper
+                div.signature-container
+                    canvas.signature-canvas
+                div(style="display: flex; flex-direction: column;")
+                    button.submit-button#sig-submit-btn(style="margin-top: 10px; max-width: 250px;") Submit/Download PDF
+                    button(style="align-self: center;").cancel-button#sig-clear-btn Clear Canvas
