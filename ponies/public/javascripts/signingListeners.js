@@ -1,7 +1,61 @@
-const canvas = document.querySelector('.signature-canvas');
-const sigClearButton = document.getElementById('sig-clear-btn');
 const sigSubmitButton = document.getElementById('sig-submit-btn');
 
+/*
+if(sigSubmitButton) {
+    sigSubmitButton.addEventListener('click', async () => {
+        //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
+        const customerName = document.getElementById('customerName').value;
+        const customerAddress = document.getElementById('customerAddress').value;
+        const customerPhone = document.getElementById('customerPhone').value;
+        const customerChildData = document.getElementById('customerChildData').value;
+        const eventMongoDbId = document.getElementById('eventMongoDbId').value;
+        if (!customerName) return alert('Please enter your name.');
+        if (!customerAddress) return alert('Please enter the venue address.');
+        if (!customerPhone) return alert('Please enter your phone.');
+        if (!customerChildData) return alert('Please enter your child data.');
+
+        console.log('')
+        // Convert canvas drawing to base64 encoded PDF
+        //const signatureImage = canvas.toDataURL('images/png');
+        const response = await fetch('/waiver', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customerName,
+                                   customerPhone,
+                                   venueAddress,
+                                   venuePhone,
+                                   waiverForm,
+                                   customerChildData })
+        });
+
+        if (!response.ok) {
+            throw new Error('Download failed');
+        } else if (response.ok) {
+            // Trigger automatic file download of the server-generated PDF blob
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'completed_document.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            const redirectUrl = response.headers.get('X-Redirect-To');            
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+        } else {
+            alert('Error processing signature.');
+        }
+    });
+}
+*/
+// REST OF THE CODE BELOW IS RESERVED FOR FUTURE USE:  WHEN WE START USING ELECTRONIC SIGNING FEATURE--AT THIS POINT, ABOVE if BLOCK SHOULD BE COMMENTED OUT
+
+const canvas = document.querySelector('.signature-canvas');
+const sigClearButton = document.getElementById('sig-clear-btn');
 let isDrawing = false;
 let ctx = null;
 
@@ -57,6 +111,7 @@ function handleResize() {
   ctx.lineCap = 'round';
 }
 
+/*  RESERVED FOR FUTURE USE:  WHEN WE START USING ELECTRONIC SIGNING FEATURE
 if(canvas && sigClearButton && sigSubmitButton) {
 
     // Configure drawing style
@@ -140,3 +195,5 @@ if(canvas && sigClearButton && sigSubmitButton) {
 } else {
     console.log('no canvas object');
 }
+
+*/

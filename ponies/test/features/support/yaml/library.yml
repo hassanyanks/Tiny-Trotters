@@ -1,0 +1,6 @@
+elements:
+	library_assets:
+		- author
+		- book
+		- genre
+		- book instance

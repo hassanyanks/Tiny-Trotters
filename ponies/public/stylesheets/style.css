@@ -238,7 +238,126 @@ a {
     margin: 10px;
 }
 
-/* Parent Form Container */
+.other-details-grid-container {
+  display: flex;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  justify-content: space-evenly; 
+  width: 100%;  
+}
+
+.schedule-form {
+  align-items: center;
+  width: 75%;
+}
+
+@media (max-width: 768px) {
+  .schedule-form, .root-container {
+    width: 75%;
+  }
+}
+
+.root-container {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.row-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fields-parent-container {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background-color: #ffffff;
+  margin: 20px;
+}
+
+.fields-container-item {
+  flex: 1 1 50px;
+}
+
+/* child of .grid-container*/
+.fields-container {
+  display: flex;
+  flex-wrap: wrap; /* Stack label above input */
+  align-items: center;
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.checkbox-group {
+  margin: 20px 5px 20px 5px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 5px 20px 10px 20px;
+}
+
+
+.clear-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+}
+
+.clear-div label {
+  margin-bottom: 5px;
+}
+
+.clear-div label, .clear-div input {
+  margin: 15px;
+}
+/*
+
+
+@media (min-width: 768px) {
+  .input-group {
+    flex-direction: row;
+    align-items: center;
+    margin: 10px 40px;
+  }
+}
+
+@media (min-width: 768px) {
+  .input-group input, .input-group select {
+  margin: 0 10px;
+  font-size: 14px;
+  padding: 2px 0;
+  min-width: 50px;
+  }
+}
+*/
+
+.input-group input, .input-group select {
+  margin: 0px 20px 0px 20px;
+  align-self: center;
+  padding: 4px 0px 4px 0px;
+  width: 100%;
+  height: auto;
+  font-size: 16px;
+  
+}
+
+.input-group label {
+  font-weight: bold;
+  margin: 0px;
+}
+
 .grid-container {
   display: grid; /* Changed from inline-grid to occupy full available width */
   /* Dynamically fits columns based on content size, wraps automatically on mobile */
@@ -248,12 +367,18 @@ a {
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem);  
 }
 
+/*
 #schedule-event {
   max-width: 800px; 
+}
+*/
+
+.waiver-container hr {
+  margin-top: 25px;
+  margin-bottom: 10px;
 }
 
 .waiver-container {
@@ -270,17 +395,6 @@ a {
   width:50%; 
 }
 
-/* child of .grid-container*/
-.fields-container {
-  display: flex;
-  flex-direction: column; /* Stack label above input */
-  gap: 8px;
-  padding: 15px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 6px;
-  background-color: #ffffff;
-}
-
 .fields-container h3 {
   align-self: center;
 }
@@ -289,7 +403,7 @@ a {
 .field input, 
 .field select, 
 .field textarea {
-  width: 100%;
+  width: auto;
   padding: 8px;
   box-sizing: border-box; /* Prevents padding from breaking width */
 }
@@ -309,13 +423,6 @@ input[type="checkbox"] {
 
 .form-submit-div {
   margin-top: 10px;
-}
-
-.clear-div {
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  text-align: center;
 }
 
 .no-full-width {
@@ -354,14 +461,6 @@ input[type="checkbox"] {
 
 #other-event-type {
   display: none;
-}
-
-.responsive-text-input, .responsive-text-label {
-  margin: 5px 0px 5px 0px;
-  /* Scale width */
-  width: clamp(250px, 50vw, 800px);
-  /* Scale padding */
-  padding: clamp(0.25rem, 1vw, 0.5rem);
 }
 
 .styled-border {

@@ -1,28 +1,91 @@
 // services/eventService.js
-import { dbInstance } from "../bin/mongodb.js";
 import ScheduledEvent from "../models/scheduled_event.js";
 import CityAddress from "../models/city_address.js";
-import City from "../models/city.js";
+import { json } from "body-parser";
+
+export async function fullAddress( streetAddress, zipcode ) {
+
+  try {
+
+    let address = '';
+    let zipcodeLookupResult = await getCityAndState(zipcode);
+
+    if( zipcodeLookupResult ) {
+      address = `${streetAddress} ${zipcodeLookupResult.cityId.name}, ${zipcodeLookupResult.stateId.name} ${zipcode}`;
+    } else {
+      address = `${streetAddress} <enter city here>, <enter state here>, ${zipcode}`;
+    }
+
+    return address;
+
+  } catch( error ) {
+    console.error("Error getting full addres:", error.message);
+  }
+
+}
+
+export async function getScheduledEventData( eventId, data ) {
+
+  try {
+
+    const waiverForm = await ScheduledEvent.findOne( { _id: eventId }, { "`${data}`": 1, "_id": 0 } );
+    return waiverForm;
+
+  } catch( error ) {
+    console.error("Error getting document:", error.message);
+  }
+
+}
 
 export async function getCityAndState(zipcode) {
+
+  try {
+
     const result = await CityAddress.findOne( { zipcode } );
     if( !result ) { return ''; } 
     return result;
+
+  } catch( error ) {
+    console.error("Error getting city address:", error.message);
+  }
+
 }
 
-export async function createScheduledEvent(eventDetails, poniesData) {
+export async function updateScheduledEvent( eventId, setBody ) {
+
+  try {
+    const result = await ScheduledEvent.updateOne(
+      { _id: eventId },
+      {
+        $set: setBody
+      }
+    );
+    return result;
+
+  } catch( error ) {
+    console.error("Error adding file:", error.message);
+  }
+
+}
+
+export async function createScheduledEvent(eventDetails, yourDetails, venueDetails, poniesData) {
+
   try {
 
     const newEvent = await ScheduledEvent.create({
-        details: eventDetails,
+        eventDetails,
+        yourDetails,
+        venueDetails,
         ponies: poniesData
     });
 
     console.log("Event created successfully:", newEvent);
     return newEvent;
+
   } catch (error) {
     console.error("Error creating event:", error.message);
   }
+
 }
 
 /* KEEIING FOR POSSIBLE FUTURE USE
@@ -41,6 +104,18 @@ function formatTime(eventDetailsData) {
 
 */
 
+export async function getDetails(postRequestBody, detailsIdentifier) {
+
+    const details = Object.fromEntries( Object.entries(postRequestBody).filter(([key]) => key.includes(detailsIdentifier))); 
+
+    if( detailsIdentifier === 'Your' ) {
+      details['Your-Active-Military/Veteran'] ? details['Your-Active-Military/Veteran'] = 'Yes' : details['Your-Active-Military/Veteran'] = 'No'
+    }
+
+    return details;
+
+}
+
 export async function getEventDetails(postRequestBody) {
 
     const eventDetails = Object.fromEntries( Object.entries(postRequestBody).filter(([key]) => key.includes('Event'))); //pulling in all fields data with name attribute containing 'Event'
@@ -51,8 +126,6 @@ export async function getEventDetails(postRequestBody) {
 
     delete eventDetails['Event-Other-Type'];
     //change this checkbox value to better syntax; this particular code needed because unchecked checkbox is not included in req.body data
-    eventDetails['Event-Active-Military/Veteran'] ? eventDetails['Event-Active-Military/Veteran'] = 'Yes' : eventDetails['Event-Active-Military/Veteran'] = 'No'
-    //formatTime(eventDetails);
 
     return eventDetails;
 

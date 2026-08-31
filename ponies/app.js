@@ -82,6 +82,7 @@ app.use('/schedule-event', scheduleEventRouter);
 app.use('/scheduled-event', scheduleEventRouter);
 app.use('/', waiverRouter);
 app.use('/waiver', waiverRouter);
+app.use('/waiver-done', waiverRouter);
 app.use('/', calendarRouter);
 app.use('/api', calendarRouter);
 app.use('/calendar', calendarRouter);

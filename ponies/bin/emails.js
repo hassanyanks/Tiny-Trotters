@@ -24,10 +24,38 @@ const transporter = nodemailer.createTransport(mg(auth));
 const __dirname = import.meta.dirname
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+function send( mailOptions ) {
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error('Error sending email:', err);
+    } else {
+      console.log('Email sent successfully!', info);
+    }
+  });
+}
+
+export async function emailDocument( documentBuffer, senderEmail, recipientsEmail ) {
+
+  //let base64String = documentBuffer.base64data;
+  //if( base64String.includes(',') ) {
+    //base64String = base64String.split(',')[1];
+  //}
+  //const pdfBuffer = Buffer.from( base64String, 'base64' );
+
+  const mailOptions = {
+    from: senderEmail,
+    to: recipientsEmail,
+    subject: 'Tiny Trotters Pony Parties Scheduled Event Signable Waiver Form',
+    text: 'The sending customer has viewed the now signable attached waiver form.',
+    attachment: [{ filename:  'signable_waiver.pdf', data:  documentBuffer }]
+  };
+
+  send( mailOptions );
+
+}
+
 export async function sendScheduledEventEmail( email, locals ) {
 
-  const TOKEN = process.env.MAILTRAP_TOKEN;
-  const TEST_INBOX_ID = process.env.MAILTRAP_INBOX_ID;
   const SENDER_EMAIL = email;
   const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
   const templatePath = path.join('.', 'views', 'scheduled_event.pug');
@@ -39,16 +67,10 @@ export async function sendScheduledEventEmail( email, locals ) {
     to: RECIPIENTS,
     cc: SENDER_EMAIL,
     subject: 'Tiny Trotters Pony Parties Schedule Event Completion',
-    html: htmlContent
+    html: htmlContent,
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error('Error sending email:', err);
-    } else {
-      console.log('Email sent successfully!', info);
-    }
-  });
+  send( mailOptions );
 
 }
 

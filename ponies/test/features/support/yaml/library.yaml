@@ -1,0 +1,136 @@
+---
+links: {home:  http://localhost:3000 }
+actions:
+  create:
+    author:
+      - author:    
+        display name: &authorc0 Shakespeare, William
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: { first_name: William, family_name:  Shakespeare, date_of_birth: '1536-04-23', date_of_death: '1586-04-23' } 
+      - author:    
+        display name: NewAuthorLastName, NewAuthorFirstName
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: { first_name: NewAuthorFirstName, family_name:  NewAuthorLastName, date_of_birth: '1640-04-23', date_of_death: '1706-04-23' } 
+    book:
+      - book:
+        display name: &bookc0 Romeo and Juliet
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: { title:  'Romeo and Juliet', summary:  'A fatal love story', isbn:  '9780713685275' }
+          select:
+            step: &selectOption 'When I select the option indicated for each of the below fields:'
+            data: { author: 'Shakespeare, William' }
+          checkbox:
+            step: &checkOption 'When I check the option indicated for each of the below fields:'
+            data: { genre: Tragedy }
+    genre:
+      - genre:
+        display name: &genrec0 Mystery
+        fields:
+          text: 
+            data: { name: *genrec0  }
+            step:  *fillIn
+    book instance:
+      - book instance:
+        fields:
+          text: 
+            step: *fillIn
+            data: { imprint: &RJimp 'Romeo and Juliet Imprint 1' }
+          select: 
+            step: *selectOption 
+            data: { book: 'Romeo and Juliet', status: Available }
+        display name:
+          - *bookc0
+          - ':'        
+          - *RJimp
+  update:
+    author:
+      - author:    
+        display name: *authorc0
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: &updatedAuthor0Data { first_name: Bill, family_name:  ShakeASpear, date_of_birth: '1536-12-23', date_of_death: '1586-12-23' } 
+        validation:
+          data:
+            - *updatedAuthor0Data
+      - author:    
+        display name: RothFusses, Pat
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: &updatedAuthor1Data { first_name: Patrick, family_name:  Rothfuss, date_of_birth: '1536-12-23', date_of_death: '1586-12-23' } 
+        validation:
+          data:
+            - *updatedAuthor1Data
+    book:
+      - book:
+        display name: *bookc0
+        fields: 
+          text: 
+            step: &fillIn 'When I fill in the below fields with the indicated values:'
+            data: &updatedBook0TextData { title:  &updatedBook0Title 'R and J', summary:  'A VERY fatal love story', isbn:  '97807' }
+          checkbox:
+            step: &checkOption 'When I check the option indicated for each of the below fields:'
+            data: &updatedBook0CheckboxData { genre: Science Fiction }
+        validation:
+          data:
+            - *updatedBook0TextData
+            - *updatedBook0CheckboxData
+    genre:
+      - genre:
+        display name: *genrec0
+        fields:
+          text: 
+            step:  *fillIn
+            data: { name: &updatedGenre0Data Horror  }
+        validation:
+          data:
+            - *updatedGenre0Data
+    book instance:
+      - book instance:
+        fields:
+          text: 
+            step: *fillIn
+            data: &updatedBookInstance0TextData { imprint: &updatedBookinstance0Imprint 'Romeo and Juliet Imprint 111111', due_back: '2026-02-01' }
+          select: 
+            step: *selectOption 
+            data: &updatedBookInstance0SelectData { status: Loaned }
+        display name:
+          - *updatedBook0Title
+          - ':'        
+          - *RJimp
+        validation:
+          data:
+            - { book title:  *updatedBook0Title }
+            - *updatedBookInstance0TextData
+            - *updatedBookInstance0SelectData
+  delete:
+    author:
+      - author:
+        display name: NewAuthorLastName, NewAuthorFirstName
+        has dependencies: true
+      - author:
+        display name: ShakeASpear, Bill
+        has dependencies: true
+    book:
+      - book:
+        display name: *updatedBook0Title
+        has dependencies: true
+    genre:
+      - genre:
+        display name: *updatedGenre0Data
+        has dependencies: false
+    book instance:
+      - book instance:
+        display name:
+          - Jiminy's First Book Ever
+          - ':'        
+          - Jiminy's Publisher A 2026-01-08
+        has dependencies: false
+...

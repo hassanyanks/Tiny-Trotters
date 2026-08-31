@@ -5,52 +5,77 @@ import EventType from './event_type.js';
 
 const Schema = mongoose.Schema;
 
-// 1. Define the deepest nested object schema first
 const EventDetailsSchema = new Schema({
-    'Event-Start': { 
-      type: Date, 
-      required: true 
-    },
-    'Event-End': { 
-      type: Date, 
-      required: true 
-    },
-    'Event-Type': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Theme': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Color-Scheme': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Venue-Street-Address': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Venue-Zipcode': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Name': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Email': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Phone': { 
-      type: String, 
-      required: true 
-    },
-    'Event-Active-Military/Veteran': { 
-      type: String, 
-      required: true 
-    },
+  'Event-Location': { 
+    type: String, 
+    required: true 
+  },
+  'Event-Start': { 
+    type: Date, 
+    required: true 
+  },
+  'Event-End': { 
+    type: Date, 
+    required: true 
+  },
+  'Event-Type': { 
+    type: String, 
+    required: true 
+  },
+  'Event-Theme': { 
+    type: String, 
+    required: true 
+  },
+  'Event-Color-Scheme': { 
+    type: String, 
+    required: true 
+  },
+}, { _id: false }); // '_id: false' prevents MongoDB from generating a separate ID for this sub-object
+
+const YourDetailsSchema = new Schema({
+  'Your-Name': { 
+    type: String, 
+    required: true 
+  },
+  'Your-Street-Address': { 
+    type: String, 
+    required: true 
+  },
+  'Your-Zipcode': { 
+    type: String, 
+    required: true 
+  },
+  'Your-Phone': { 
+    type: String, 
+    required: true 
+  },
+  'Your-Email': { 
+    type: String, 
+    required: true 
+  },
+  'Your-Active-Military/Veteran': { 
+    type: String, 
+    required: true 
+  },
+}, { _id: false }); // '_id: false' prevents MongoDB from generating a separate ID for this sub-object
+
+const VenueDetailsSchema = new Schema({
+  'Venue-Name': { 
+    type: String, 
+    required: false 
+  },
+  'Venue-Street-Address': { 
+    type: String, 
+    required: false 
+  },
+  'Venue-Zipcode': { 
+    type: String, 
+    required: false 
+  },
+  'Venue-Phone': { 
+    type: String, 
+    required: false 
+  },
 }, { _id: false }); // '_id: false' prevents MongoDB from generating a separate ID for this sub-object
 
 
@@ -62,7 +87,9 @@ const PonyEventSchema = new Schema({
 
 // 3. Parent Document Schema (Scheduled Event)
 const ScheduledEventSchema = new Schema({
-  details: EventDetailsSchema,
+  eventDetails: EventDetailsSchema,
+  yourDetails: YourDetailsSchema,
+  venueDetails: VenueDetailsSchema,
   ponies: [PonyEventSchema], // Array of nested pony sub-documents
   customer: { 
     type: Schema.Types.ObjectId, 

@@ -5,7 +5,7 @@ import ScheduledEvent from "../models/scheduled_event.js";
 import { cachedCitiesStr } from '../utils/cityService.js';
 import { sendScheduledEventEmail } from "../bin/emails.js";
 import { createScheduledEvent } from "./eventService.js";
-import { getEventDetails, getPoniesData, formatTime } from "./eventService.js";
+import { getEventDetails, getPoniesData, formatTime, fullAddress, getDetails } from "./eventService.js";
 
 export const eventScheduleGet = async(req, res, next) => {
   try {    
@@ -33,23 +33,41 @@ function addOtherAccessories(accessoriesList, ponyNonStandardAccessories) {
 export const eventSchedulePost = async(req, res, next) => {
   try { 
 
+    const yourDetails = await getDetails(req.body, 'Your' );
+    const venueDetails = await getDetails(req.body, 'Venue' );
     const eventDetails = await getEventDetails(req.body);
     console.log(`*************************************getEventDetails() RETURNED: ${JSON.stringify(eventDetails)}  `)
     const poniesData = await getPoniesData(req.body);
     console.log(`*************************************getPoniesData() RETURNED: ${JSON.stringify(poniesData)}  `)
 
+    let customerAddress = await fullAddress( req.body['Your-Street-Address'], req.body['Your-Zipcode'] );
+    res.locals.customerAddress = customerAddress
+    console.log(`****************customer address:  ${res.locals.customerAddress}`);
+
+    //the below get passed to waiver form to populate signature/info blocks that follow the waiver statement on the waiver form
+    res.locals.customerName   = req.body['Your-Name'];
+    res.locals.customerEmail  = req.body['Your-Email'];
+    res.locals.customerPhone  = req.body['Your-Phone'];
+
+    if( req.body['Event-Location'] === 'Another Venue' ) {
+
+      res.locals.venueName   = req.body['Venue-Contact-Name'];
+      res.locals.venueEmail  = req.body['Venue-Email'];
+      res.locals.venuePhone  = req.body['Venue-Phone'];
+
+      let venueAddress = await fullAddress( req.body['Venue-Street-Address'], req.body['Venue-Zipcode'] );                         ;
+      res.locals.venueAddress = venueAddress;
+      console.log(`****************venue address:  ${res.locals.venueAddress}`);
+
+    }
+
+    res.locals.eventLocation = req.body['Event-Location'];
+    console.log(`****************event location passed OUT:  ${res.locals.eventLocation}`);
     res.locals.citiesServed = cachedCitiesStr;
-    res.locals.venueStreetAddress = req.body['Event-Venue-Street-Address'];
-    res.locals.venueCity = req.body['Event-City'];
-    res.locals.venueZipcode = req.body['Event-Venue-Zipcode'];
-    res.locals.venueState = req.body['Event-State'];
-    res.locals.hostName = req.body['Event-Name'];
-    res.locals.email = req.body['Event-Email'];
-    res.locals.hostPhone = req.body['Event-Phone'];
 
-    const result = await createScheduledEvent(eventDetails, poniesData);
+    const result = await createScheduledEvent(eventDetails, yourDetails, venueDetails, poniesData);
 
-    const details = result.toObject().details;
+    const details = result.toObject().eventDetails;
     const ponies = result.toObject().ponies;
 
     for (const [key, value] of Object.entries(details)) {
@@ -58,13 +76,14 @@ export const eventSchedulePost = async(req, res, next) => {
       }
     }
 
-    res.locals.details = details;
+    res.locals.eventDetails = details;
+    res.locals.yourDetails = yourDetails;
+    res.locals.venueDetails = venueDetails ? venueDetails : null
     res.locals.ponies = ponies;
     res.locals.eventMongoDbId = result.id;
 
     console.log(`scheduled event result.details:  ${JSON.stringify(result)}`);
-    console.log(`**************************customer data being passed to waiver:  ${res.locals.venueCity}//${res.locals.venueState}//${res.locals.venueStreetAddress}`)
-    sendScheduledEventEmail(req.body['Event-Email'], res.locals);
+    sendScheduledEventEmail(req.body['Your-Email'], res.locals);
 
     res.render('scheduled_event', {
       url: '/scheduled-event',
