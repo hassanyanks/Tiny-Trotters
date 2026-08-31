@@ -29,6 +29,7 @@
     "node-cache": "^5.1.2",
     "nodemailer": "^9.0.5",
     "nodemailer-mailgun-transport": "^2.1.5",
+    "passport-local-mongoose": "^9.1.0",
     "path": "^0.12.7",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.19.1",
