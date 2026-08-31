@@ -9,6 +9,7 @@
   "dependencies": {
     "@dropbox/sign": "^1.11.0",
     "axios": "^1.19.0",
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.3.0",
     "connect-redis": "^10.0.0",
     "consolidate": "^1.0.0",
