@@ -1,6 +1,7 @@
 import { cachedCitiesStr } from '../utils/cityService.js'; 
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-export const index = async (req, res, next) => {
+export const index = asyncHandler(async (req, res, next) => {
   try {
     res.locals.citiesServed = cachedCitiesStr; 
     return res.render("index"); 
@@ -8,4 +9,4 @@ export const index = async (req, res, next) => {
   } catch (error) { 
     return next(error); 
   } 
-};
+});

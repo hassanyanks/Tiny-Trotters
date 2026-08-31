@@ -1,6 +1,3 @@
-import { initMongoDB } from './bin/mongodb.js';
-import { RedisClient } from './bin/redis.js';
-import { startServer } from './bin/startServer.js';
 import createError from 'http-errors';
 import { v4 as uuid } from 'uuid';
 import express from 'express';
@@ -8,12 +5,20 @@ import session from 'express-session';
 import path from 'path';
 import 'dotenv/config';
 import logger from 'morgan';
+import cors from 'cors';
+
+import { initMongoDB } from './bin/mongodb.js';
+import { RedisClient } from './bin/redis.js';
+import { startServer } from './bin/startServer.js';
 import indexRouter from './routes/indexRoutes.js';
 import ponyRouter from './routes/ponyRoutes.js';
 import servicesRouter from './routes/servicesRoutes.js';
 import galleryRouter from './routes/galleryRoutes.js';
 import scheduleEventRouter from './routes/scheduleEventRoutes.js';
 import waiverRouter from './routes/waiverRoutes.js'
+import calendarRouter from './routes/calendarRoutes.js';
+import formsRouter from './routes/formDataRoutes.js';
+import autocompleteRouter from './routes/autocompleteRoutes.js';
 import { RedisStore } from 'connect-redis';
 
 const app = express();
@@ -76,7 +81,19 @@ app.use('/', scheduleEventRouter);
 app.use('/schedule-event', scheduleEventRouter);
 app.use('/scheduled-event', scheduleEventRouter);
 app.use('/', waiverRouter);
-app.use('/sign-waiver', waiverRouter);
+app.use('/waiver', waiverRouter);
+app.use('/waiver-done', waiverRouter);
+app.use('/', calendarRouter);
+app.use('/api', calendarRouter);
+app.use('/calendar', calendarRouter);
+app.use('/api/events', calendarRouter);
+app.use('/', formsRouter);
+app.use('/api', formsRouter);
+app.use('/api/city-address', formsRouter);
+app.use('/schedule-event', formsRouter);
+app.use('/', autocompleteRouter);
+app.use('/api', autocompleteRouter);
+app.use('/api/autocomplete', autocompleteRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

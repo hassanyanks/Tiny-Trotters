@@ -1,0 +1,96 @@
+---
+#Scenarios:
+#   1.  Scheduling an event at home
+
+#1 START SCENARIO 1.
+- action: "visit"
+  locator: "/index"
+
+#2
+- action: "click_on"
+  locator: "Schedule an Event"
+
+#3
+- action: "select"
+  locator: "My Home"
+  options: { from: "event-location-select" }
+
+#4
+- action: "has_css?"
+  locator: "h3"
+  options: { text: "Venue Details", visible: false }
+
+#5
+- action: "select"
+  locator: "Birthday"
+  options: { from: "event-type-select" }
+ 
+#6
+- action: "fill_in"
+  locator: "event-start"
+  value: "09/01/2026 09:00 AM"
+
+#7
+- action: "fill_in"
+  locator: "event-end"
+  value: "09/01/2026 11:00 AM"
+
+#8
+- action: "fill_in"
+  locator: "event-theme"
+  value: "Harry Potter"
+
+#9
+- action: "fill_in"
+  locator: "event-color-scheme"
+  value: "red, white, and blue"
+
+#10
+- action: "check"
+  locator: "pony-checkbox-Prince"
+
+#11
+- action: "fill_in"
+  locator: "role-input-Prince"
+  value: "some role"
+
+#12
+- action: "select_multiple"
+  values: ["Other", "Pearls", "Hair Tinsel"]
+  options: { from: "accessories-select-Prince" }
+
+#13
+- action: "fill_in"
+  locator: "Other Accessories"
+  value: "some other accessories"
+
+#14
+- action: "fill_in"
+  locator: "Event-Home-Name"
+  value: "Terrence Loring Voelker"
+
+#15
+- action: "fill_in"
+  locator: "Event-Home-Email"
+  value: "greenhamyanks@gmail.com"
+
+#16
+- action: "fill_in"
+  locator: "Event-Home-Phone"
+  value: "404-376-6405"
+
+#17
+- action: "fill_in"
+  locator: "Event-Home-Street-Address"
+  value: "916 Concord Circle"
+
+#18
+- action: "fill_in"
+  locator: "Event-Home-Zipcode"
+  value: "60060"
+
+#19
+- action: "click_button"
+  locator: "schedule-event-submit"
+  
+...	

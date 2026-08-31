@@ -1,0 +1,120 @@
+---
+#Scenarios:
+#   1.  Scheduling an event at a venue outside your home
+
+#1 START SCENARIO 1.
+- action: "visit"
+  locator: "/index"
+
+#2
+- action: "click_on"
+  locator: "Schedule an Event"
+
+#3
+- action: "select"
+  locator: "Another Venue"
+  options: { from: "event-location-select" }
+
+#4
+- action: "select"
+  locator: "Birthday"
+  options: { from: "event-type-select" }
+ 
+#5
+- action: "fill_in_time"
+  locator: "event-start"
+  value: "09/01/2026 9:00 AM"
+
+#6
+- action: "fill_in_time"
+  locator: "event-end"
+  value: "09/01/2026 11:00 AM"
+
+#7
+- action: "fill_in"
+  locator: "event-theme"
+  value: "Harry Potter"
+
+#8
+- action: "fill_in"
+  locator: "event-color-scheme"
+  value: "red, white, and blue"
+
+#9
+- action: "check"
+  locator: "pony-checkbox-Prince"
+
+#10
+- action: "fill_in"
+  locator: "role-input-Prince"
+  value: "some role"
+
+#11
+- action: "select_multiple"
+  values: ["Other", "Pearls", "Hair Tinsel"]
+  options: { from: "accessories-select-Prince" }
+
+#12
+- action: "fill_in"
+  locator: "Other Accessories"
+  value: "some other accessories"
+
+#13
+- action: "fill_in"
+  locator: "Event-Home-Name"
+  value: "Terrence Loring Voelker"
+
+#14
+- action: "fill_in"
+  locator: "Event-Home-Email"
+  value: "greenhamyanks@gmail.com"
+
+#15
+- action: "fill_in"
+  locator: "Event-Home-Phone"
+  value: "404-376-6405"
+
+#16
+- action: "fill_in"
+  locator: "Event-Home-Street-Address"
+  value: "916 Concord Circle"
+
+#17
+- action: "fill_in"
+  locator: "Event-Home-Zipcode"
+  value: "60060"
+
+#18
+- action: "fill_in"
+  locator: "venue-contact-name"
+  value: "Terrence Loring Voelker"
+
+#19
+- action: "fill_in"
+  locator: "venue-email"
+  value: "greenhamyanks@gmail.com"
+
+#20
+- action: "fill_in"
+  locator: "venue-phone"
+  value: "404-376-6405"
+
+#21
+- action: "fill_in"
+  locator: "Event-Venue-Street-Address"
+  value: "916 Concord Circle"
+
+#22
+- action: "fill_in"
+  locator: "Event-Venue-Zipcode"
+  value: "60060"
+
+#23
+- action: "click_button"
+  locator: "schedule-event-submit"
+  
+#24
+- action: "click_button"
+  locator: "waiver-button"
+  
+...	

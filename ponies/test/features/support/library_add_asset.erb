@@ -1,0 +1,76 @@
+Feature:  I want to be able to <%= @action %> <%= @entity_type %>s
+
+########################################################################
+@<%= self.sanitized_entity_type %> @<%= @action %>_<%= self.sanitized_entity_type %>
+Scenario:  <%= @action.capitalize %> <%= @entity_type.capitalize %>
+########################################################################
+
+Given I visit "<%= self.site_home %>"
+<% if @action == 'update' %>
+Given I click the "All <%= @entity_type %>s" link
+And I click the "<%= @entity_display_name %>" link
+<% end %>
+And I click the "<%= @action.capitalize %> <%= @entity_type %>" link
+
+
+<% textFieldsStep = !@text_fields.nil? ? @text_fields['step'] : '' %>
+<%= textFieldsStep %>
+
+<% if !@text_fields.nil? %>
+<%   fieldsStr = '|'; valuesStr = '|' %>
+<%     @text_fields['data'].each do |key,value| %>
+<%       fieldsStr += key + ' | ' %>
+<%       valuesStr += value  + ' | ' %>
+<%   end %>
+<%=  fieldsStr + "\n" %>
+<%=  valuesStr %>
+<% end %>
+
+
+<% selectFieldsStep = !@select_fields.nil? ? @select_fields['step'] : '' %>
+<%= selectFieldsStep %>
+
+<% if !@select_fields.nil? %>
+<%   fieldsStr = '|'; valuesStr = '|' %>
+<%     @select_fields['data'].each do |key,value| %>
+<%       fieldsStr += key + ' | ' %>
+<%       valuesStr += value  + ' | ' %>
+<%   end %>
+<%=  fieldsStr + "\n" %>
+<%=  valuesStr %>
+<% end %>
+
+
+<% checkboxFieldsStep = !@checkbox_fields.nil? ? @checkbox_fields['step'] : '' %>
+<%= checkboxFieldsStep %>
+
+<% if !@checkbox_fields.nil? %>
+<%   fieldsStr = '|'; valuesStr = '|' %>
+<%     @checkbox_fields['data'].each do |key,value| %>
+<%       fieldsStr += key + ' | ' %>
+<%       valuesStr += value  + ' | ' %>
+<%   end %>
+<%=  fieldsStr + "\n" %>
+<%=  valuesStr %>
+<% end %>
+
+
+When I click the "Submit" button 
+And I click the "All <%= @entity_type + 's' %>" link
+<% if @action == 'create' %>
+Then I "should" see a "<%= @entity_display_name %>" link
+<% elsif @action == 'update' %>
+And I click the "<%= @entity_display_name %>" link
+Then the below fields should have the indicated values:
+<%   fieldsStr = '|'; valuesStr = '|' %>
+<%     @updated_data.each do |key,value| %>
+<%       fieldsStr += key + ' | ' %>
+<%       valuesStr += value  + ' | ' %>
+<%   end %>
+<%=  fieldsStr + "\n" %>
+<%=  valuesStr %>
+<% %>
+<% %>
+<% %>
+<% end %>
+

@@ -1,68 +1,122 @@
 extends layout 
 
+block scripts 
+    script(src="/javascripts/formListeners.js", type="module")
+
 block content
-    h2.standard-underline Schedule Event
-    form(action="/scheduled-event", method='POST')
-        div.grid-container#schedule-event
-            div.fields-container
-                h3.standard-underline Event Details
-                div.field
-                    label Event Type
-                    select.responsive-input.custom-select(required name="Event-Type" id="event-type-select")
-                        if eventTypes && eventTypes.length > 0
-                            option(value="" disabled selected id="event-type-placeholder") Choose an option...
-                            each eventType in eventTypes
-                                option(value=eventType.name)= eventType.name
-                    input#other-event-type(type="text" name="Event-Other-Type")
-                    div.clear-div
-                        label(id="event-type-reset-label" style="font-size: 14px; display: none") Reset
-                        input(id="event-type-reset-box" type="checkbox" style="display: none")
-                div.field 
-                    label Event Start
-                    input#event-start.responsive-input(name="Event-Start" required type="datetime-local") 
-                    label Event End 
-                    input#event-end.responsive-input(name="Event-End" required type="datetime-local") 
-            div.fields-container
-                h3.standard-underline Select Ponies and Accessories
-                span(style="display: flex; align-items: flex-start; justify-content: center; font-size: 20px; font-style: italic;" ) Select one or more ponies
-                if ponies && ponies.length > 0
-                    each pony in ponies
-                        div.field
-                            input(name=`Pony ${pony.name}` id=`pony-checkbox-${pony.name}` type="checkbox")
-                            label(id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;" title="Click the box to invite me") #{pony.name}
-                        div.field(id=`${pony.name}`, style="display: none;")
-                            label Role
-                            input(name=`Pony Role ${pony.name}` id=`pony-role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
-                            label Accessories
-                            select.responsive-input(title="Ctrl + Click adds/removes additional options" id=`accessories-select-${pony.name}` name=`Pony Accessories ${pony.name}` multiple size="5")
-                                if accessories && accessories.length > 0
-                                    each accessory in accessories
-                                        option(value=accessory.name)= accessory.name
-                            div(id=`other-accessory-div-${pony.name}` style="display: none")
-                                label(id=`other-accessory-label-${pony.name}` style="font-size: 14px;") Other Accessory
-                                input(id=`other-accessory-input-${pony.name}` name=`Pony Other Accessories ${pony.name}` type="text")
-                                div.clear-div 
-                                    label(id=`other-accessory-reset-label-${pony.name}` style="font-size: 14px;") Clear Other Accessory
-                                    input(id=`other-accessory-reset-box-${pony.name}` type="checkbox")
-                            div.clear-div
-                                label(style="font-size: 14px;") Clear All
-                                input(id=`clear-accessories-${pony.name}` type="checkbox")
+    h1.standard-underline Schedule Event
+    form.schedule-form(action="/scheduled-event", method='POST')
+        div.root-container
+            div.row-wrapper#schedule-event
+                div.fields-parent-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Event Details
+                    div.input-group
+                        label Event Location
+                        select.responsive-input.custom-select(required name="Event-Location" id="event-location-select")
+                            option(value="" disabled selected id="event-location-placeholder") Your home or another venue
+                            option(value="My Home") My Home
+                            option(value="Another Venue") Another Venue
+                    div.input-group
+                        label Event Type
+                        select.responsive-input.custom-select(required name="Event-Type" id="event-type-select")
+                            if eventTypes && eventTypes.length > 0
+                                option(value="" disabled selected id="event-type-placeholder") Choose an option...
+                                each eventType in eventTypes
+                                    option(value=eventType.name)= eventType.name
+                        input#other-event-type(type="text" name="Event-Other-Type")
+                        div.clear-div#other-event-type-clear(style="display: none")
+                            label(id="event-type-reset-label" style="font-size: 14px;") Reset
+                            input(id="event-type-reset-box" type="checkbox")
+                    div.input-group
+                        label Event Start
+                        input#event-start.responsive-input(name="Event-Start" required type="datetime-local") 
+                    div.input-group
+                        label Event End 
+                        input#event-end.responsive-input(name="Event-End" required type="datetime-local") 
+                    div.input-group
+                        label Event Theme 
+                        input#event-theme.responsive-input(name="Event-Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text" maxlength="200") 
+                    div.input-group
+                        label Event Color Scheme 
+                        input#event-color-scheme.responsive-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text" maxlength="200") 
+                div.fields-parent-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Ponies and Accessories
+                    span(style="display: flex; align-items: flex-start; justify-content: center; font-size: 20px; font-style: italic;" ) Select one or more ponies
+                    if ponies && ponies.length > 0
+                        each pony in ponies
+                            div.checkbox-group
+                                input(name=`Pony ${pony.name}` id=`pony-checkbox-${pony.name}` type="checkbox")
+                                label(for=`pony-checkbox-${pony.name}` id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;" title="Click the box to invite me") #{pony.name}
+                                div.input-group(id=`${pony.name}` style="display: none;")
+                                    div.input-group
+                                        label(for=`role-input-${pony.name}`) Role
+                                        input.full-width(name=`Pony Role ${pony.name}` id=`role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
+                                    div.input-group
+                                        label(for=`accessories-select-${pony.name}`) Accessories
+                                        select.responsive-input(title="Ctrl + Click adds/removes additional options" id=`accessories-select-${pony.name}` name=`Pony Accessories ${pony.name}` multiple size="5")
+                                            if accessories && accessories.length > 0
+                                                each accessory in accessories
+                                                    option(value=accessory.name)= accessory.name
+                                    div.input-group(id=`other-accessory-${pony.name}` style="display: none;")
+                                        label(for=`other-accessory-input-${pony.name}` id=`other-accessory-label-${pony.name}` style="font-size: 14px; margin-right: 10px; display: none;") Other Accessories
+                                        input(id=`other-accessory-input-${pony.name}` name=`Pony Other Accessories ${pony.name}` type="text" )
+                                    div.clear-div(id=`clear-div-other-accessory-${pony.name}` style="display: none;")
+                                        label(for=`other-accessory-reset-box-input-${pony.name}` style="font-size: 14px; margin-bottom: 10px;") Clear Other Accessories
+                                        input(id=`other-accessory-reset-box-input-${pony.name}` type="checkbox")
+                                    div.clear-div(id=`clear-div-accessories-${pony.name}`)
+                                        label(for=`clear-accessories-input-${pony.name}` style="font-size: 14px; margin-bottom: 10px;") Clear All Accessories
+                                        input(id=`clear-accessories-input-${pony.name}` type="checkbox")
+            div.row-wrapper
+                div.fields-parent-container#your-details-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Your Details
+                    div.input-group
+                        label Full Name
+                        input#Event-Home-Name.responsive-input(name="Your-Name" required type="text", maxlength="100") 
+                    div.input-group
+                        label Email
+                        input#Event-Home-Email.responsive-input(name="Your-Email" required type="text", maxlength="200") 
+                    div.input-group
+                        label Phone
+                        input#Event-Home-Phone.responsive-input(name="Your-Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
+                    div.input-group
+                        label Street Address 
+                        input#Event-Home-Street-Address.responsive-input(name="Your-Street-Address" placeholder=" 123 street [apt/unit #]" required type="text" maxlength="200") 
+                    div.input-group
+                        label Zipcode 
+                        input#Event-Home-Zipcode.responsive-input(name="Your-Zipcode" placeholder=" 12345" required type="text" minlength="5" maxlength="5") 
+                    div.checkbox-group
+                        input(name="Your-Active-Military/Veteran" type="checkbox")
+                        label(style="margin-left: 5px;") I am Active Military/Veteran
+                    div.input-group(style="display: none;")
+                div.fields-parent-container#venue-details-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Venue Details
+                    div.input-group
+                        label Contact Name
+                        input#venue-contact-name.responsive-input(name="Venue-Contact-Name" placeholder="if known" required type="text", maxlength="100") 
+                    div.input-group
+                        label Contact Email
+                        input#venue-email.responsive-input(name="Venue-Email" required type="text", maxlength="200") 
+                    div.input-group
+                        label Contact Phone
+                        input#venue-phone.responsive-input(name="Venue-Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
+                    div.input-group
+                        label Street Address 
+                        input#Event-Venue-Street-Address.responsive-input(name="Venue-Street-Address" placeholder=" 123 street [apt/unit #]" type="text" maxlength="200") 
+                    div.input-group
+                        label Zipcode 
+                        input#Event-Venue-Zipcode.responsive-input(name="Venue-Zipcode" placeholder=" 12345" type="text" minlength="5" maxlength="5") 
+                    div.input-group(style="display: none;")
+                    div.input-group
             div.field.full-width 
-                label.responsive-text-label Event Theme 
-                input.responsive-text-input(name="Event-Theme" placeholder="Harry Potter, Star Wars, Sports, D & D, etc." required type="text", maxlength="200") 
-                label.responsive-text-label Event Color Scheme 
-                input.responsive-text-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text", maxlength="200") 
-                label.responsive-text-label Event Address 
-                input.responsive-text-input(name="Event-Address" placeholder=" 123 street [apt/unit #], city, zipcode" required type="text", maxlength="200") 
-                label.responsive-text-label Name
-                input.responsive-text-input(name="Event-Name" id="Event-Name" placeholder="at minimum, first and last" required type="text", maxlength="100") 
-                label.responsive-text-label Email
-                input.responsive-text-input(name="Event-Email" required type="text", maxlength="200") 
-                label.responsive-text-label Phone
-                input.responsive-text-input(name="Event-Phone" placeholder="123-456-7890" required pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" type="text", maxlength="100") 
-                input(name="Event-Active-Military/Veteran" type="checkbox")
-                label(style="margin-left: 5px;") Active Military/Veteran
+            //div.autocomplete-container
+                label(for="address-input") Event Address
+                input.responsive-input#address-input(type="text" required maxlength="200" placeholder="Start typing your address..." autocomplete="off")
+                ul.suggestions-hidden(id="suggestions-list")                
         div.buttons-container
-            button.submit-button(type="submit")
+            button#schedule-event-submit.submit-button(type="submit")
                 span Submit
             a.cancel-button(href='/index') Cancel

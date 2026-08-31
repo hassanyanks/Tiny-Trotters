@@ -1,5 +1,5 @@
 import express from 'express';
-import { index } from '../controllers/indexController.js';
+import { index } from '../controllers/indexControllers.js';
 
 const router = express.Router();
 

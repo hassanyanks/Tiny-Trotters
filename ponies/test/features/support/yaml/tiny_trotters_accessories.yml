@@ -1,0 +1,159 @@
+---
+#Scenarios:
+#   1.  INITIAL PONY SELECTION:  at pony selection; show selected pony role, accessories fields, hide other accessories fields
+#   2.  SELECT 'OTHER' OPTION: select 'Other' accessory selection; show corresponding fields 
+#   3.  DE-SELECT 'OTHER' OPTION: deselect 'Other'; re-hide other accessories fields
+#   4.  RE-SELECT 'OTHER' OPTION: reselect 'Other'; show other accessories fields and their default STATES
+#   5.  RESET OTHER ACCESSORIES CHECKBOX:  fill in other accessories text field, click other accessories reset box; other accessories flds/reset box go AWAY
+#   6.  RESET ALL ACCESSORIES CHECKBOX:  select accessories, including 'Other'; click reset all accessories box  
+
+#1 START SCENARIO 1.
+- action: "visit"
+  locator: "/index"
+
+#2
+- action: "click_on"
+  locator: "Schedule an Event"
+  
+#3 START SELECTING PONY ACCESSORIES AND ROLE
+- action: "check"
+  locator: "pony-checkbox-Prince"
+
+#4  
+- action: "has_css?"
+  locator: "#role-input-Prince"
+
+#5
+- action: "has_css?"
+  locator: "#accessories-select-Prince"
+
+#6
+- action: "has_no_css?"
+  locator: "#other-accessory-input-Prince"
+
+#7
+- action: "has_no_css?"
+  locator: "#other-accessory-reset-box-input-Prince"
+
+#8 START SCENARIO 2.
+- action: "select"
+  locator: "Other"
+  options: { from: "accessories-select-Prince" }
+
+#9
+- action: "has_css?"
+  locator: "#other-accessory-input-Prince[required]"
+
+#10
+- action: "has_css?"
+  locator: "#other-accessory-reset-box-input-Prince"
+
+#11
+- action: "fill_in"
+  locator: "Other Accessories"
+  value: "some other accessories"
+  
+#12 START SCENARIO 3.
+- action: "unselect"
+  locator: "Other"
+  options: { from: "accessories-select-Prince" }
+  
+#13
+- action: "has_css?"
+  locator: "#other-accessory-input-Prince"
+  options: { visible: false }
+
+#14
+- action: "has_no_field?"
+  locator: "other-accessory-reset-box-input-Prince"
+
+#15 START SCENARIO 4.
+- action: "select"
+  locator: "Other"
+  options: { from: "accessories-select-Prince" }
+  
+#16
+- action: "has_no_field?"
+  locator: "other-accessory-input-Prince"
+  options: { with: 'some other accessory' }
+
+#17
+- action: "has_field?"
+  locator: "other-accessory-input-Prince"
+  options: { with: '' }
+
+#18
+- action: "has_css?"
+  locator: "#other-accessory-reset-box-input-Prince"
+ 
+#19 START SCENARIO 5.
+- action: "fill_in"
+  locator: "Other Accessories"
+  value: "some other accessories"
+
+#20
+- action: "check"
+  locator: "other-accessory-reset-box-input-Prince"
+
+#21
+- action: "has_no_field?"
+  locator: "other-accessory-input-Prince"
+  options: { with: 'some other accessories' }
+
+#22
+- action: "has_no_css?"
+  locator: "#pony-other-accessory-label-Prince"
+  options: { visible: true }
+
+#23
+- action: "has_field?"
+  locator: "other-accessory-input-Prince"
+  options: { with: '', visible: false }
+
+#24
+- action: "has_select?"
+  locator: "#accessories-select-Prince"
+  options: { text: "Other", count: 0 }
+
+#25 RESET BOX GOES AWAY AFTER CLICKING
+- action: "has_no_css?"
+  locator: "#other-accessory-reset-box-input-Prince"
+
+#26 START SCENARIO 6.
+- action: "select_multiple"
+  values: ["Other", "Pearls", "Hair Tinsel"]
+  options: { from: "accessories-select-Prince" }
+
+#27
+- action: "fill_in"
+  locator: "Other Accessories"
+  value: "some other accessories"
+
+#28
+- action: "check"
+  locator: "clear-accessories-input-Prince"
+
+#29
+- action: "has_select?"
+  locator: "accessories-select-Prince"
+  options: { selected: [] }
+
+#30
+- action: "has_no_css?"
+  locator: "#other-accessory-reset-box-input-Prince"
+
+#31
+- action: "has_css?"
+  locator: "#clear-accessories-input-Prince"
+
+#32
+- action: "has_css?"
+  locator: "#role-input-Prince"
+  options: { visible: true }
+
+#33
+- action: "has_select?"
+  locator: "accessories-select-Prince"
+  options: { visible: true, selected: [] }
+
+...	

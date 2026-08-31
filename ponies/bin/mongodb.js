@@ -5,8 +5,11 @@ export let dbInstance = null;
 
 export async function initMongoDB() {
   try {
-    const { MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_DB_STR, DB_NAME } = process.env;
-    const mongoDB = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}${MONGODB_DB_STR}/${DB_NAME}`;
+    const { MONGODB_USERNAME, DB_NAME, NODE_ENV } = process.env;
+    const mongoDB = `mongodb+srv://${MONGODB_USERNAME}:` +
+                                   `${NODE_ENV === 'production' ? process.env.MONGODB_PASSWORD : process.env.MONGODB_PASSWORD_DEV }` +
+                                   `${NODE_ENV === 'production' ? process.env.MONGODB_DB_STR : process.env.MONGODB_DB_STR_DEV}/` +
+                                   `${DB_NAME}`;
 
     dbInstance = await mongoose.connect(mongoDB);
 

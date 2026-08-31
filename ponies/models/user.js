@@ -3,15 +3,17 @@ import passportLocalMongoose from 'passport-local-mongoose';
 import bcrypt from 'bcrypt';
 //import {SALT_ROUNDS} from '../config/config.js';
 import dotenv from 'dotenv';
-dotenv.config({ path: './.env' }); 
+import CityAddress from './city_address.js';
 
-const UserSchema = new mongoose.Schema({
-    id: { type: Number, required: true, unique: true },
+dotenv.config({ path: './.env' }); 
+const Schema = mongoose.Schema;
+
+const UserSchema = new Schema({
     name: { type: String, required: true, minLength:  5, maxLength: 128, unique: false },
     streetAddress: { type: String, required: true, minLength:  10, maxLength: 256, unique: false },
     phone: { type: String, required: true, minLength:  12, maxLength: 32, unique: true },
     email: { type: String, required: true, minLength:  32, maxLength: 128, unique: true },
-    cityAddress: { type: Schema.Types.ObjectId, ref: "CityAddress", required: false },
+    cityAddress: { type: Schema.Types.ObjectId, ref: 'CityAddress', required: false },
     password: String,
     salt: String,
     resetPasswordToken: String,

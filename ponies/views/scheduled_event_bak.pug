@@ -1,0 +1,51 @@
+extends layout 
+
+block scripts 
+    script(src="/javascripts/formListeners.js", type="module")
+block content
+    div.standard-underline(style="align-self: center; margin-bottom: 20px;")
+        h1(style="margin-bottom: 10px;") Event Scheduled Pending Confirmation Callback
+        h2(style="margin-bottom: 10px; text-align: center;") You will receive an email-check your spam folder just in case
+        h3(style="margin-bottom: 10px; text-align: center;") As you wait, please read and provide info for the safety waiver
+
+    div(style="margin-bottom: 20px;").service-portal
+        form(action="/waiver", method='GET')
+            input(type="hidden", name="customerName", value=customerName)
+            input(type="hidden", name="customerPhone", value=customerPhone)
+            input(type="hidden", name="customerAddress", value=customerAddress)
+            input(type="hidden", name="venueName", value=venueName)
+            input(type="hidden", name="venueEmail", value=venueEmail)
+            input(type="hidden", name="venuePhone", value=venuePhone)
+            input(type="hidden", name="venueAddress", value=venueAddress)
+            input(type="hidden", name="eventLocation", value=eventLocation)
+            input(type="hidden", name="eventMongoDbId", value=eventMongoDbId)
+            button.submit-button(type="submit", style="align-self: center;") Safety Waiver
+    div.schedule-form
+        div.root-container
+            div.row-wrapper#scheduled-event
+                div.fields-parent-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Event Details
+                    div.input-group
+                        each fieldValue, fieldName in details
+                                div.field.styled-border.full-width
+                                    span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Event-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                    span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                div.fields-parent-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Ponies and Accessories
+                        if ponies && ponies.length > 0
+                            each pony in ponies.flat() 
+                                div.field.styled-border
+                                    h4(style="margin-left: 5px;") #{pony.name}
+                                    ul 
+                                        li Role
+                                            ul 
+                                                li #{pony.role}
+                                    ul 
+                                        li Accessories
+                                            if pony.accessories && pony.accessories.length > 0
+                                                each accessory in pony.accessories.flat() 
+                                                    ul 
+                                                        li #{accessory}
+

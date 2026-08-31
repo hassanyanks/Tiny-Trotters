@@ -3,9 +3,6 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const PonyEventAccessorySchema = new Schema({
-  id: { type: Number, required: true, unique: true },
-  pony: { type: Schema.Types.ObjectId, ref: "Pony", required: true },
-  event: { type: Schema.Types.ObjectId, ref: "ScheduledEvent", required: true },
   accessories: { type: String, required: true },
 });
 
