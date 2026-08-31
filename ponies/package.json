@@ -20,6 +20,7 @@
     "express": "^4.22.2",
     "express-session": "^1.19.0",
     "fs": "^0.0.1-security",
+    "geocodio-library-node": "^2.0.0",
     "http-errors": "~1.6.3",
     "https": "^1.0.0",
     "imagetracerjs": "^1.2.6",
