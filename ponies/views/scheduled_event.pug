@@ -22,53 +22,54 @@ block content
             input(type="hidden", name="eventLocation", value=eventLocation)
             input(type="hidden", name="eventMongoDbId", value=eventMongoDbId)
             button#waiver-button.submit-button(type="submit", style="align-self: center;") Safety Waiver
-    div.root-container
-        div.row-wrapper#schedule-event
-            div.fields-parent-container
-                div.fields-container-item
-                    h3(style="text-align: center;").standard-underline Event Details
-                div.input-group
-                    each fieldValue, fieldName in eventDetails
-                        div.field.styled-border.full-width
-                            span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Event-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                            span(style="margin: 10px 10px 10px 3px;")= fieldValue
-            div.fields-parent-container
-                div.fields-container-item
-                    h3(style="text-align: center;").standard-underline Ponies and Accessories
-                    if ponies && ponies.length > 0
-                        each pony in ponies.flat() 
-                            div.field.styled-border(style="margin: 5px 20px 20px 20px;")
-                                h4(style="margin-left: 5px;") #{pony.name}
-                                ul 
-                                    li Role
-                                        ul 
-                                            li #{pony.role}
-                                ul 
-                                    li Accessories
-                                        if pony.accessories && pony.accessories.length > 0
-                                            each accessory in pony.accessories.flat() 
-                                                ul 
-                                                    li #{accessory}
-        div.row-wrapper
-            div.fields-parent-container#your-details-container
-                div.fields-container-item
-                    h3(style="text-align: center;").standard-underline Your Details
-                div.input-group
-                    each fieldValue, fieldName in yourDetails
-                        div.field.styled-border.full-width
-                            span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                            span(style="margin: 10px 10px 10px 3px;")= fieldValue
-            if eventLocation === 'Another Venue'
-                div.fields-parent-container#venue-details-container
+    div#scheduled-event-container
+        div.root-container
+            div.row-wrapper#schedule-event
+                div.fields-parent-container
                     div.fields-container-item
-                        h3(style="text-align: center;").standard-underline Venue Details
+                        h3(style="text-align: center;").standard-underline Event Details
                     div.input-group
-                        each fieldValue, fieldName in venueDetails
+                        each fieldValue, fieldName in eventDetails
                             div.field.styled-border.full-width
-                                span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Venue-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Event-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
                                 span(style="margin: 10px 10px 10px 3px;")= fieldValue
-        //div.field.full-width 
-        //div.autocomplete-container
-            label(for="address-input") Event Address
-            input.responsive-input#address-input(type="text" required maxlength="200" placeholder="Start typing your address..." autocomplete="off")
-            ul.suggestions-hidden(id="suggestions-list")                
+                div.fields-parent-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Ponies and Accessories
+                        if ponies && ponies.length > 0
+                            each pony in ponies.flat() 
+                                div.field.styled-border(style="margin: 5px 20px 20px 20px;")
+                                    h4(style="margin-left: 5px;") #{pony.name}
+                                    ul 
+                                        li Role
+                                            ul 
+                                                li #{pony.role}
+                                    ul 
+                                        li Accessories
+                                            if pony.accessories && pony.accessories.length > 0
+                                                each accessory in pony.accessories.flat() 
+                                                    ul 
+                                                        li #{accessory}
+            div.row-wrapper
+                div.fields-parent-container#your-details-container
+                    div.fields-container-item
+                        h3(style="text-align: center;").standard-underline Your Details
+                    div.input-group
+                        each fieldValue, fieldName in yourDetails
+                            div.field.styled-border.full-width
+                                span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                if eventLocation === 'Another Venue'
+                    div.fields-parent-container#venue-details-container
+                        div.fields-container-item
+                            h3(style="text-align: center;").standard-underline Venue Details
+                        div.input-group
+                            each fieldValue, fieldName in venueDetails
+                                div.field.styled-border.full-width
+                                    span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Venue-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                    span(style="margin: 10px 10px 10px 3px;")= fieldValue
+            //div.field.full-width 
+            //div.autocomplete-container
+                label(for="address-input") Event Address
+                input.responsive-input#address-input(type="text" required maxlength="200" placeholder="Start typing your address..." autocomplete="off")
+                ul.suggestions-hidden(id="suggestions-list")                
