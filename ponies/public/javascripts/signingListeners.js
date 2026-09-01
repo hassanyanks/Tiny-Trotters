@@ -1,4 +1,62 @@
-const sigSubmitButton = document.getElementById('sig-submit-btn');
+const signSubmitButton = document.getElementById('sign-submit-btn');
+
+//CODE COMMENTED OUT BELOW IS RESERVED FOR FUTURE USE WHEN WE START USING ELECTRONIC SIGNING
+
+//IN THE MEANTIME, THIS IS THE NON-ELECTRONIC SIGNING VERSION OF THE IMPLEMENTATION, I.E. THE "SIGNABLE WAIVER" VERSION
+ /*
+
+if(sigSubmitButton) {
+    sigSubmitButton.addEventListener('click', async () => {
+// On the /index page client-side script
+const urlParams = new URLSearchParams(window.location.search);
+const token = urlParams.get('downloadToken');
+
+if (token) {
+  // Trigger the actual file download route in a hidden iframe or window
+  window.location.href = `/download-pdf?token=${token}`;
+}
+ 
+        //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
+        const customerName = document.getElementById('customerName').value;
+        const customerAddress = document.getElementById('customerAddress').value;
+        const customerPhone = document.getElementById('customerPhone').value;
+        const customerChildData = document.getElementById('customerChildData').value;
+        const eventMongoDbId = document.getElementById('eventMongoDbId').value;
+        if (!customerName) return alert('Please enter your name.');
+        if (!customerAddress) return alert('Please enter the venue address.');
+        if (!customerPhone) return alert('Please enter your phone.');
+        if (!customerChildData) return alert('Please enter your child data.');
+    });
+}
+*/
+
+/*
+        const response = await fetch( '/waiver', { method: 'POST' } );
+
+        if (!response.ok) {
+            throw new Error('Download failed');
+        } else if (response.ok) {
+            // Trigger automatic file download of the server-generated PDF blob
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'signable_waiver.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            const redirectUrl = response.headers.get('X-Redirect-To');            
+            if (redirectUrl) {
+                window.location.href = redirectUrl;
+            }
+        } else {
+            alert('Error processing waiver.');
+        }
+    });
+}
+*/
 
 /*
 if(sigSubmitButton) {
@@ -51,7 +109,6 @@ if(sigSubmitButton) {
         }
     });
 }
-*/
 // REST OF THE CODE BELOW IS RESERVED FOR FUTURE USE:  WHEN WE START USING ELECTRONIC SIGNING FEATURE--AT THIS POINT, ABOVE if BLOCK SHOULD BE COMMENTED OUT
 
 const canvas = document.querySelector('.signature-canvas');

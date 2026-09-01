@@ -7,28 +7,14 @@ import 'dotenv/config';
 import {PDFDocument, rgb} from 'pdf-lib';
 import fs from 'fs';
 
-const STORAGE_DIR = './stored_waivers';
+const __dirname = import.meta.dirname
+
+const STORAGE_DIR = path.join(__dirname, '../public/signable_waivers');
 if (!fs.existsSync(STORAGE_DIR)) {
     fs.mkdirSync(STORAGE_DIR, { recursive: true });
 }
 
-const __dirname = import.meta.dirname
 const FILE_PATH = path.join(__dirname, '../public/templates');
-
-/*
-export const waiverDone = asyncHandler(async(req, res, next) => {
-  try { 
-
-
-    console.log(`**************waiver added to event in db result:  ${JSON.stringify(result)}`);
-    res.locals.citiesServed = cachedCitiesStr;
-    res.render( "index", { url:  '/index' } );
-
-  } catch (error) {
-    next(error);
-  }
-});
-*/
 
 export const waiverPost = asyncHandler(async(req, res, next) => {
   try { 
@@ -57,8 +43,8 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       const pdfDoc = await PDFDocument.create();
       const sourcePages = sourcePdfDoc.getPages();
       const lastSourcePage = sourcePages[sourcePages.length - 1];
-      const { width, height } = lastSourcePage.getSize();
-      const pageIndices = sourcePdfDoc.getPageIndices();
+      //const { width, height } = lastSourcePage.getSize();
+      //const pageIndices = sourcePdfDoc.getPageIndices();
       //const copiedPages = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       const [firstPage] = await pdfDoc.copyPages(sourcePdfDoc, [0]);
       pdfDoc.addPage(firstPage);
@@ -114,26 +100,18 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       // 7. Save the file to the backend server
       const safeName = customerName.replace(/[^a-z0-9]/gi, '_').toLowerCase(); // Sanitize input
       const filename = `${safeName}_${Date.now()}.pdf`;                 // Unique filename
-      const filePath = path.join(STORAGE_DIR, filename);
-      
+      const filePath = path.join(STORAGE_DIR, filename);      
       fs.writeFileSync(filePath, pdfBuffer); // Write to local disk
-      console.log(`Document saved successfully at: ${filePath}`);
-      console.log(`****************event mongodb id:  ${req.body.eventMongoDbId}`);
-      console.log(`waiverPost customer email:  ${req.body.customerEmail} `)
 
       let setBody = { waiverForm: pdfBuffer };
       let result = await updateScheduledEvent( req.body.eventMongoDbId, setBody );
       emailDocument( Buffer.from(pdfBytes), req.body.customerEmail, process.env.STAFF_EMAIL );
 
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename=signed_waiver.pdf');
-      res.setHeader('Access-Control-Expose-Headers', 'X-Redirect-To');
-      res.set('X-Redirect-To', '/index');
-      return res.send(Buffer.from(pdfBytes));
+      res.redirect( 303, '/index' );
 
   } catch (error) {
       console.error('Error processing waiver:', error);
-      return res.status(500).json({ error: 'Failed to process document.' });
+      return res.status(500).json({ error: 'Failed to process waiver.' });
   }
 
 });
@@ -146,7 +124,7 @@ export const waiverGet = asyncHandler(async(req, res, next) => {
     res.locals.customerEmail = req.query.customerEmail;
     res.locals.customerAddress = req.query.customerAddress;
     res.locals.eventLocation = req.query.eventLocation;
-
+    
     console.log(`waiverGet customer email:  ${res.locals.customerEmail} `)
 
     if( res.locals.eventLocation === 'Another Venue' ) {
@@ -155,6 +133,7 @@ export const waiverGet = asyncHandler(async(req, res, next) => {
       res.locals.venueAddress = req.query.venueAddress;
     }
 
+    res.locals.waiverForm = process.env.WAIVER_FORM;
     res.locals.citiesServed = cachedCitiesStr;
     res.locals.eventMongoDbId = req.query.eventMongoDbId;
 

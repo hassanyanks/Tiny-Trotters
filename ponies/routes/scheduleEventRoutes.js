@@ -9,7 +9,7 @@ router.use(express.json());
 router.get('/', eventScheduleGet );
 router.get('/schedule-event', eventScheduleGet);
 router.post('/', eventSchedulePost);
-router.post('/index', eventSchedulePost);
+//router.post('/index', eventSchedulePost);
 router.get('/scheduled-event', eventSchedulePost)
 
 export default router;
