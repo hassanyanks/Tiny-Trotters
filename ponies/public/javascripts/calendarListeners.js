@@ -18,6 +18,7 @@ document.getElementById('nextBtn').addEventListener('click', () => {
 
 // Initial Mount Call
 document.addEventListener('DOMContentLoaded', () => {
+    console.log(`current month:  ${currentMonth}`)
     renderMonth(currentMonth);
 });
 
@@ -53,12 +54,13 @@ async function renderMonth(targetDate, direction = 'none') {
     const params = new URLSearchParams({ start: startOfGrid.toISOString(), end: endOfGrid.toISOString() });
     let events = [];
 
+    console.log(`passing these params to /api/events:  ${params}`)
     try {
         const res = await fetch(`/api/events?${params}`);
         if (!res.ok) {
             const errorText = await res.text();
-            console.log(`Server returned ${res.status}: ${errorText}`);
-            throw new Error(`Server returned ${res.status}`); // Check for 500 errors
+            console.log(`Error-server returned: ${res.status} ${errorText}`);
+            throw new Error(`Error-server returned: ${res.status}`); // Check for 500 errors
         }
         events = await res.json();
         console.log(`fetch returned:  ${JSON.stringify(events)}`)

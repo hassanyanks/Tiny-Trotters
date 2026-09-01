@@ -45,6 +45,7 @@ export async function emailDocument( documentBuffer, senderEmail, recipientsEmai
   const mailOptions = {
     from: senderEmail,
     to: recipientsEmail,
+    cc: senderEmail,
     subject: 'Tiny Trotters Pony Parties Scheduled Event Signable Waiver Form',
     text: 'The sending customer has viewed the now signable attached waiver form.',
     attachment: [{ filename:  'signable_waiver.pdf', data:  documentBuffer }]
