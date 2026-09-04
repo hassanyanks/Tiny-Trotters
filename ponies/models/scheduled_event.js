@@ -64,6 +64,10 @@ const VenueDetailsSchema = new Schema({
     type: String, 
     required: false 
   },
+  'Venue-Contact-Name': { 
+    type: String, 
+    required: false 
+  },
   'Venue-Street-Address': { 
     type: String, 
     required: false 

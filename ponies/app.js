@@ -5,10 +5,11 @@ import session from 'express-session';
 import path from 'path';
 import 'dotenv/config';
 import logger from 'morgan';
-import cors from 'cors';
+import { RedisStore } from 'connect-redis';
+import { EventEmitter } from 'events';
 
 import { initMongoDB } from './bin/mongodb.js';
-import { RedisClient } from './bin/redis.js';
+import redisClient from './bin/redis.js';
 import { startServer } from './bin/startServer.js';
 import indexRouter from './routes/indexRoutes.js';
 import ponyRouter from './routes/ponyRoutes.js';
@@ -19,7 +20,10 @@ import waiverRouter from './routes/waiverRoutes.js'
 import calendarRouter from './routes/calendarRoutes.js';
 import formsRouter from './routes/formDataRoutes.js';
 import autocompleteRouter from './routes/autocompleteRoutes.js';
-import { RedisStore } from 'connect-redis';
+import { initializeRedisCache } from './bin/mongodb.js';
+
+// Change the global default for all emitters
+EventEmitter.defaultMaxListeners = 15;
 
 const app = express();
 const __dirname = import.meta.dirname
@@ -32,12 +36,12 @@ app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'templates')));
 app.use(express.static(path.join(__dirname, 'lib')));
-//export const redisClient = new RedisClient();
 
 try {
-    const [mongoDbInstance] = await Promise.all([initMongoDB()]); //, redisClient.startRedis()]);
+    const [mongoDbInstance, redisReady] = await Promise.all([initMongoDB(), redisClient.isOpen]);
     //console.log(`promise all result:  ${mongoDbInstance}, ${redisStatus}`)
-    if( mongoDbInstance === 'tiny-trotters') { //&& redisStatus === 'connected') {
+    if( mongoDbInstance === 'tiny-trotters' && redisReady ) {
+      initializeRedisCache();
       startServer();
     } else {
       console.error(`Not starting server: mongodb connection: ${mongoDbInstance}`);
@@ -51,12 +55,12 @@ app.use(session({
   genid: (req) => {
     return uuid() // use UUIDs for session IDs
   },
-    //store: new RedisStore({ client: redisClient.client }),
+    store: new RedisStore({ client: redisClient }),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
     cookie: { 
-        secure: true, //process.env.NODE_ENV === 'production', // Use secure cookies in production
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
         httpOnly: true, // Prevents client-side JS from reading the cookie
         maxAge: 1000 * 60 * 60 * 24 // Cookie expiration time (e.g., 1 day)
     },

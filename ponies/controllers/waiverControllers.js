@@ -22,7 +22,7 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       // COMMENTED-OUT CODE BELOW IS RESERVED FOR FUTURE USE--WHEN WE START USING ELECTRONIC SIGNING 
 
       //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
-      const { customerName, customerPhone, customerAddress, venueName, venuePhone, venueAddress, customerChildData /*, signatureImage*/ } = req.body;
+      const { customerName, customerPhone, customerAddress, venueContactName, venuePhone, venueAddress, customerChildData /*, signatureImage*/ } = req.body;
 
       console.log(`***********************req.body:  ${JSON.stringify(req.body)}`);
 
@@ -79,7 +79,7 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
         //    height: 100,
         //}); 
         
-        firstPage.drawText(`Printed Name: ${venueName}`, { x: 50, y: 375, size: 12 });
+        firstPage.drawText(`Printed Name: ${venueContactName}`, { x: 50, y: 375, size: 12 });
         firstPage.drawText( 'Date:  _______________', { x: 400, y: 375, size: 12 });
         firstPage.drawText(`Address:  ${venueAddress}`, { x: 50, y: 360, size: 12 });
         firstPage.drawText(`Phone Number:  ${venuePhone}`, { x: 50, y: 345, size: 12 });
@@ -92,7 +92,7 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       firstPage.drawText('Names and ages of children in vicinity of ponies:', { x: 50, y: childrensSectionYstart, size: 12 });
       firstPage.drawText(customerChildData, { x: 70, y: childrensSectionYstart-20, size: 12 });
 
-      // 6. Save document and stream bytes to client
+      //Save document for storage to DB and local (back-end) file system
       const pdfBytes = await pdfDoc.save();
       const pdfBuffer = Buffer.from(pdfBytes);
       if( !pdfBytes || !pdfBuffer ) { throw new Error( "Something went wrong creating signal version of waiver!" ) };
@@ -128,7 +128,8 @@ export const waiverGet = asyncHandler(async(req, res, next) => {
     console.log(`waiverGet customer email:  ${res.locals.customerEmail} `)
 
     if( res.locals.eventLocation === 'Another Venue' ) {
-      res.locals.venueName = req.query.venueName;
+      res.locals.venueName   = req.query.venueName;
+      res.locals.venueContactName = req.query.venueContactName;
       res.locals.venuePhone = req.query.venuePhone;
       res.locals.venueAddress = req.query.venueAddress;
     }

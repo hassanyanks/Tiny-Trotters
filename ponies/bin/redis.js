@@ -1,45 +1,17 @@
-import { createClientPool, createClient } from 'redis';
-import { BasicPooledClientSideCache } from 'redis';
 import 'dotenv/config';
+import { createClient } from 'redis';
 
-export class RedisClient {
+const redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://127.0.0.1:6379'
+});
 
-  constructor() {
-    this.cache = new BasicPooledClientSideCache({
-      ttl: 0,
-      maxEntries: 0,
-      evictPolicy: "LRU"
-    });
-    this.client = createClient({
-      url: process.env.REDIS_URL, 
-      clientSideCache: this.cache,
-      minimum: 5
-    });
-  }
+redisClient.on('error', (err) => console.error('Redis Client Error:', err));
+redisClient.on('connect', () => console.log('Redis connected successfully!'));
 
-  async test() {
-        await this.client.set('id', '2');
-        const result = await this.client.get('id');
-        console.log(`redis test returns: ${JSON.stringify(result)}`);
-  }
+// Trigger connection immediately in the background
+redisClient.connect().catch((err) => {
+    console.error('Failed to connect to Redis during startup:', err);
+});
 
-  async startRedis() {
-    this.client.on('error', err => console.log('Redis Client Error', err));
-    try {
-      return new Promise( async (resolve, reject) => {
-        await this.client.connect();
-        setTimeout(() => {
-          if( this.client.isOpen ) {
-            return resolve('connected');
-          } else {
-            return reject('not connected');
-          }
-        }, 2000)
-      });
-    } catch(err) {
-        console.error(`error connecting to Redis:  ${err}`);
-        reject('not connected');
-    }
-  }
+export default redisClient;
 
-} //end class

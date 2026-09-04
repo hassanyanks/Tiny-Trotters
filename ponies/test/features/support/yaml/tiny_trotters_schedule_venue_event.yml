@@ -23,12 +23,12 @@
 #5
 - action: "fill_in_time"
   locator: "event-start"
-  value: "09/01/2026 9:00 AM"
+  value: "09/22/2026 05:00 PM"
 
 #6
 - action: "fill_in_time"
   locator: "event-end"
-  value: "09/01/2026 11:00 AM"
+  value: "09/22/2026 06:00 PM"
 
 #7
 - action: "fill_in"

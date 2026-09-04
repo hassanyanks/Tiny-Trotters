@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import 'dotenv/config';
+import redisClient from './redis.js';
+import ScheduledEvent from '../models/scheduled_event.js';
 
 export let dbInstance = null;
 
@@ -30,32 +32,77 @@ export async function initMongoDB() {
   }
 }
 
-/*
-export async function initMongoDB() {
-    let dbInstance;
+/**
+ * Checks if the Redis cache is empty, and hydrates it from Mongo using Mongoose Cursors.
+ */
+export async function initializeRedisCache() {
+
+    // 1. Ensure Redis connection is active
+    if (!redisClient.isOpen) {
+        await redisClient.connect();
+    }
+
+    redisClient.flushDb();
+    //const size = await redisClient.dbSize();
+    
     try {
-        const username = process.env.MONGODB_GLOBAL_USER; 
-        const pswd = process.env.MONGODB_GLOBAL_PSWD;
-        const url = `mongodb+srv://${username}:${pswd}${process.env.SAMS_MONGODB_STR}`;
-        dbInstance = await mongoose.connect(url)
-        console.log(`mongoose connect result: ${dbInstance.connection.name}`)
-    } catch(err) {
-        console.error(`error connecting to Mongo db:  ${err}`);
-    } finally {
-        return dbInstance;
-    };
 
+      let recordCount = 0;
 
-    .then(() => {
-        console.log('successfully connected to Mongo db');
-    })
-    .catch(err => {
-        console.error(`error connecting to Mongo db:  ${err}`);
-        connected = false;
-    })
-    .finally(() => {
-        mongoose.connection.on('disconnected', () => { console.log('Mongo db disconnected') });
-        return connected;
-    });
-*/    
+      const initialCacheCount = await redisClient.zCard('events:by_date');
 
+      if (initialCacheCount === 0) {
+
+        console.log(`✅ Redis cache empty. Found ${initialCacheCount} indexed events; hydrating Redis...`);
+
+        const BATCH_SIZE = 1000;
+        let batchPipeline = redisClient.multi();
+
+        // 3. Use lean() to get raw objects instead of heavy Mongoose documents
+        const cursor = ScheduledEvent.find({}, { 'waiverForm': 0 }).lean().cursor();
+        for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
+          console.log(`initializeRedisCache() scheduled event returned:  ${JSON.stringify(doc)}`);
+          const eventId = doc._id.toString();
+          let timestamp;
+          if( doc.details && doc.details['Event-Start']) {
+            timestamp = doc.details['Event-Start'].getTime();
+          } else if( doc.eventDetails && doc.eventDetails['Event-Start']) {
+            timestamp = doc.eventDetails['Event-Start'].getTime();
+          } else { timestamp = 0; }            
+
+            // Stage payload string
+            batchPipeline.set(`event:data:${eventId}`, JSON.stringify(doc), {
+                EX: 86400 * 30 // 30-day cache lifespan
+            });
+
+            // Stage sorted set index entry
+            batchPipeline.zAdd('events:by_date', {
+                score: timestamp,
+                value: eventId
+            });
+
+            recordCount++;
+
+            // Batch execution management
+            if (recordCount % BATCH_SIZE === 0) {
+                await batchPipeline.exec();
+                batchPipeline = redisClient.multi();
+                console.log(`⏩ Hydrated ${recordCount} records via Mongoose...`);
+            }
+        }
+
+        // Execute any remaining records in the final pipeline chunk
+        if (recordCount % BATCH_SIZE !== 0) {
+            await batchPipeline.exec();
+        }
+      }
+
+      const cacheCount = await redisClient.zCard('events:by_date');
+      if (cacheCount > 0) {
+        console.log(`✅ Redis cache hydrated. Found ${cacheCount} indexed events.`);
+      }
+
+    } catch (error) {
+        console.error('❌ Failed to warm up Redis cache from Mongoose:', error);
+    }
+}

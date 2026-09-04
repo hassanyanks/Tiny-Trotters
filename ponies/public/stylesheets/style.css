@@ -93,6 +93,10 @@ body {
     padding-bottom: 40px;
 }
 
+.services-portal-container a {
+  text-align: center;
+}
+
 /* child of .services-portal-container */
 .service-portal {
   display: flex;
@@ -659,6 +663,91 @@ padding-right: 15px;
   opacity: 0.5;
 }
 
+.calendar-container { 
+  max-width: 1000px; 
+  margin: 0 auto; 
+  background: #fff; 
+  border: 1px solid var(--border-color); 
+  border-radius: 8px; 
+  padding: 20px; 
+  position: relative; 
+}
+
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.weekdays div { font-weight: bold; text-align: center; padding: 10px 0; background: #eee; }
+
+
+/* Mobile views (default) */
+.grid { 
+  display: grid; 
+  grid-template-columns: repeat(1, 1fr); /* 1 column on small screens */
+  gap: 4px; 
+}
+
+/* Mobile landscape / Small tablets */
+@media (min-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr); 
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr); 
+  }
+}
+
+/* Laptops and Desktops */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(7, 1fr); /* Your original 7 columns */
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+
+} 
+@media (max-width: 768px) {
+  /* Reduce outer container padding */
+  .calendar-container {
+  margin: 0 auto; 
+  background: #fff; 
+  border: 1px solid var(--border-color); 
+  border-radius: 8px; 
+  position: relative; 
+  padding: 10px;
+  }
+}
+    
+    /* Calendar Day Layout */
+    .calendar-day { 
+      border: 1px solid var(--border-color); min-height: 100px; padding: 6px; 
+      display: flex; flex-direction: column; background: #fdfdfd; position: relative;
+    }
+    .day-number { font-weight: bold; margin-bottom: 4px; }
+    .adjacent-month { padding: 6px; background-color: #f1f0f0; color: white; }
+    .adjacent-month span:hover {
+      color: #00adb5;
+    }
+    .today { background: #eef7ff; border-color: #007bff; }
+
+    /* Event Badges */
+    .event-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .event-badge { background: #B7CCC0; color: black; font-size: 11px; padding: 2px 4px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .more-events { font-size: 11px; color: #666; font-weight: bold; margin-top: 2px; cursor: pointer; text-align: right; }
+
+    /* Popover Styles */
+    .popover {
+      display: none; position: absolute; z-index: 10; background: white; border: 1px solid #aaa;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 6px; padding: 12px; width: 220px;
+    }
+    .popover h4 { margin: 0 0 8px 0; font-size: 14px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+    .popover ul { margin: 0; padding: 0 0 0 16px; font-size: 13px; line-height: 1.4; }
+
+/*
 .calendar-container {
   width: 100%; max-width: 900px; margin: 20px auto;
   font-family: system-ui, sans-serif; border: 1px solid #e0e0e0;
@@ -675,11 +764,9 @@ padding-right: 15px;
   text-align: center; font-weight: 600; background: #f1f3f5;
   border-bottom: 1px solid #e0e0e0; padding: 8px 0;
 }
-/* Viewport locks container width and hides overflowing slides */
 .slider-viewport {
-  position: relative; overflow: hidden; width: 100%; height: 500px;
+  position: relative; overflow: hidden; width: 100%; height: 750px;
 }
-/* Grid slide item defaults */
 .calendar-grid {
   display: grid; grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr); height: 100%; width: 100%;
@@ -693,12 +780,61 @@ padding-right: 15px;
 .day-number { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
 .event-list { overflow-y: auto; flex-grow: 1; }
 .event-pill {
-  background: #007bff; color: white; font-size: 11px;
+  background: #B7CCC0; color: black; font-size: 11px;
   padding: 2px 6px; border-radius: 3px; margin-bottom: 2px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/*
+.calendar-more-items {
+    font-size: 11px;
+    font-weight: 600;
+    color: #5f6368; 
+    padding: 2px 6px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    align-self: flex-start; 
+}
+
+.calendar-more-items:hover {
+    background-color: #f1f3f4;
+    color: #1a73e8; 
+}
+
+.calendar-events-popover {
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+    min-width: 180px;
+    max-width: 240px;
+    padding: 12px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.popover-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #70757a;
+    margin-bottom: 4px;
+    letter-spacing: 0.8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
 .autocomplete-container {
   position: relative;
   width: 100%;
@@ -745,4 +881,79 @@ padding-right: 15px;
 
 #suggestions-list li:hover {
   background-color: #f0f0f0;
+}
+
+/* Dimmed background overlay */
+.overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 999; /* Just below the panel */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.overlay-backdrop.active {
+    opacity: 1;
+    pointer-events: auto; /* Allows clicking to close */
+}
+
+/* Slide over side expander */
+.side-expander {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    max-width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+
+    /* NEW: Turns the panel into a flexible vertical column */
+    display: flex;
+    flex-direction: column; 
+}
+
+.side-expander.open {
+    transform: translateX(0);
+}
+
+/* Inner formatting */
+.expander-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0; /* Prevents header from compressing */
+}
+
+.expander-content {
+    padding: 20px;
+    flex-grow: 1;           /* Takes up all remaining vertical space */
+    overflow-y: auto;       /* Enables vertical scrolling when content overflows */
+    
+    /* Optional: Adds smooth inertia scrolling on iOS mobile devices */
+    -webkit-overflow-scrolling: touch; 
+}
+
+.event-meta p {
+    margin: 8px 0;
+}
+
+.event-meta h3 {
+  text-align: center;
+}
+
+.expander-fieldname {
+  margin-right: 5px;
+  font-weight: bold;
 }
