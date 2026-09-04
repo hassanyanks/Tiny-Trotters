@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { createClient } from 'redis';
 
 const redisClient = createClient({
-  url: process.env.NODE_ENV === 'dev' ? 'redis://127.0.0.1:6379' : process.env.REDIS_URL,
+  url: process.env.NODE_ENV === 'dev' ? 'redis://127.0.0.1:6379' : process.env.VALKEY_URL,
   socket: {
     family: 4,            // Forces IPv4 resolution for Render's internal network
     connectTimeout: 10000 // Gives it 10 seconds to handshake
