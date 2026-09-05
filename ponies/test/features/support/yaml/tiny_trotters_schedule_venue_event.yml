@@ -23,12 +23,12 @@
 #5
 - action: "fill_in_time"
   locator: "event-start"
-  value: "09/22/2026 05:00 PM"
+  value: "09/09/2026 03:00 PM"
 
 #6
 - action: "fill_in_time"
   locator: "event-end"
-  value: "09/22/2026 06:00 PM"
+  value: "09/09/2026 04:00 PM"
 
 #7
 - action: "fill_in"
@@ -86,34 +86,39 @@
 
 #18
 - action: "fill_in"
+  locator: "venue-name"
+  value: "Golden Corral"
+
+#19
+- action: "fill_in"
   locator: "venue-contact-name"
   value: "Terrence Loring Voelker"
 
-#19
+#20
 - action: "fill_in"
   locator: "venue-email"
   value: "greenhamyanks@gmail.com"
 
-#20
+#21
 - action: "fill_in"
   locator: "venue-phone"
   value: "404-376-6405"
 
-#21
+#22
 - action: "fill_in"
   locator: "Event-Venue-Street-Address"
   value: "916 Concord Circle"
 
-#22
+#23
 - action: "fill_in"
   locator: "Event-Venue-Zipcode"
   value: "60060"
 
-#23
+#24
 - action: "click_button"
   locator: "schedule-event-submit"
   
-#24
+#25
 - action: "click_button"
   locator: "waiver-button"
   

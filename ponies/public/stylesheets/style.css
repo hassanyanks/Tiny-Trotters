@@ -924,6 +924,7 @@ padding-right: 15px;
 
 .side-expander.open {
     transform: translateX(0);
+    width: max-content;
 }
 
 /* Inner formatting */
@@ -937,12 +938,13 @@ padding-right: 15px;
 }
 
 .expander-content {
-    padding: 20px;
-    flex-grow: 1;           /* Takes up all remaining vertical space */
-    overflow-y: auto;       /* Enables vertical scrolling when content overflows */
-    
-    /* Optional: Adds smooth inertia scrolling on iOS mobile devices */
-    -webkit-overflow-scrolling: touch; 
+  width: max-content;
+  padding: 20px;
+  flex-grow: 1;           /* Takes up all remaining vertical space */
+  overflow-y: auto;       /* Enables vertical scrolling when content overflows */
+  
+  /* Optional: Adds smooth inertia scrolling on iOS mobile devices */
+  -webkit-overflow-scrolling: touch; 
 }
 
 .event-meta p {
