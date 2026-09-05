@@ -61,7 +61,6 @@ export async function initializeRedisCache() {
         // 3. Use lean() to get raw objects instead of heavy Mongoose documents
         const cursor = ScheduledEvent.find({}, { 'waiverForm': 0 }).lean().cursor();
         for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
-          console.log(`initializeRedisCache() scheduled event returned:  ${JSON.stringify(doc)}`);
           const eventId = doc._id.toString();
           let timestamp;
           if( doc.details && doc.details['Event-Start']) {
