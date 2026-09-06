@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'templates')));
 app.use(express.static(path.join(__dirname, 'lib')));
+app.use(express.static(path.join(__dirname, 'bin')));
 
 try {
     const [mongoDbInstance, redisReady] = await Promise.all([initMongoDB(), redisClient.isOpen]);
@@ -83,6 +84,7 @@ app.use('/services', servicesRouter);
 app.use('/gallery', galleryRouter);
 app.use('/', scheduleEventRouter);
 app.use('/schedule-event', scheduleEventRouter);
+app.use('/schedule-an-event', scheduleEventRouter); //DEVELOPMENT***********************************
 app.use('/scheduled-event', scheduleEventRouter);
 app.use('/', waiverRouter);
 app.use('/waiver', waiverRouter);

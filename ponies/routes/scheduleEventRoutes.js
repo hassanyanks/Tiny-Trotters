@@ -11,5 +11,8 @@ router.get('/schedule-event', eventScheduleGet);
 router.post('/', eventSchedulePost);
 //router.post('/index', eventSchedulePost);
 router.get('/scheduled-event', eventSchedulePost)
+router.get('/schedule-an-event', function(req, res, next) {
+  res.render('schedule_event_calendar');
+});
 
 export default router;

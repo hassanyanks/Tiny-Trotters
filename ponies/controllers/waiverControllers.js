@@ -21,10 +21,15 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
 
       // COMMENTED-OUT CODE BELOW IS RESERVED FOR FUTURE USE--WHEN WE START USING ELECTRONIC SIGNING 
 
+      const eventDetails = JSON.parse(req.body.eventDetails);
+      const customerEmail = eventDetails.yourDetails['Your-Email'];
+      const eventLocation = eventDetails.eventDetails['Event-Location'];
+      console.log(`customer email:  ${customerEmail}, event location:  ${eventLocation}`);
+
+      const mongoDbId = eventDetails._id;
+
       //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
       const { customerName, customerPhone, customerAddress, venueContactName, venuePhone, venueAddress, customerChildData /*, signatureImage*/ } = req.body;
-
-      console.log(`***********************req.body:  ${JSON.stringify(req.body)}`);
 
       if ( !customerName || !customerPhone || !customerAddress || !customerChildData  /* || !signatureImage */ ) {
           return res.status(400).json({ error: 'Missing required fields.' });
@@ -66,8 +71,6 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       firstPage.drawText(`Address:  ${customerAddress}`, { x: 50, y: 460, size: 12 });
       firstPage.drawText(`Phone Number:  ${customerPhone}`, { x: 50, y: 445, size: 12 });
 
-      let eventLocation = req.body.eventLocation;
-
       if( eventLocation === 'Another Venue' ) {
 
         firstPage.drawText( "VENUE SIGNATURE:  ", { x: 50, y: 400, size: 12 });
@@ -104,14 +107,14 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
       fs.writeFileSync(filePath, pdfBuffer); // Write to local disk
 
       let setBody = { waiverForm: pdfBuffer };
-      let result = await updateScheduledEvent( req.body.eventMongoDbId, setBody );
-      emailDocument( Buffer.from(pdfBytes), req.body.customerEmail, process.env.STAFF_EMAIL );
+      let result = await updateScheduledEvent( mongoDbId, setBody );
+      emailDocument( Buffer.from(pdfBytes), customerEmail, process.env.STAFF_EMAIL );
 
       res.redirect( 303, '/index' );
 
   } catch (error) {
-      console.error('Error processing waiver:', error);
-      return res.status(500).json({ error: 'Failed to process waiver.' });
+      console.error('Error processing waiver:', error.message);
+      return res.status(500).json({ error: `Failed to process waiver:  ${error.message}` });
   }
 
 });
@@ -119,24 +122,10 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
 export const waiverGet = asyncHandler(async(req, res, next) => {
   try { 
 
-    res.locals.customerName = req.query.customerName;
-    res.locals.customerPhone = req.query.customerPhone;
-    res.locals.customerEmail = req.query.customerEmail;
-    res.locals.customerAddress = req.query.customerAddress;
-    res.locals.eventLocation = req.query.eventLocation;
-    
-    console.log(`waiverGet customer email:  ${res.locals.customerEmail} `)
-
-    if( res.locals.eventLocation === 'Another Venue' ) {
-      res.locals.venueName   = req.query.venueName;
-      res.locals.venueContactName = req.query.venueContactName;
-      res.locals.venuePhone = req.query.venuePhone;
-      res.locals.venueAddress = req.query.venueAddress;
-    }
-
+    const detailsStr = req.query.details;
+    res.locals.details = JSON.parse(detailsStr);
     res.locals.waiverForm = process.env.WAIVER_FORM;
     res.locals.citiesServed = cachedCitiesStr;
-    res.locals.eventMongoDbId = req.query.eventMongoDbId;
 
     res.render("waiver", { url:  '/waiver'} );
 

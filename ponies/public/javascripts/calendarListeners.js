@@ -1,3 +1,4 @@
+
 // 1. Initial State & Configuration
 let eventsData = [];
 const MAX_EVENTS = 4;
@@ -12,7 +13,7 @@ function changeMonth(direction) {
     const transitionalDate = new Date(state.year, state.month + direction, 1);
     state.year = transitionalDate.getFullYear();
     state.month = transitionalDate.getMonth();
-    renderCalendar();
+    renderScheduledEventsCalendar();
 }
 
 function getLocalTime( isoStringFormattedTime ) {
@@ -25,7 +26,7 @@ function getLocalTime( isoStringFormattedTime ) {
 }
 
 // 2. Main Render Layout
-async function renderCalendar() {
+async function renderScheduledEventsCalendar() {
     const gridContainer = document.getElementById("calendar-grid");
     const monthHeader = document.getElementById("month-header");
 
@@ -201,6 +202,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     closeBtn.addEventListener("click", closeEventPanel);
     backdrop.addEventListener("click", closeEventPanel); // Clicking outside closes it
+
+    // Kickoff layout initialization
+    renderScheduledEventsCalendar();
+
 });
 
 // Event Listeners for scrolling navigation buttons
@@ -212,9 +217,13 @@ document.getElementById('next-month-button').addEventListener('click', () => {
     changeMonth(1);
 });
 
-
-// Kickoff layout initialization
-renderCalendar();
+      document.addEventListener("DOMContentLoaded", function () {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+        });
+        calendar.render();
+      });
 
 
 

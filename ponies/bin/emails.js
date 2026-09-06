@@ -55,13 +55,13 @@ export async function emailDocument( documentBuffer, senderEmail, recipientsEmai
 
 }
 
-export async function sendScheduledEventEmail( email, locals ) {
+export async function sendScheduledEventEmail( postRequestBody ) {
 
-  const SENDER_EMAIL = email;
+  const SENDER_EMAIL = postRequestBody['Your-Email'];
   const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
   const templatePath = path.join('.', 'views', 'scheduled_event.pug');
   const compiledFunction = pug.compileFile(templatePath);
-  const htmlContent = compiledFunction(locals);
+  const htmlContent = compiledFunction(postRequestBody);
 
   const mailOptions = {
     from: SENDER_EMAIL,

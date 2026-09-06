@@ -11,17 +11,7 @@ block content
 
     div(style="margin-bottom: 20px;").service-portal
         form(action="/waiver", method='GET')
-            input(type="hidden", name="customerName", value=customerName)
-            input(type="hidden", name="customerPhone", value=customerPhone)
-            input(type="hidden", name="customerEmail", value=customerEmail)
-            input(type="hidden", name="customerAddress", value=customerAddress)
-            input(type="hidden", name="venueName", value=venueName)
-            input(type="hidden", name="venueContactName", value=venueContactName)
-            input(type="hidden", name="venueEmail", value=venueEmail)
-            input(type="hidden", name="venuePhone", value=venuePhone)
-            input(type="hidden", name="venueAddress", value=venueAddress)
-            input(type="hidden", name="eventLocation", value=eventLocation)
-            input(type="hidden", name="eventMongoDbId", value=eventMongoDbId)
+            input(type="hidden", name="details", value=JSON.stringify(details))
             button#waiver-button.submit-button(type="submit", style="align-self: center;") Safety Waiver
     div#scheduled-event-container
         div.root-container
@@ -30,15 +20,15 @@ block content
                     div.fields-container-item
                         h3(style="text-align: center;").standard-underline Event Details
                     div.input-group
-                        each fieldValue, fieldName in eventDetails
+                        each fieldValue, fieldName in details.eventDetails
                             div.field.styled-border.full-width
                                 span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Event-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
                                 span(style="margin: 10px 10px 10px 3px;")= fieldValue
                 div.fields-parent-container
                     div.fields-container-item
                         h3(style="text-align: center;").standard-underline Ponies and Accessories
-                        if ponies && ponies.length > 0
-                            each pony in ponies.flat() 
+                        if details.ponies && details.ponies.length > 0
+                            each pony in details.ponies.flat() 
                                 div.field.styled-border(style="margin: 5px 20px 20px 20px;")
                                     h4(style="margin-left: 5px;") #{pony.name}
                                     ul 
@@ -56,19 +46,21 @@ block content
                     div.fields-container-item
                         h3(style="text-align: center;").standard-underline Your Details
                     div.input-group
-                        each fieldValue, fieldName in yourDetails
-                            div.field.styled-border.full-width
-                                span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                span(style="margin: 10px 10px 10px 3px;")= fieldValue
-                if eventLocation === 'Another Venue'
+                        each fieldValue, fieldName in details.yourDetails
+                            if fieldName.search(/Zipcode/) === -1 && fieldName.search(/Street/) === -1 
+                                div.field.styled-border.full-width
+                                    span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                    span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                if details.eventDetails['Event-Location'] === 'Another Venue'
                     div.fields-parent-container#venue-details-container
                         div.fields-container-item
                             h3(style="text-align: center;").standard-underline Venue Details
                         div.input-group
-                            each fieldValue, fieldName in venueDetails
-                                div.field.styled-border.full-width
-                                    span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Venue-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                    span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                            each fieldValue, fieldName in details.venueDetails
+                                if fieldName.search(/Zipcode/) === -1 && fieldName.search(/Street/) === -1 
+                                    div.field.styled-border.full-width
+                                        span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Venue-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
+                                        span(style="margin: 10px 10px 10px 3px;")= fieldValue
             //div.field.full-width 
             //div.autocomplete-container
                 label(for="address-input") Event Address
