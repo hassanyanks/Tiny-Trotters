@@ -50,7 +50,7 @@ block content
                             if fieldName.search(/Zipcode/) === -1 && fieldName.search(/Street/) === -1 
                                 div.field.styled-border.full-width
                                     span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                    span(style="margin: 10px 10px 10px 3px;" id=fieldName)= fieldValue
+                                    span(style="margin: 10px 10px 10px 3px;" id=fieldName.includes('/') ? fieldName.replace('/', '-') : fieldName)= fieldValue
                 if details.eventDetails['Event-Location'] === 'Another Venue'
                     div.fields-parent-container#venue-details-container
                         div.fields-container-item

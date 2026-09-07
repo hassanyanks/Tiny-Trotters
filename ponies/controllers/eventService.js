@@ -196,7 +196,8 @@ export function formatTime(isoStringFormattedTime) {
     const dayOfWeek = daysOfWeek[dateStr.getDay()];
     const year = dateStr.getFullYear();
     const tmpHrs = dateStr.getHours(); // >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
-    const mins = dateStr.getMinutes();
+    const tmpMins = dateStr.getMinutes();
+    const mins = tmpMins < 10 ? `0${tmpMins}` : tmpMins;
     const meridiemSuffix = tmpHrs >= 12 ? 'PM' : 'AM'
     const hrs = dateStr.getHours() >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
     console.log( `formatted time:  ${dayOfWeek}, ${month} ${date}, ${year}, ${hrs}:${mins} ${meridiemSuffix}` );
