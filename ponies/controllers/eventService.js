@@ -195,10 +195,13 @@ export function formatTime(isoStringFormattedTime) {
     const month = months[dateStr.getMonth()];
     const dayOfWeek = daysOfWeek[dateStr.getDay()];
     const year = dateStr.getFullYear();
-    const hrs = dateStr.getHours();
+    const tmpHrs = dateStr.getHours(); // >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
     const mins = dateStr.getMinutes();
+    const meridiemSuffix = tmpHrs >= 12 ? 'PM' : 'AM'
+    const hrs = dateStr.getHours() >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
+    console.log( `formatted time:  ${dayOfWeek}, ${month} ${date}, ${year}, ${hrs}:${mins} ${meridiemSuffix}` );
 
-    return `${dayOfWeek}, ${month} ${date}, ${year}`
+    return `${dayOfWeek}, ${month} ${date}, ${year}, ${hrs}:${mins} ${meridiemSuffix}`
 
   } catch(error) {
     console.log(`Error formatting time:  ${error.message}`);

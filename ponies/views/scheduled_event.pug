@@ -23,24 +23,24 @@ block content
                         each fieldValue, fieldName in details.eventDetails
                             div.field.styled-border.full-width
                                 span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Event-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                                span(style="margin: 10px 10px 10px 3px;" id=fieldName)= fieldValue
                 div.fields-parent-container
                     div.fields-container-item
                         h3(style="text-align: center;").standard-underline Ponies and Accessories
                         if details.ponies && details.ponies.length > 0
                             each pony in details.ponies.flat() 
                                 div.field.styled-border(style="margin: 5px 20px 20px 20px;")
-                                    h4(style="margin-left: 5px;") #{pony.name}
+                                    h4(style="margin-left: 5px;" id=`${pony.name}-header`) #{pony.name}
                                     ul 
                                         li Role
                                             ul 
-                                                li #{pony.role}
+                                                li(id=`${pony.name}-role`)= pony.role
                                     ul 
                                         li Accessories
                                             if pony.accessories && pony.accessories.length > 0
-                                                each accessory in pony.accessories.flat() 
+                                                for [index, accessory] of pony.accessories.flat().entries() 
                                                     ul 
-                                                        li #{accessory}
+                                                        li(id=`${pony.name}-accessory-${index}`)= accessory
             div.row-wrapper
                 div.fields-parent-container#your-details-container
                     div.fields-container-item
@@ -50,7 +50,7 @@ block content
                             if fieldName.search(/Zipcode/) === -1 && fieldName.search(/Street/) === -1 
                                 div.field.styled-border.full-width
                                     span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Your-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                    span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                                    span(style="margin: 10px 10px 10px 3px;" id=fieldName)= fieldValue
                 if details.eventDetails['Event-Location'] === 'Another Venue'
                     div.fields-parent-container#venue-details-container
                         div.fields-container-item
@@ -60,7 +60,7 @@ block content
                                 if fieldName.search(/Zipcode/) === -1 && fieldName.search(/Street/) === -1 
                                     div.field.styled-border.full-width
                                         span(style="font-weight: bold; margin: 10px;")= fieldName.replace(/^(Venue-)|-/g, (m, p1) => p1 ? '' : ' ') + ":"
-                                        span(style="margin: 10px 10px 10px 3px;")= fieldValue
+                                        span(style="margin: 10px 10px 10px 3px;" id=fieldName)= fieldValue
             //div.field.full-width 
             //div.autocomplete-container
                 label(for="address-input") Event Address

@@ -123,13 +123,11 @@ function addDetails(title, eventContainer, details) {
         const fieldName = formatFieldName(key) + ":" 
         const fieldValue = value;           
         const fieldsDiv = document.createElement('div');
-        fieldsDiv.classList.add('field');
         fieldsDiv.classList.add('styled-border');
         const fieldNameEl = document.createElement('span');
         fieldNameEl.classList.add('expander-fieldname');
         fieldNameEl.textContent = fieldName;
         const fieldValueEl = document.createElement('span');
-        fieldValueEl.classList.add('expander-fieldvalue');
         fieldValueEl.textContent = fieldName.includes('Start') || fieldName.includes('End') ? getLocalTime(fieldValue) : fieldValue;
         fieldsDiv.appendChild(fieldNameEl);
         fieldsDiv.appendChild(fieldValueEl);

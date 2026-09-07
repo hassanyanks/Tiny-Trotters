@@ -93,7 +93,7 @@ export const eventSchedulePost = async(req, res, next) => {
     res.locals.details = redisEventParsed;
     res.locals.citiesServed = cachedCitiesStr;
 
-    sendScheduledEventEmail(req.body);
+    sendScheduledEventEmail(redisEventParsed);
 
     res.render('scheduled_event', {
       url: '/scheduled-event',

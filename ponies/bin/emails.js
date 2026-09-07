@@ -55,13 +55,117 @@ export async function emailDocument( documentBuffer, senderEmail, recipientsEmai
 
 }
 
-export async function sendScheduledEventEmail( postRequestBody ) {
+function getLocalTime( isoStringFormattedTime ) {
+    const localTime = new Date(isoStringFormattedTime).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true // Set to true for AM/PM format
+    });
+    return localTime;    
+}
 
-  const SENDER_EMAIL = postRequestBody['Your-Email'];
+function getStyleSheet() {
+
+return '.expander-content ' + 
+'{ ' +
+'  width: max-content;' +
+'  padding: 20px;' +
+'  flex-grow: 1;  ' +
+'  overflow-y: auto;  ' +
+'  -webkit-overflow-scrolling: touch; ' +
+'}' +
+'event-meta p ' + 
+'{ ' +
+'  margin: 8px 0; ' +
+'  event-meta h3 { ' +
+'  text-align: center; ' +
+'  expander-fieldname { ' +
+'  margin-right: 5px; ' +
+'  font-weight: bold; ' +
+'}' +
+'.fields-parent-container ' + 
+'{ ' +
+'  flex: 1; ' +
+'  min-width: 0; ' +
+'  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem); ' +  
+'  border: 1px solid rgba(0, 0, 0, 0.15); ' +
+'  border-radius: 6px; ' +
+'  background-color: #ffffff; ' +
+'  margin: 20px; ' +
+'}' +
+'.expander-fieldname { ' +
+'  margin-right: 5px; ' +
+'  font-weight: bold; ' +
+'}' +
+'.styled-border ' +
+'{ ' +
+'  border: 2px solid #ccc; ' +
+'  border-radius: 6px; ' +
+'  box-sizing: border-box; ' +
+'  padding: 5px; ' +
+'} '
+
+}
+
+function formatFieldName(fieldName) {
+    let tmp = fieldName.replace(/^(Event-)|(Your)|(Venue)|-/g, (m, p1) => p1 ? '' : ' ')
+    return tmp.charAt(0).toUpperCase() + tmp.slice(1);;
+}
+
+function setDetails(title, details) {
+  let detailsContent = `<h3 style="font-size: 20px;">${title}<hr><br>`;
+
+  if(details) {
+    if( title === 'Pony Details') {
+      details.forEach((ponyAttributes,index) => {
+        console.log(`pony attributes:  ${JSON.stringify(ponyAttributes)}`);
+        for(const[key,value] of Object.entries(ponyAttributes).filter(([key]) => key !== '_id')) {
+          console.log(`adding pony attribute to fieldsContent ${key}//${value}`);
+          detailsContent += `<div><span class="expander-fieldname"; style="font-size: 16px; font-weight: bold;">${key.charAt(0).toUpperCase() + key.slice(1)}</span>:  ` +
+                            `<span style="font-size: 16px; font-weight: light;">${value instanceof Array ? value.toString() : value}</span></div>`;
+        }
+        detailsContent += '<br>';                
+      });
+    } else {
+      for(const[key,value] of Object.entries(details).filter(([key]) => key !== '_id')) {
+          const fieldName = key;
+          const fieldValue = value;
+          detailsContent += `<div><span class="expander-fieldname" style="font-size: 16px; font-weight: bold;">${formatFieldName(fieldName)}</span>:  ` +
+                            `<span style="font-size: 16px; font-weight: light;">${fieldName.includes('Start') || fieldName.includes('End') ? getLocalTime(fieldValue) : fieldValue}</span></div>`;
+      }
+    }
+  }
+
+  return detailsContent;
+}
+
+function setHtmlContent(redisEventParsed) {
+
+  const eventDetails = redisEventParsed.eventDetails;
+  const customerDetails = redisEventParsed.yourDetails;
+  const venueDetails = redisEventParsed.venueDetails;
+  const ponyDetails = redisEventParsed.ponies;
+  const allDetails = [eventDetails, ponyDetails, customerDetails, venueDetails];
+  const titles = ['Event Details', 'Pony Details', 'Customer Details', 'Venue Details'];
+  let fieldsContent;
+
+  allDetails.forEach((details, index) => {
+    console.log(`adding this content to fieldsContent ${JSON.stringify(details)}`);
+    fieldsContent += setDetails(titles[index], details);
+  });
+
+  const htmlContent = fieldsContent.replace('undefined<h3', '<h3'); //errant undefined of unknown origin
+  console.log(`**********html content:  ${htmlContent}`);
+  return htmlContent;
+}
+
+export async function sendScheduledEventEmail( redisEventParsed ) {
+
+  const SENDER_EMAIL = redisEventParsed.yourDetails['Your-Email'];
   const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
-  const templatePath = path.join('.', 'views', 'scheduled_event.pug');
-  const compiledFunction = pug.compileFile(templatePath);
-  const htmlContent = compiledFunction(postRequestBody);
+  //const templatePath = path.join('.', 'views', 'scheduled_event.pug');
+  //const compiledFunction = pug.compileFile(templatePath);
+  const htmlContent = setHtmlContent(redisEventParsed);
 
   const mailOptions = {
     from: SENDER_EMAIL,
