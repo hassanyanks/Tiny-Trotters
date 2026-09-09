@@ -1,27 +1,27 @@
 import mongoose from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 import bcrypt from 'bcrypt';
-//import {SALT_ROUNDS} from '../config/config.js';
 import dotenv from 'dotenv';
-import CityAddress from './city_address.js';
 
 dotenv.config({ path: './.env' }); 
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    name: { type: String, required: true, minLength:  5, maxLength: 128, unique: false },
-    streetAddress: { type: String, required: true, minLength:  10, maxLength: 256, unique: false },
-    phone: { type: String, required: true, minLength:  12, maxLength: 32, unique: true },
-    email: { type: String, required: true, minLength:  32, maxLength: 128, unique: true },
-    cityAddress: { type: Schema.Types.ObjectId, ref: 'CityAddress', required: false },
+    role: String,
+    name: { type: String, maxLength: 128 },
+    streetAddress: { type: String, maxLength: 256 },
+    phone: { type: String, unique: true, sparse: true },
+    email: { type: String, required: true, maxLength: 128, unique: true },
+    cityAddress: { type: Schema.Types.ObjectId, ref: 'CityAddress' },
+
     password: String,
     salt: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date,
+    
     // For OAuth2
     provider: String,
-    providerId: String,
-    // ... other profile info (name, etc)
+    providerId: String
 }).pre('save', async function(err) {
     //const saltRounds = 10;
     if(!this.isModified('password')) return err;

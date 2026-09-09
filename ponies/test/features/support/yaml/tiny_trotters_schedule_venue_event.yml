@@ -201,7 +201,7 @@
 
 #41
 - action: "has_css?"
-  locator: "span[id^='Your-Active-Military']"
+  locator: "#Your-Active-Military-Veteran"
   value: "Yes"
 
 #42

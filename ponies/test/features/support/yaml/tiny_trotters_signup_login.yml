@@ -1,0 +1,129 @@
+---
+#Scenarios:
+#   1.  Signing up as first admin, then regular user:  **************************PRE-TEST SETUP:  ENSURE ACCOUNTS WITH BELOW EMAILS ARE REMOVED***********************
+#   2.  logging in after signup
+
+#1 START SCENARIO 1.
+- action: "visit"
+  locator: "/index"
+
+#2  
+- action:  "has_no_css?"
+  locator: "a[href='/calendar']"
+  options: { visible: true, text: "Scheduled Events Calendar" }
+  
+#3
+- action: "click_button"
+  locator: "Log In"
+
+#4
+- &signup_action
+  action: "find_and_click"
+  locator: "a[href='/signup']"
+
+#5
+- action: "find_and_fill_in"
+  locator: "input#email-fld"
+  value: "terrencelvoelker@gmail.com"
+ 
+#6
+- action: "find_and_fill_in"
+  locator: "input.password-fld"
+  value: "DimitriEksi"
+
+#7
+- action: "find_and_click"
+  locator: ".toggle-password"
+
+#8
+- action: "has_css?"
+  locator: ".toggle-password"
+  options: { text: "Hide" }
+
+#9
+- action: "find_and_click"
+  locator: ".toggle-password"
+
+#10
+- action: "has_css?"
+  locator: ".toggle-password"
+  options: { text: "Show" }
+
+#11
+- action: "click_button"
+  locator: "Submit"
+
+#12  
+- action:  "has_css?"
+  locator: "a[href='/calendar']"
+  options: { visible: true, text: "Scheduled Events Calendar" }
+
+#13  
+- action:  "has_no_button?"
+  locator: "Log In"
+
+#14  
+- action:  "has_button?"
+  locator: "Log Out"
+
+#15
+- action: "find_and_click"
+  locator: "a[href='/calendar']"
+
+#16
+- action: "click_button"
+  locator: "Log Out"
+
+#17  
+- action:  "has_no_css?"
+  locator: "a[href='/calendar']"
+  options: { visible: true, text: "Scheduled Events Calendar" }
+
+#18
+- action: "click_button"
+  locator: "Log In"
+
+#19
+- *signup_action
+
+#20
+- action: "find_and_fill_in"
+  locator: "input#email-fld"
+  value: "terrence@gmail.com"
+ 
+#21
+- action: "find_and_fill_in"
+  locator: "input.password-fld"
+  value: "terrence"
+
+#22
+- action: "click_button"
+  locator: "Submit"
+
+#23  
+- action:  "has_no_css?"
+  locator: "a[href='/calendar']"
+  options: { visible: true, text: "Scheduled Events Calendar" }
+
+#24  
+- action:  "has_no_button?"
+  locator: "Log In"
+
+#25  
+- action:  "has_button?"
+  locator: "Log Out"
+
+#26
+- action: "click_button"
+  locator: "Log Out"
+
+#27  
+- action:  "has_button?"
+  locator: "Log In"
+
+#28  
+- action:  "has_no_button?"
+  locator: "Log Out"
+
+
+...	

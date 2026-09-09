@@ -14,7 +14,12 @@ html
           h5.standard-underline Serving #{citiesServed}
         div.nav-right.nav-side
           a(href='/index') Home
-          //button.submit-button Log In
+          if currentUser
+            form(action="/logout" method="POST")
+              button.submit-button Log Out
+          if !currentUser
+            form(action="/login" method="GET")
+              button.submit-button Log In
       hr
       block content
       footer.sticky-footer

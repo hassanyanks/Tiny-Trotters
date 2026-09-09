@@ -959,3 +959,54 @@ padding-right: 15px;
   margin-right: 5px;
   font-weight: bold;
 }
+
+.login-form {
+  align-items: center;
+}
+
+.button-div {
+  display: flex; 
+  justify-content: center;
+}
+
+.login-button {
+  align-self: center;
+}
+
+.login-container, .alt-login-container {
+  width: 25%;
+  justify-self: center;
+  margin: 10px;
+  padding: 10px;
+}
+
+.alt-login-container {
+  font-size: 20px;
+}
+
+.alt-login-container hr {
+  margin-top: 20px;
+  background-color: #a8a7a7;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.text-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 5px;
+  font-size: 20px;
+  border: 1px solid #ddd;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

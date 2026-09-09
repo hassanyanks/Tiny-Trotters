@@ -1,12 +1,14 @@
 require 'yaml'
 require 'capybara/dsl'
 require 'fileutils'
+require 'rspec/expectations'
+include RSpec::Matchers
 
 class DynamicTestRunner
   include Capybara::DSL
 
   def execute_steps_from_file(file_path)
-    steps = YAML.load_file(file_path)
+    steps = YAML.load_file(file_path, aliases:  true)
 
     steps.each_with_index do |step, index|
       action = step['action'].to_sym
@@ -104,6 +106,25 @@ class DynamicTestRunner
 
     when :save_screenshot
       page.public_send(action, step['filename'])
+
+	when :find_and_click
+		found_element = page.public_send('find', step['locator'])
+		found_element.click
+	
+	when :find_and_fill_in
+		found_element = page.public_send('find', step['locator'])
+		found_element.fill_in with: step['value']
+
+	when :find_and_has_text
+		found_element = page.public_send('find', step['locator'])
+		expect( found_element.value ).to eq(step['value'])
+	
+	when :find_and_has_no_text
+		found_element = page.public_send('find', step['locator'])
+		expect( found_element.value ).not_to eq(step['value'])
+		
+	when :go_back
+		page.public_send(action)
 
     else
       execute_generic_step(action, step)

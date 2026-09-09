@@ -1,0 +1,18 @@
+extends layout 
+
+block scripts 
+
+    script(src="/javascripts/togglePswdListener.mjs" type="module")
+
+block append content
+
+    section.login-container
+        //- url is either '/login' or '/signup'; template is shared
+        form(action=url method="post") 
+            input.text-input#email-fld(placeholder="Email" name="email" type="text" required autofocus)
+            section.password-container
+                input.text-input.password-fld(placeholder="Password" name="password" type="password" required)
+                span.toggle-password Show
+            div.button-div
+                button.submit-button(type="submit") Submit
+
