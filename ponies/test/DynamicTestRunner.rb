@@ -125,7 +125,8 @@ class DynamicTestRunner
 		
 	when :go_back
 		page.public_send(action)
-
+		sleep 5
+		
     else
       execute_generic_step(action, step)
     end

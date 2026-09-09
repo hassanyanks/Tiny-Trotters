@@ -4,8 +4,6 @@ import { cachedCitiesStr } from '../utils/cityService.js';
 
 const router = express.Router();
 
-router.get('/');
-
 router.get('/calendar', (req, res) => {
     res.locals.citiesServed = cachedCitiesStr; 
     res.render('scheduled_events_calendar');
