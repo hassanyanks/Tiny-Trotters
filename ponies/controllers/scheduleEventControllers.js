@@ -5,7 +5,13 @@ import ScheduledEvent from "../models/scheduled_event.js";
 import { cachedCitiesStr } from '../utils/cityService.js';
 import { sendScheduledEventEmail } from "../bin/emails.js";
 import { createScheduledEvent } from "./eventService.js";
-import { getEventDetails, getPoniesData, formatTime, fullAddress, getDetails } from "./eventService.js";
+import { getPoniesData, formatTime, fullAddress, getDetails, redisFetchEvent } from "./eventService.js";
+import redisClient from "../bin/redis.js";
+import 'dotenv/config';
+
+export const scheduleAnEvent = async(req, res, next) => {
+
+};
 
 export const eventScheduleGet = async(req, res, next) => {
   try {    
@@ -30,60 +36,64 @@ function addOtherAccessories(accessoriesList, ponyNonStandardAccessories) {
   }
 }
 
+//import { MongoClient, ObjectId } from 'mongodb';
+
+async function addEventToRedis(mongoEventDoc) {
+  try {
+
+    // 1. Extract the MongoDB ID as a clean text string
+    const eventId = mongoEventDoc._id.toString(); 
+    const timestamp = new Date(mongoEventDoc.eventDetails['Event-Start']).getTime();
+    
+    const pipeline = redisClient.multi();
+
+    // 2. Cache the document in Redis using the MongoDB ID in the key
+    pipeline.set(`event:data:${eventId}`, JSON.stringify(mongoEventDoc), {
+        EX: 86400 * 30 // Cache for 30 days
+    });
+
+    // 3. Track the MongoDB ID in the sorted set date index
+    pipeline.zAdd('events:by_date', {
+        score: timestamp,
+        value: eventId
+    });
+
+    await pipeline.exec() //all goes well, returns ["OK", 1]
+
+  } catch (error) {
+    console.error("Error adding event to redis:", error.message);
+  }
+
+}
+
 export const eventSchedulePost = async(req, res, next) => {
   try { 
 
     const yourDetails = await getDetails(req.body, 'Your' );
-    const venueDetails = await getDetails(req.body, 'Venue' );
-    const eventDetails = await getEventDetails(req.body);
-    console.log(`*************************************getEventDetails() RETURNED: ${JSON.stringify(eventDetails)}  `)
-    const poniesData = await getPoniesData(req.body);
-    console.log(`*************************************getPoniesData() RETURNED: ${JSON.stringify(poniesData)}  `)
-
     let customerAddress = await fullAddress( req.body['Your-Street-Address'], req.body['Your-Zipcode'] );
-    res.locals.customerAddress = customerAddress
-    console.log(`****************customer address:  ${res.locals.customerAddress}`);
-
-    //the below get passed to waiver form to populate signature/info blocks that follow the waiver statement on the waiver form
-    res.locals.customerName   = req.body['Your-Name'];
-    res.locals.customerEmail  = req.body['Your-Email'];
-    res.locals.customerPhone  = req.body['Your-Phone'];
-
-    if( req.body['Event-Location'] === 'Another Venue' ) {
-
-      res.locals.venueName   = req.body['Venue-Contact-Name'];
-      res.locals.venueEmail  = req.body['Venue-Email'];
-      res.locals.venuePhone  = req.body['Venue-Phone'];
-
+    yourDetails['Your-Full-Address'] = customerAddress;
+    const venueDetails = await getDetails(req.body, 'Venue' );
+    const eventDetails = await getDetails(req.body, 'Event');
+   if( venueDetails ) {
       let venueAddress = await fullAddress( req.body['Venue-Street-Address'], req.body['Venue-Zipcode'] );                         ;
-      res.locals.venueAddress = venueAddress;
-      console.log(`****************venue address:  ${res.locals.venueAddress}`);
-
+      venueDetails['Venue-Full-Address'] = venueAddress;
     }
+    const poniesData = await getPoniesData(req.body);
+ 
+    const result = await createScheduledEvent(eventDetails, yourDetails, venueDetails, poniesData);
+    const eventId = result._id;
 
-    res.locals.eventLocation = req.body['Event-Location'];
-    console.log(`****************event location passed OUT:  ${res.locals.eventLocation}`);
+    // Redis
+    await addEventToRedis(result);
+    const eventFromRedis = await redisFetchEvent(eventId);
+    const redisEventParsed = JSON.parse(eventFromRedis);
+    redisEventParsed.eventDetails['Event-Start'] = formatTime(redisEventParsed.eventDetails['Event-Start']);
+    redisEventParsed.eventDetails['Event-End'] = formatTime(redisEventParsed.eventDetails['Event-End']);
+
+    res.locals.details = redisEventParsed;
     res.locals.citiesServed = cachedCitiesStr;
 
-    const result = await createScheduledEvent(eventDetails, yourDetails, venueDetails, poniesData);
-
-    const details = result.toObject().eventDetails;
-    const ponies = result.toObject().ponies;
-
-    for (const [key, value] of Object.entries(details)) {
-      if (key.includes('Start') || key.includes('End')) {
-        details[key] = formatTime(String(value));
-      }
-    }
-
-    res.locals.eventDetails = details;
-    res.locals.yourDetails = yourDetails;
-    res.locals.venueDetails = venueDetails ? venueDetails : null
-    res.locals.ponies = ponies;
-    res.locals.eventMongoDbId = result.id;
-
-    console.log(`scheduled event result.details:  ${JSON.stringify(result)}`);
-    sendScheduledEventEmail(req.body['Your-Email'], res.locals);
+    sendScheduledEventEmail(redisEventParsed);
 
     res.render('scheduled_event', {
       url: '/scheduled-event',

@@ -2,29 +2,27 @@ extends layout
 
 block content
     form(action="/waiver", method='POST')
-        input(type="hidden", name="eventLocation", value=eventLocation)
-        input(type="hidden", name="eventMongoDbId", value=eventMongoDbId)
-        input(type="hidden", name="customerEmail", value=customerEmail)
+        input(type="hidden", name="eventDetails", value=JSON.stringify(details))
         div(style="width: 100%").waiver-container
             h3.standard-underline Read waiver, then ensure all fields have the necessary data
             h4(style="font-style: italic; margin-top: 5px; margin-bottom: 0px;") Later--in person--you will sign a copy of the waiver being sent to us 
             h5(style="font-style: italic;  color: red; margin-top: 5px;") We are also emailing you a copy  
             iframe(src=`/templates/${waiverForm}` id="waiver-form-iframe" width="100%" height="300px")
             label(for="customerName") Your Full Name
-            input(type="text" id="customerName" name="customerName" value=customerName size=50 required)
+            input(type="text" id="customerName" name="customerName" value=details.yourDetails['Your-Name'] size=50 required)
             label(for="customerPhone") Your Phone
-            input(type="text" id="customerPhone" name="customerPhone" value=customerPhone size=25 required)
+            input(type="text" id="customerPhone" name="customerPhone" value=details.yourDetails['Your-Phone'] size=25 required)
             label(for="customerAddress") Your Address
-            input(type="text" id="customerAddress" name="customerAddress" value=customerAddress size=100 required)
+            input(type="text" id="customerAddress" name="customerAddress" value=details.yourDetails['Your-Full-Address'] size=100 required)
 
-            if eventLocation === 'Another Venue'
+            if details.eventDetails['Event-Location'] === 'Another Venue'
                 hr
-                label(for="venueName") Venue Name
-                input(type="text" id="venueName" name="venueName" value=venueName size=50 required)
+                label(for="venueContactName") Venue Contact Name
+                input(type="text" id="venueContactName" name="venueContactName" value=details.venueDetails['Venue-Contact-Name'] size=50 required)
                 label(for="venuePhone") Venue Phone
-                input(type="text" id="venuePhone" name="venuePhone" value=venuePhone size=25)
+                input(type="text" id="venuePhone" name="venuePhone" value=details.venueDetails['Venue-Phone'] size=25)
                 label(for="venueAddress") Venue Address
-                input(type="text" id="venueAddress" name="venueAddress" value=venueAddress size=100 required)
+                input(type="text" id="venueAddress" name="venueAddress" value=details.venueDetails['Venue-Full-Address'] size=100 required)
 
             hr
             label(for="customerChildData") Names and Ages of Children to be Present

@@ -1,5 +1,5 @@
-//import bcrypt from 'bcrypt';
-//import crypto, { hash } from 'crypto';
+import bcrypt from 'bcrypt';
+import crypto, { hash } from 'crypto';
 //import User from '../models/user.js';
 //import {SALT_ROUNDS} from '../config/config.js';
 import 'dotenv/config';
@@ -55,13 +55,132 @@ export async function emailDocument( documentBuffer, senderEmail, recipientsEmai
 
 }
 
-export async function sendScheduledEventEmail( email, locals ) {
+function getLocalTime( isoStringFormattedTime ) {
+    const localTime = new Date(isoStringFormattedTime).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true // Set to true for AM/PM format
+    });
+    return localTime;    
+}
 
-  const SENDER_EMAIL = email;
+function getStyleSheet() {
+
+return '.expander-content ' + 
+'{ ' +
+'  width: max-content;' +
+'  padding: 20px;' +
+'  flex-grow: 1;  ' +
+'  overflow-y: auto;  ' +
+'  -webkit-overflow-scrolling: touch; ' +
+'}' +
+'event-meta p ' + 
+'{ ' +
+'  margin: 8px 0; ' +
+'  event-meta h3 { ' +
+'  text-align: center; ' +
+'  expander-fieldname { ' +
+'  margin-right: 5px; ' +
+'  font-weight: bold; ' +
+'}' +
+'.fields-parent-container ' + 
+'{ ' +
+'  flex: 1; ' +
+'  min-width: 0; ' +
+'  font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem); ' +  
+'  border: 1px solid rgba(0, 0, 0, 0.15); ' +
+'  border-radius: 6px; ' +
+'  background-color: #ffffff; ' +
+'  margin: 20px; ' +
+'}' +
+'.expander-fieldname { ' +
+'  margin-right: 5px; ' +
+'  font-weight: bold; ' +
+'}' +
+'.styled-border ' +
+'{ ' +
+'  border: 2px solid #ccc; ' +
+'  border-radius: 6px; ' +
+'  box-sizing: border-box; ' +
+'  padding: 5px; ' +
+'} '
+
+}
+
+function formatFieldName(fieldName) {
+    let tmp = fieldName.replace(/^(Event-)|(Your)|(Venue)|-/g, (m, p1) => p1 ? '' : ' ')
+    return tmp.charAt(0).toUpperCase() + tmp.slice(1);;
+}
+
+function setDetails(title, details) {
+  let detailsContent = `<h3 style="font-size: 20px;">${title}<hr><br>`;
+
+  if(details) {
+    if( title === 'Pony Details') {
+      details.forEach((ponyAttributes,index) => {
+        console.log(`pony attributes:  ${JSON.stringify(ponyAttributes)}`);
+        for(const[key,value] of Object.entries(ponyAttributes).filter(([key]) => key !== '_id')) {
+          console.log(`adding pony attribute to fieldsContent ${key}//${value}`);
+          detailsContent += `<div><span class="expander-fieldname"; style="font-size: 16px; font-weight: bold;">${key.charAt(0).toUpperCase() + key.slice(1)}</span>:  ` +
+                            `<span style="font-size: 16px; font-weight: light;">${value instanceof Array ? value.toString() : value}</span></div>`;
+        }
+        detailsContent += '<br>';                
+      });
+    } else {
+      for(const[key,value] of Object.entries(details).filter(([key]) => key !== '_id')) {
+          const fieldName = key;
+          const fieldValue = value;
+          detailsContent += `<div><span class="expander-fieldname" style="font-size: 16px; font-weight: bold;">${formatFieldName(fieldName)}</span>:  ` +
+                            `<span style="font-size: 16px; font-weight: light;">${fieldName.includes('Start') || fieldName.includes('End') ? getLocalTime(fieldValue) : fieldValue}</span></div>`;
+      }
+    }
+  }
+
+  return detailsContent;
+}
+
+function setHtmlContent(redisEventParsed) {
+
+  const eventDetails = redisEventParsed.eventDetails;
+  const customerDetails = redisEventParsed.yourDetails;
+  const venueDetails = redisEventParsed.venueDetails;
+  const ponyDetails = redisEventParsed.ponies;
+  const allDetails = [eventDetails, ponyDetails, customerDetails, venueDetails];
+  const titles = ['Event Details', 'Pony Details', 'Customer Details', 'Venue Details'];
+  let fieldsContent;
+
+  allDetails.forEach((details, index) => {
+    console.log(`adding this content to fieldsContent ${JSON.stringify(details)}`);
+    fieldsContent += setDetails(titles[index], details);
+  });
+
+  const htmlContent = fieldsContent.replace('undefined<h3', '<h3'); //errant undefined of unknown origin
+  console.log(`**********html content:  ${htmlContent}`);
+  return htmlContent;
+}
+
+export async function sendEmailWithToken(user) {
+
+  const SENDER_EMAIL = `${process.env.STAFF_EMAIL.split(',')[0]}`;
+  const RECIPIENT_EMAIL = user.email;
+  const resetUrl = `https://localhost:443/password-reset-form/?token=${user.resetPasswordToken}`;
+
+  const mailOptions = {
+    from: SENDER_EMAIL,
+    to: RECIPIENT_EMAIL,
+    subject: 'Tiny Trotters Pony Parties Password Reset',
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`,
+  };
+
+  send( mailOptions );
+
+}
+
+export async function sendScheduledEventEmail( redisEventParsed ) {
+
+  const SENDER_EMAIL = redisEventParsed.yourDetails['Your-Email'];
   const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
-  const templatePath = path.join('.', 'views', 'scheduled_event.pug');
-  const compiledFunction = pug.compileFile(templatePath);
-  const htmlContent = compiledFunction(locals);
+  const htmlContent = setHtmlContent(redisEventParsed);
 
   const mailOptions = {
     from: SENDER_EMAIL,
@@ -72,37 +191,6 @@ export async function sendScheduledEventEmail( email, locals ) {
   };
 
   send( mailOptions );
-
-}
-
-export function sendEmailWithToken(user) {
-
-  // Looking to send emails in production? Check out our Email API/SMTP product!
-  const transporter = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: process.env.ESP_USER,
-      pass: process.env.ESP_PSWD
-    }
-  });
-
-  const TOKEN = process.env.MAILTRAP_TOKEN;
-  const TEST_INBOX_ID = process.env.MAILTRAP_INBOX_ID;
-  const SENDER_EMAIL = "support@gmail.com";
-  const RECIPIENT_EMAIL = user.email;
-  //const resetUrl = `https://localhost:443/pswd-reset-usermatch/?token=${user.resetPasswordToken}`;
-
-  const client = new MailtrapClient({ token: TOKEN, sandbox: true, testInboxId: TEST_INBOX_ID });
-
-  client.send({
-  from: { name: "Mailtrap Test", email: SENDER_EMAIL },
-  to: [{ email: RECIPIENT_EMAIL }],
-  subject: "Scheduled Event",
-  html: `${htmlContent}`,
-  })
-  .then(console.log)
-  .catch(console.error);
 
 }
 
@@ -139,19 +227,4 @@ export function getUserByEmail( resolve, reject, email ) {
     })
 }
 
-export function updateUserWithToken( user, hashedToken ) {
-  return new Promise( async (resolve, reject) => {
-    console.log(`updateUserWithToken() user passed in:  user ${user}, token ${hashedToken}`)
-    //const { user, hashedToken } = userAndToken;
-      //console.log(`********************* mailtrap user ${process.env.ESP_USER}, mailtrap pswd ${process.env.ESP_PSWD}**************************`)
-      user.resetPasswordToken = hashedToken;
-      user.resetPasswordExpires = Date.now() + 1800000; // .5 hour
-      const modifiedUser = await user.save();
-      if( modifiedUser.resetPasswordToken === hashedToken ) {
-        resolve(modifiedUser);
-      } else {
-        reject(new Error(`Unable to update User record with reset token.`))
-      }
-  });
-}
   

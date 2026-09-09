@@ -1,0 +1,82 @@
+---
+#Scenarios:
+#   Signing up as user already in db:  ***********************SETUP:  ENSURE MY ACCOUNT IS IN THE DB!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+#1 START SCENARIO 1.
+- action: "visit"
+  locator: "/index"
+
+#2  
+- action:  "has_no_css?"
+  locator: "a[href='/calendar']"
+  options: { visible: true, text: "Scheduled Events Calendar" }
+  
+#3
+- action: "click_button"
+  locator: "Log In"
+
+#4
+- action: "find_and_click"
+  locator: "a[href='/signup']"
+
+#5
+- action: "find_and_fill_in"
+  locator: "input#email-fld"
+  value: "terrencelvoelker@gmail.com"
+ 
+#6
+- action: "find_and_fill_in"
+  locator: "input.password-fld"
+  value: "DimitriEksi"
+
+#7
+- action: "find_and_click"
+  locator: ".toggle-password"
+
+#8
+- action: "has_css?"
+  locator: ".toggle-password"
+  options: { text: "Hide" }
+
+#9
+- action: "find_and_click"
+  locator: ".toggle-password"
+
+#10
+- action: "has_css?"
+  locator: ".toggle-password"
+  options: { text: "Show" }
+
+#11
+- action: "click_button"
+  locator: "Submit"
+
+#12
+- action: "has_css?"
+  locator: "pre"
+  options: { text: "{\"error\":\"Conflict\",\"message\":\"A user with this email already exists. Please press back button, then use another or try 'Forgot password?' if this user is you.\"}"}  
+
+#13
+- action: "go_back"
+
+#14
+- action: "click_button"
+  locator: "Log In"
+
+#15
+- action: "find_and_fill_in"
+  locator: "input#forgot-password-email"
+  value: "terrencelvoelker@gmail.com"
+
+#16
+- action: "click_button"
+  locator: "Reset"
+
+#12
+- action: "has_element?"
+  locator: "pre"
+  options: { message: "{\"Reset your password by following the link just sent to your email. The token in the link will expire in one hour.\"}"}  
+
+#13
+- action: "go_back"

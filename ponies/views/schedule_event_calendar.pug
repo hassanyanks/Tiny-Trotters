@@ -1,0 +1,18 @@
+extends layout 
+
+block scripts 
+    script(type="importmap").
+      {
+        "imports": {
+          "fullcalendar": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.0/all/global.js"
+        }
+      }
+
+block content
+    h1 Available Slots
+    
+    //- The calendar container must have a unique ID
+    div#schedule-event-calendar
+
+    //- Load your frontend script
+    //script(src="/javascripts/calendarListeners.js", type="module")

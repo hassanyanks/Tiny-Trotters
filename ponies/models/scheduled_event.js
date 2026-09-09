@@ -45,6 +45,10 @@ const YourDetailsSchema = new Schema({
     type: String, 
     required: true 
   },
+  'Your-Full-Address': { 
+    type: String, 
+    required: true 
+  },
   'Your-Phone': { 
     type: String, 
     required: true 
@@ -64,11 +68,19 @@ const VenueDetailsSchema = new Schema({
     type: String, 
     required: false 
   },
+  'Venue-Contact-Name': { 
+    type: String, 
+    required: false 
+  },
   'Venue-Street-Address': { 
     type: String, 
     required: false 
   },
   'Venue-Zipcode': { 
+    type: String, 
+    required: false 
+  },
+  'Venue-Full-Address': { 
     type: String, 
     required: false 
   },

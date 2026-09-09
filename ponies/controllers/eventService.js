@@ -1,7 +1,7 @@
 // services/eventService.js
 import ScheduledEvent from "../models/scheduled_event.js";
 import CityAddress from "../models/city_address.js";
-import { json } from "body-parser";
+import redisClient from "../bin/redis.js";
 
 export async function fullAddress( streetAddress, zipcode ) {
 
@@ -88,7 +88,7 @@ export async function createScheduledEvent(eventDetails, yourDetails, venueDetai
 
 }
 
-/* KEEIING FOR POSSIBLE FUTURE USE
+/* KEEPING FOR POSSIBLE FUTURE USE
 function formatTime(eventDetailsData) {
   const eventTimeData = Object.fromEntries( Object.entries(eventDetailsData).filter(([key]) => key.includes('Start') || key.includes('End'))); //pulling in all fields data with name attribute containing 'Event'
   for(const[key,value] of Object.entries(eventTimeData) ) {
@@ -105,17 +105,23 @@ function formatTime(eventDetailsData) {
 */
 
 export async function getDetails(postRequestBody, detailsIdentifier) {
+  const details = Object.fromEntries( Object.entries(postRequestBody).filter(([key]) => key.includes(detailsIdentifier))); 
 
-    const details = Object.fromEntries( Object.entries(postRequestBody).filter(([key]) => key.includes(detailsIdentifier))); 
+  if( detailsIdentifier === 'Your' ) {
+    details['Your-Active-Military/Veteran'] ? details['Your-Active-Military/Veteran'] = 'Yes' : details['Your-Active-Military/Veteran'] = 'No'
+  }
 
-    if( detailsIdentifier === 'Your' ) {
-      details['Your-Active-Military/Veteran'] ? details['Your-Active-Military/Veteran'] = 'Yes' : details['Your-Active-Military/Veteran'] = 'No'
-    }
+  if( detailsIdentifier === 'Event' ) {
+    if(details['Event-Type'] === "Other") {
+      details['Event-Type'] = details['Event-Other-Type']
+      delete details['Event-Other-Type'];
+    } 
+  }
 
-    return details;
-
+  return details;
 }
 
+/*
 export async function getEventDetails(postRequestBody) {
 
     const eventDetails = Object.fromEntries( Object.entries(postRequestBody).filter(([key]) => key.includes('Event'))); //pulling in all fields data with name attribute containing 'Event'
@@ -130,6 +136,7 @@ export async function getEventDetails(postRequestBody) {
     return eventDetails;
 
 }
+*/
 
 function addOtherAccessories(accessoriesList, ponyNonStandardAccessories) {
   for(const[key,value] of Object.entries(ponyNonStandardAccessories) ) {
@@ -177,15 +184,33 @@ export async function getPoniesData(postRequestBody) {
 
 }
 
-export function formatTime(dateTimeValue) {
-    console.log(`formatTime() incoming param:  ${JSON.stringify(dateTimeValue)}`);
-    const [dayOfWeek, month, date, year, timeValue] = String(dateTimeValue).split(' ');
-    const hour = parseInt(timeValue.split(':')[0]);
-    const minutes = timeValue.split(':')[1]
-    const time12HrFormatted =  hour > 12  ? `${hour-12}:${minutes} PM` 
-                            : hour === 12 ? `${hour}:${minutes} PM` 
-                            : `${hour}:${minutes} AM`
-    const newDateTimeValue = `${dayOfWeek} ${month} ${date} ${year} ${time12HrFormatted}`
-    console.log(`formatTime() return value:  ${newDateTimeValue}`)
-    return newDateTimeValue;
+export function formatTime(isoStringFormattedTime) {
+  try {
+
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const dateStr = new Date(isoStringFormattedTime);
+
+    const date = dateStr.getDate();
+    const month = months[dateStr.getMonth()];
+    const dayOfWeek = daysOfWeek[dateStr.getDay()];
+    const year = dateStr.getFullYear();
+    const tmpHrs = dateStr.getHours(); // >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
+    const tmpMins = dateStr.getMinutes();
+    const mins = tmpMins < 10 ? `0${tmpMins}` : tmpMins;
+    const meridiemSuffix = tmpHrs >= 12 ? 'PM' : 'AM'
+    const hrs = dateStr.getHours() >= 12 ? dateStr.getHours() - 12 : dateStr.getHours();
+    console.log( `formatted time:  ${dayOfWeek}, ${month} ${date}, ${year}, ${hrs}:${mins} ${meridiemSuffix}` );
+
+    return `${dayOfWeek}, ${month} ${date}, ${year}, ${hrs}:${mins} ${meridiemSuffix}`
+
+  } catch(error) {
+    console.log(`Error formatting time:  ${error.message}`);
+    return isoStringFormattedTime;
+  }
+}
+
+export async function redisFetchEvent( eventId ) {
+    const data = await redisClient.get(`event:data:${eventId}`);
+    return data;
 }

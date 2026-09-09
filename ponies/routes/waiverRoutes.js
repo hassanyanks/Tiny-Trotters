@@ -16,6 +16,5 @@ router.use(bodyParser.json({limit: '10mb'}));
 router.get('/', waiverGet );
 router.get('/waiver', waiverGet);
 router.post('/waiver', waiverPost);
-router.post('/index');
 
 export default router;
