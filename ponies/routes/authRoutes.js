@@ -22,6 +22,7 @@ router.use(passport.session()); // This uses the express-session middleware
 //    res.render('index');
 //}
 
+
 router.get('/signup', (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render("signup");
