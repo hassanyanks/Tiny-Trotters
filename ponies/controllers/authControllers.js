@@ -81,7 +81,7 @@ async function startLoggedInSession(req, res, next, user) {
         
         console.log(`Authentication successful. User: ${req.session.userid}. Redirecting...`);
         
-        return res.redirect('/index');
+        return res.redirect('/index', { userRole: req.session.userRole });
     });
 }
 
