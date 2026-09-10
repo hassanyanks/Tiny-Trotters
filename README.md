@@ -8,6 +8,15 @@
             - Go to your Staging Service -> Custom Domains, and add a backup variant like ://yourdomain.com (or vice versa). 
               - This forces Render to issue and validate SSL certificates for both services ahead of time
   ### Manual Failover Steps
-    - If production goes down:
-      - You go to your Cloudflare DNS pane
-      - You edit your root domain (@) and www CNAME records, changing the target from prod-app.onrender.com to staging-app.onrender.com.You save.
+    - What to do during an Emergency (The 2-Step Protocol)
+       * If your production server crashes, you must change settings in both dashboards. 
+       * Because Cloudflare eliminates DNS propagation time, your site will still recover in under a minute [1.5]:Step 1 
+       * Step 1 (In Render): 
+         - Go to your Production Service settings, scroll to Custom Domains, and delete yourdomain.com. 
+         - Then immediately go to your Staging Service settings, click Add Custom Domain, and paste yourdomain.com
+           + Because Render already has valid SSL logs for your domain infrastructure, this attaches instantly.
+        * Step 2 (In Cloudflare)
+          - Go to your DNS Records
+          - edit your root (@) and www CNAME records
+          - switch the target string from your production Render URL to your staging Render URL. 
+          - Click Save
