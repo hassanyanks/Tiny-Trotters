@@ -116,13 +116,13 @@ export const signupPost = async (req, res, next) => {
 
         // 1. Input Validation
         if (!email || !password) {
-            return res.status(404).render('login', { error: 'Email and password are required.' });
+            return res.status(400).render('signup', { error: 'Email and password are required.' });
         }
 
         // Basic email regex validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(404).render('signup', { error: 'Please enter a valid email.' });
+            return res.status(400).render('signup', { error: 'Please enter a valid email.' });
         }
 
         // Normalize email to lowercase and trim spaces
@@ -133,12 +133,9 @@ export const signupPost = async (req, res, next) => {
         const saltRounds = Number(process.env.SALT_ROUNDS) || 10;
         const hash = await bcrypt.hash(password, saltRounds);
 
-        if (!hash) {
-            return res.status(500).render('signup', { error: 'Unable to process your password.' });
-        }
-
         // 3. Admin Role Resolution
-        const staffEmails = process.env.STAFF_EMAIL ? process.env.STAFF_EMAIL.split(',').map(e => e.trim().toLowerCase()) : [];
+        const staffEmailsEnv = process.env.STAFF_EMAIL || '';
+        const staffEmails = staffEmailsEnv.split(',').map(e => e.trim().toLowerCase());
         const userRole = staffEmails.includes(normalizedEmail) ? 'admin' : 'user';
 
         console.log(`Assigned user role: ${userRole}`);
@@ -153,7 +150,9 @@ export const signupPost = async (req, res, next) => {
             // Handle MongoDB duplicate key error
             if (err.code === 11000) {
                 const duplicateField = Object.keys(err.keyValue)[0] || 'field';
-                return res.status(400).render('signup', { error: `A user with this ${duplicateField} already exists. Please try another or log in as an existing user.` });
+                return res.status(400).render('signup', { 
+                    error: `A user with this ${duplicateField} already exists. Please try another or log in.` 
+                });
             }
 
             console.error(`Error saving user to database: ${err.message}`);
@@ -161,10 +160,17 @@ export const signupPost = async (req, res, next) => {
         }
         
         // 5. Establish Session
-        startLoggedInSession(req, res, next, newUser);
+        req.logIn(newUser, (loginErr) => {
+            if (loginErr) { return next(loginErr); }
+            
+            req.session.userid = newUser._id;
+            req.session.userRole = newUser.role;
+            
+            return res.status(303).redirect('/index');
+        });
 
     } catch (err) {
-        // Catches unexpected errors (e.g., bcrypt failures, session crashes)
+        // Catches unexpected errors (e.g., database connection down, session crashes)
         next(err);
     }
 };
