@@ -5,8 +5,8 @@
 
 #1 START SCENARIO 1.
 - action: "visit"
-  #locator: "https://tiny-trotters-staging.onrender.com"
-  locator: "/index"
+  locator: "https://tiny-trotters-staging.onrender.com"
+  #locator: "/index"
 #2
 - action: "click_on"
   locator: "Schedule an Event"
