@@ -8,7 +8,7 @@
             - Go to your Staging Service -> Custom Domains, and add a backup variant like ://yourdomain.com (or vice versa). 
               - This forces Render to issue and validate SSL certificates for both services ahead of time
   ### Manual Failover Steps
-    - What to do during an Emergency (The 2-Step Protocol)
+    - What to do during an Emergency
        * If your production server crashes, you must change settings in both dashboards. 
        * Because Cloudflare eliminates DNS propagation time, your site will still recover in under a minute [1.5]:Step 1 
        * Step 1 (In Render): 
@@ -20,3 +20,7 @@
           - edit your root (@) and www CNAME records
           - switch the target string from your production Render URL to your staging Render URL. 
           - Click Save
+        * Step 3
+          - In Render staging environment and under individual Environment Variables
+          - temporarily change your environment flag (e.g., NODE_ENV) from staging to production 
+            * (or delete it if you want it to pull directly from your shared Production Env Group).
