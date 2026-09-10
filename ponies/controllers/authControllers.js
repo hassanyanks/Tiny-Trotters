@@ -7,60 +7,55 @@ import { generateHashedToken, sendEmailWithToken } from '../bin/emails.js'
 
 const { Strategy: LocalStrategy } = await import('passport-local');
 
+// 1. Core Authentication Strategy
 passport.use(new LocalStrategy(
-  { usernameField: 'email' },
-  async (email, password, done) => {
-    try {
-      // 1. Fetch user and handle database lookup
-      const user = await User.findOne({ email: email }).exec();
-      
-      if (!user) {
-        //await bcrypt.compare(password, '$2b$10$invalidhashplaceholder'); //security hardening here
-        return done(null, false, { message: 'Invalid email or password.' });
-      }
+    { usernameField: 'email' },
+    async (email, password, done) => {
+        try {
+            const normalizedEmail = email.trim().toLowerCase();
+            const user = await User.findOne({ email: normalizedEmail }).exec();
+            
+            // Hardening mechanism against timing attacks
+            if (!user) {
+                await bcrypt.compare(password, '$2b$10$X3k7R6vW9qP2mN5zL8uY1eO4sT7vX8yZ9uI0oP1qR2sT3uV4wX5yZ');
+                return done(null, false, { message: 'Invalid email or password.' });
+            }
 
-      // 2. Compare passwords (promisified or wrapped securely)
-      // Note: verify if your schema uses user.passwordHash or user.password
-      const isMatch = await bcrypt.compare(password, user.password);
-      
-      if (!isMatch) {
-        return done(null, false, { message: 'Invalid email or password.' });
-      }
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                return done(null, false, { message: 'Invalid email or password.' });
+            }
 
-      // 3. Success
-      return done(null, user);
-
-    } catch (err) {
-      // 4. Handle server/database errors cleanly
-      return done(err);
+            return done(null, user);
+        } catch (err) {
+            return done(err);
+        }
     }
-  }
 ));
 
-// tell passport how to serialize the user
+// 2. Session Packaging (Serializing)
 passport.serializeUser((user, done) => {
-console.log(`*********************Inside serializeUser callback. User id ${user.id} is saved to the session file store here`)
-done(null, user.id);
+    console.log(`[Session] Serializing user ID ${user._id} to session file store.`);
+    // Using user._id forces the native identifier representation
+    done(null, user._id);
 });
 
-passport.deserializeUser(async function(id, done) {
-try {
-    // Await the database query directly
-    const user = await User.findById(id).exec();
-    
-    // If no user is found, pass false
-    if (!user) {
-    return done(null, false);
+// 3. Request Unpacking (Deserializing)
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id).exec();
+        
+        if (!user) {
+            console.warn(`[Session] Deserialization failed: User ID ${id} no longer exists.`);
+            return done(null, false);
+        }
+
+        console.log(`[Session] Deserialized successfully for user: ${user._id}`);
+        return done(null, user);
+    } catch (err) {
+        console.error(`[Session] Database error during deserialization: ${err.message}`);
+        return done(err);
     }
-    
-    // Success: pass the user object
-    console.log(`**************************user found is ${user.id}`);
-    return done(null, user);
-    
-} catch (err) {
-    // Safely catch database connection errors or casting errors
-    return done(err);
-}
 });
 
 export const user_from_email = async(req, res, next) => {
@@ -71,57 +66,47 @@ export const home = async(req, res, next) => {
     res.render('index', { user: req.user });
 }
 
-async function startLoggedInSession(req, res, next, user) {
-    req.logIn(user, function(err) {
+// startLoggedInSession.js
+function startLoggedInSession(req, res, next, user) {
+    req.logIn(user, (err) => {
         if (err) { return next(err); }
         
-        req.session.userid = user._id;
-        req.session.userRole = user.role;
-        console.log(`req.session.userRole is ${req.session.userRole}`);
+        console.log(`Authentication successful. User ID: ${user._id}. Redirecting...`);
         
-        console.log(`Authentication successful. User: ${req.session.userid}. Redirecting...`);
-        
-        return res.redirect('/index');
+        // 303 See Other is correct for redirecting after a POST request
+        return res.status(303).redirect('/index');
     });
 }
 
-export const loginPost = async (req, res, next) => {
-    const { email, password } = req.body;
+export const loginPost = (req, res, next) => {
 
-    // 1. Robust input validation
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required.' });
-    }
+    //front end enforces entry of these two
+    const { email } = req.body;
 
-    // Basic regex for email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Please enter a valid email address.' });
+        return res.status(400).render('login', { error: 'Please enter a valid email address.' });
     }
-
-    const user = await User.find({ email }).exec();
-    console.log(`user is ${user}...`);
 
     // 2. Passport Authentication
     passport.authenticate('local', (err, user, info) => {
-        if (err) { 
-            return next(err); 
-        }
-        console.log('past first error check');
-        // Handle authentication failure (Generic message prevents user enumeration)
-        if (!user) { 
-            return res.status(401).json({ error: 'Invalid email or password.' });
-        }
-        console.log('past if !user');
+        if (err) { return next(err); }
         
-        // 3. Establish session
-        // Note: startLoggedInSession must properly handle res/next or be promisified
-        try {
-            startLoggedInSession(req, res, next, user);
-        } catch (sessionErr) {
-            return next(sessionErr);
+        if (!user) { 
+            return res.status(401).render('login', { error: 'Invalid email or password.' });
         }
-
+        
+        // 3. Establish Passport Session
+        req.logIn(user, (loginErr) => {
+            if (loginErr) { return next(loginErr); }
+            
+            req.session.userid = user._id;
+            req.session.userRole = user.role;
+            
+            // 4. Pure SSR Redirect
+            // The browser sees this status and automatically updates the URL to /index
+            return res.status(303).redirect('/index');
+        });
     })(req, res, next);
 };
 
@@ -129,60 +114,57 @@ export const signupPost = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        // 1. Robust input validation
+        // 1. Input Validation
         if (!email || !password) {
-            return res.status(400).send('<h2>Email and password are required.</h2>');
+            return res.status(404).render('login', { error: 'Email and password are required.' });
         }
 
-        // Basic regex for email validation instead of just checking '@'
+        // Basic email regex validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).send('<h2>Seems you did not enter a valid email address. Hit the back button and please try again.</h2>');
+            return res.status(404).render('signup', { error: 'Please enter a valid email.' });
         }
 
-        console.log(`Signing up with email: ${email}`);
+        // Normalize email to lowercase and trim spaces
+        const normalizedEmail = email.trim().toLowerCase();
+        console.log(`Signing up with email: ${normalizedEmail}`);
 
-        // 2. Securely parse salt rounds
+        // 2. Securely parse salt rounds and hash password
         const saltRounds = Number(process.env.SALT_ROUNDS) || 10;
         const hash = await bcrypt.hash(password, saltRounds);
 
         if (!hash) {
-            return res.status(500).json({ message: 'Unable to register you due to an error!!' });
+            return res.status(500).render('signup', { error: 'Unable to process your password.' });
         }
 
-        // 3. Secure Admin Role Resolution
-        // Splitting by comma assumes STAFF_EMAIL is a string like "admin@test.com,staff@test.com"
-        const staffEmails = process.env.STAFF_EMAIL ? process.env.STAFF_EMAIL.split(',') : [];
-        const userRole = staffEmails.includes(email.trim()) ? 'admin' : 'user';
+        // 3. Admin Role Resolution
+        const staffEmails = process.env.STAFF_EMAIL ? process.env.STAFF_EMAIL.split(',').map(e => e.trim().toLowerCase()) : [];
+        const userRole = staffEmails.includes(normalizedEmail) ? 'admin' : 'user';
 
-        console.log(`user role to be ${userRole}`);
+        console.log(`Assigned user role: ${userRole}`);
+
         // 4. Save User
-        const newUser = new User({ email: email.trim(), password: hash, role: userRole });
+        const newUser = new User({ email: normalizedEmail, password: hash, role: userRole });
 
         try {
             const result = await newUser.save();
-            console.log(`New user result: ${result}`);
-        } catch(err) {
-            if( err.code === 11000 ) {
-                const duplicateField = Object.keys(err.keyValue)[0]
-                return res.status(409).json({
-                    error: "Conflict",
-                    message: `A user with this ${duplicateField} already exists. Please press back button, then use another or try 'Forgot password?' if this user is you.`
-                });
+            console.log(`New user created: ${result._id}`);
+        } catch (err) {
+            // Handle MongoDB duplicate key error
+            if (err.code === 11000) {
+                const duplicateField = Object.keys(err.keyValue)[0] || 'field';
+                return res.status(400).render('signup', { error: `A user with this ${duplicateField} already exists. Please try another or log in as an existing user.` });
             }
 
-            console.error(`encountered error creating account: ${err.message}`)
-            return res.status(400).send(`<h2>Error creating account--press back button and try again .</h2>`);
+            console.error(`Error saving user to database: ${err.message}`);
+            return res.status(500).render('signup', { error: 'Error creating account. Please try again.' });
         }
         
         // 5. Establish Session
-        await startLoggedInSession(req, res, next, newUser);
+        startLoggedInSession(req, res, next, newUser);
 
     } catch (err) {
-        // Handle MongoDB duplicate key error (index on email field)
-        if (err.code === 11000) {
-            return res.status(400).send('<h2>Email already in use--try \'Forgot password?\' on login page.</h2>');
-        }
+        // Catches unexpected errors (e.g., bcrypt failures, session crashes)
         next(err);
     }
 };
@@ -209,8 +191,9 @@ export const logoutPost = async (req, res, next) => {
         });
 
         // 3. Clear cookie and redirect safely
-        res.clearCookie('connect.sid');
-        return res.redirect(303, '/index');
+        const sessionCookieName = process.env.SESSION_COOKIE_NAME || 'connect.sid';
+        res.clearCookie(sessionCookieName);
+        return res.status(303).redirect('/login');
 
     } catch (err) {
         console.error('Logout error occurred:', err);
@@ -225,39 +208,41 @@ export const forgotPasswordEmailSend = async (req, res, next) => {
 
         // 1. Robust input validation
         if (!email) {
-            return res.status(400).send('<h2>Email is required.</h2>');
+            return res.status(400).render('login', { error: 'Email is required.' });
         }
 
         // Basic regex for email validation instead of just checking '@'
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            return res.status(400).send('<h2>Seems you did not enter a valid email address. Hit the back button and please try again.</h2>');
+            return res.status(400).render('login', { error: 'Invalid email.' });
         }
 
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(404).send('User not found.');
+            return res.status(404).render('login', { error: 'User not found--you may not have an account at that email.' });
         }
 
         const token = await generateHashedToken(user);
         if(!token) {
-            return res.status(400).send('Token generation error!!');
+            return res.status(500).render('login', { error: 'Token generation error.' });
         }
 
         const modifedUser = updateUserWithToken(user, token);
         console.log(`modified user is ${modifedUser}`)
         if(!modifedUser) {
-            return res.status(400).send('Token save error!!');
+            return res.status(500).render('login', { error: 'Token save error.' });
         }
 
         sendEmailWithToken(user); 
 
-        return res.json({
-            message: 'Reset your password by following the link just sent to your email. The token in the link will expire in one hour.'
-        });
+        return res.status(200).render('login', { message: 'Reset your password by following the link just sent to your email. The token in the link will expire in one hour.' });
+
+        //return res.json({
+        //    message: 'Reset your password by following the link just sent to your email. The token in the link will expire in one hour.'
+        //});
     } catch (error) {
         console.error(`Encountered error ${error}`);
-        return res.status(400).send('We encountered an error!!');
+        return res.status(500).render('login', { error: 'Sorry, but we encountered an error--please try again later.' });
     }
 };
 
@@ -266,7 +251,7 @@ export const resetPasswordGet = async (req, res, next) => {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).send('Token is required.');
+        return res.status(400).render('login', { error: 'Required security token is missing.' });
     }
 
     const user = await User.findOne({
@@ -275,7 +260,7 @@ export const resetPasswordGet = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(400).send('Token is invalid or has expired.');
+        return res.status(400).render('login', { error: 'Token is invalid or has expired.' });
     }
 
     res.locals.token = token;
@@ -294,13 +279,13 @@ export const resetPasswordPost = async (req, res, next) => {
   try {
     const { token, password, confirmPassword } = req.body;
 
-    // 1. Validate inputs
-    if (!token || !password) {
-      return res.status(400).json({ message: 'Token and password are required--click the back button, then re-enter password and try again.' });
+    // 1. Validate inputs; front end enforces entry of password and confirmPassword
+    if (!token ) {
+        return res.status(400).render('login', { error: 'Required security token is missing.  Please try "Forgot password?" again' });
     }
 
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match--click the back button and try again.' });
+        return res.status(303).redirect(`/password-reset-form?token=${encodeURIComponent(token)}&error=${encodeURIComponent('Passwords do not match.')}`);
     }
 
     // 2. Find the user by token and ensure it hasn't expired yet
@@ -310,7 +295,7 @@ export const resetPasswordPost = async (req, res, next) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Token is invalid or has expired--click the back button, then re-do "Forgot password?".' });
+        return res.status(400).render('login', { error: 'Security token is invalid or has expired.  Please try "Forgot password?" again' });
     }
 
     // 3. Hash the new password and update user
@@ -325,7 +310,7 @@ export const resetPasswordPost = async (req, res, next) => {
     await user.save();
 
     // 5. Send a JSON response (standard for modern frontend frameworks) or redirect
-    return res.status(200).json({ message: 'Password has been successfully reset--now use the back button to log in.' });
+    return res.status(201).render('login', { message: 'Password has been successfully reset--you may now log in' });
 
   } catch (error) {
     next(error); 

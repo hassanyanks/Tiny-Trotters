@@ -83,19 +83,10 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Expose login state globally to all SSR templates
 app.use((req, res, next) => {
-    if( req.isAuthenticated() ) {
-        res.locals.user, req.user = req.session.passport.user; 
-        console.log(`*************************************req.isAuthenticated():  res.locals.user now is ${JSON.stringify(req.session.passport.user)}*********************************************`)
-    } else {
-        res.locals.user = null;
-    }
-  next();
-});
-
-// Global middleware to pass req.user to all Pug templates
-app.use((req, res, next) => {
-    // Passport automatically drops the deserialized user into req.user
+    // res.locals makes variables automatically available to your views (EJS, Pug, Handlebars)
+    res.locals.isAuthenticated = req.isAuthenticated();
     res.locals.currentUser = req.user || null; 
     next();
 });
