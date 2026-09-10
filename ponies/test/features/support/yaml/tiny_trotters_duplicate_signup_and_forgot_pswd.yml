@@ -5,7 +5,8 @@
 
 #1 START SCENARIO 1.
 - action: "visit"
-  locator: "https://tiny-trotters-staging.onrender.com/"
+  #locator: "https://tiny-trotters-staging.onrender.com/"
+  locator: "/index"
 
 #2  
 - action:  "has_no_css?"
@@ -54,29 +55,22 @@
 
 #12
 - action: "has_css?"
-  locator: "pre"
-  options: { text: "{\"error\":\"Conflict\",\"message\":\"A user with this email already exists. Please press back button, then use another or try 'Forgot password?' if this user is you.\"}"}  
+  locator: "p[text='A user with this email already exists. Please try another or log in as an existing user.']"
 
 #13
-- action: "go_back"
-
-#14
 - action: "click_button"
   locator: "Log In"
 
-#15
+#14
 - action: "find_and_fill_in"
   locator: "input#forgot-password-email"
   value: "terrencelvoelker@gmail.com"
 
-#16
+#15
 - action: "click_button"
   locator: "Reset"
 
-#12
-- action: "has_element?"
-  locator: "pre"
-  options: { message: "{\"Reset your password by following the link just sent to your email. The token in the link will expire in one hour.\"}"}  
+#16
+- action: "has_css?"
+  locator: "p[text='Reset your password by following the link just sent to your email. The token in the link will expire in one hour.']"
 
-#13
-- action: "go_back"

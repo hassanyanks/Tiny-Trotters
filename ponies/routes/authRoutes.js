@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { signupPost, loginPost, logoutPost, forgotPasswordEmailSend, resetPasswordGet, resetPasswordPost } from '../controllers/authControllers.js';
 import { cachedCitiesStr } from '../utils/cityService.js';
+import { ensureAuthenticated, forwardAuthenticated, ensureAdmin } from '../bin/authMiddleware.js';
 
 const __dirname = import.meta.dirname
 dotenv.config({ path: path.join(__dirname, '../.env') });
@@ -23,16 +24,26 @@ router.use(passport.session()); // This uses the express-session middleware
 //}
 
 
-router.get('/signup', (req, res) => {
+router.get('/signup', forwardAuthenticated, (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render("signup");
 } );
-router.post('/signup', signupPost);
-router.post('/login', loginPost);
-router.get('/login', (req, res) => {
+router.post('/signup', forwardAuthenticated, signupPost);
+
+router.post('/login', forwardAuthenticated, loginPost, (req, res) => {
+    res.locals.citiesServed = cachedCitiesStr;
+    res.render('index');
+});
+router.get('/login', forwardAuthenticated, (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render('login');
 } );
+
+router.get('/index', ensureAuthenticated, (req, res) => res.render('index'));
+
+//SAVING FOR FUTURE USE
+//router.get('/admin/panel', ensureAdmin, (req, res) => res.render('adminPanel'));
+
 router.post('/logout', logoutPost);
 
 router.post('/forgot-password-email-send', forgotPasswordEmailSend );
@@ -41,9 +52,10 @@ router.get('/pswd-reset-usermatch', resetPasswordGet);
 
 router.get('/password-reset-form', async (req, res) => {
     const token = req.query.token;
+    const error = req.query.error;
     console.log(`inside /password-reset-form GET, token is ${token}`)
     res.locals.citiesServed = cachedCitiesStr;
-    res.render('reset_password', { token });
+    res.render('reset_password', { token, error });
 });
 
 router.get('/uploaded', (req, res) => {

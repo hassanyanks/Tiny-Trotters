@@ -4,10 +4,13 @@ block content
     form(action="/waiver", method='POST')
         input(type="hidden", name="eventDetails", value=JSON.stringify(details))
         div(style="width: 100%").waiver-container
+
             h3.standard-underline Read waiver, then ensure all fields have the necessary data
             h4(style="font-style: italic; margin-top: 5px; margin-bottom: 0px;") Later--in person--you will sign a copy of the waiver being sent to us 
             h5(style="font-style: italic;  color: red; margin-top: 5px;") We are also emailing you a copy  
+
             iframe(src=`/templates/${waiverForm}` id="waiver-form-iframe" width="100%" height="300px")
+
             label(for="customerName") Your Full Name
             input(type="text" id="customerName" name="customerName" value=details.yourDetails['Your-Name'] size=50 required)
             label(for="customerPhone") Your Phone
@@ -27,6 +30,7 @@ block content
             hr
             label(for="customerChildData") Names and Ages of Children to be Present
             textarea(id="customerChildData" name="customerChildData" rows="5" style="width: 25%;" required)
+
         div.buttons-container
             button.submit-button#sign-submit-btn(type="submit")
                 span Submit

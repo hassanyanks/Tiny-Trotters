@@ -1,5 +1,5 @@
 import { cachedCitiesStr } from '../utils/cityService.js';
-import { updateScheduledEvent, getScheduledEventData } from './eventService.js';
+import { updateScheduledEvent } from './eventService.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { emailDocument } from '../bin/emails.js';
 import path from 'path';
@@ -28,12 +28,8 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
 
       const mongoDbId = eventDetails._id;
 
-      //all these preceded by event are actually customer data--they are programmtically named for thus for efficiency
+      //front end enforces filling out of these fields; signatureImage commented out and being saved for future use
       const { customerName, customerPhone, customerAddress, venueContactName, venuePhone, venueAddress, customerChildData /*, signatureImage*/ } = req.body;
-
-      if ( !customerName || !customerPhone || !customerAddress || !customerChildData  /* || !signatureImage */ ) {
-          return res.status(400).json({ error: 'Missing required fields.' });
-      }
 
       // ELECTRONIC SIGNATURE FEATURE CODE BELOW COMMENTED OUT IS RESERVED FOR FUTURE USE--WHEN WE START USING ELECTRONIC SIGNING 
       // 1. Process the incoming Base64 image

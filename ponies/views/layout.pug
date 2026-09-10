@@ -14,10 +14,10 @@ html
           h5.standard-underline Serving #{citiesServed}
         div.nav-right.nav-side
           a(href='/index') Home
-          if currentUser
+          if isAuthenticated
             form(action="/logout" method="POST")
               button.submit-button Log Out
-          if !currentUser
+          else
             form(action="/login" method="GET")
               button.submit-button Log In
       hr
