@@ -2,11 +2,14 @@
 ## Manual Failover
   ### Pre-requisites:  Cloudflare, Hostinger, and Render configuration
     - To ensure your manual failover works smoothly on the free tier, complete these setup steps:
-        - Pre-register the Domain on Both Services (The Trick)
-          - To bypass Render's single-domain restriction, you can trick the system using a slight variation  
+        - Cloudflare
+          * to transfer from Hostinger to Cloudflare, enter hostinger as your DNS provider and Cloudflare will copy all DNS records
+        - Render:  Pre-register the Domain on Both Services (The Trick)
+          * To bypass Render's single-domain restriction, you can trick the system using a slight variation  
             - Go to your Production Service -> Custom Domains, and add yourdomain.com.
             - Go to your Staging Service -> Custom Domains, and add a backup variant like ://yourdomain.com (or vice versa). 
-              - This forces Render to issue and validate SSL certificates for both services ahead of time
+              * This forces Render to issue and validate SSL certificates for both services ahead of time
+        - On Hostinger, delete the original nameserves, replacing them with the Cloudflare nameservers
   ### Manual Failover Steps
     - What to do during an Emergency
        * If your production server crashes, you must change settings in both dashboards. 
