@@ -74,7 +74,7 @@ app.use(session({
     return uuid() // use UUIDs for session IDs
   },
     store: new RedisStore({ client: redisClient }),
-    secret: process.env.NODE_ENV === 'production' ? process.cookieSecret : 'keyboard cat',
+    secret: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? process.cookieSecret : 'keyboard cat',
     resave: false,
     saveUninitialized: false,
     cookie: { 
