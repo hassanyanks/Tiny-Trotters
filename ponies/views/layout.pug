@@ -20,22 +20,22 @@ html
           else
             form(action="/login" method="GET")
               button.submit-button Log In
-      hr
+      hr.layout-hr
       block content
-      footer.sticky-footer
-        p
-          span Sydney Radford | 385-309-9979 |
-          span
-            a(href="mailto:tinytrottersponyparties@gmail.com") tinytrottersponyparties@gmail.com
-        p.socials
-          span
-            a(href=`https://www.facebook.com/profile.php?id=${process.env.FACEBOOK_ID}` target="_blank")
-              img(src="/images/icon-logo-facebook.png" alt="Facebook")
-          span
-            a(href="https://www.instagram.com/tiny_trotters_pony_parties/" target="_blank")
-              img(src="/images/icon-logo-instagram.png" alt="Instagram")
-          span
-            img.qr-code(src='/images/recolored_qr.svg')
-          span
-            img(src="/images/vet_owned_biz.png", alt="Vet Owned")
+    footer.sticky-footer
+      p
+        span Sydney Radford | 385-309-9979 |
+        span
+          a(href="mailto:tinytrottersponyparties@gmail.com") tinytrottersponyparties@gmail.com
+      p.socials
+        span
+          a(href=`https://www.facebook.com/profile.php?id=${process.env.FACEBOOK_ID}` target="_blank")
+            img(src="/images/icon-logo-facebook.png" alt="Facebook")
+        span
+          a(href="https://www.instagram.com/tiny_trotters_pony_parties/" target="_blank")
+            img(src="/images/icon-logo-instagram.png" alt="Instagram")
+        span
+          img.qr-code(src='/images/recolored_qr.svg')
+        span
+          img(src="/images/vet_owned_biz.png", alt="Vet Owned")
 

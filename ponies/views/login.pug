@@ -7,13 +7,12 @@ block prepend content
 block append content
 
     section.alt-login-container
-        hr
         span Forgot password? 
         form(action="/forgot-password-email-send" method="post")
             input.text-input#forgot-password-email(placeholder="Email" name="email" type="text" required autofocus)
             div.button-div
                 button.submit-button(type="submit") Reset
-        hr
-        span Don't have an account?
+        hr(style="width: 100%")
+        span(style="margin-right: 10px;") Don't have an account?
         a(href="/signup") Sign up
 
