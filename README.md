@@ -27,3 +27,19 @@
           - In Render staging environment and under individual Environment Variables
           - temporarily change your environment flag (e.g., NODE_ENV) from staging to production 
             * (or delete it if you want it to pull directly from your shared Production Env Group).
+
+    ## Downtime/Incident Alerting
+      - Passive Origin Monitoring (For your server downtime)Cloudflare automatically watches the traffic flowing to your server. 
+        * If your origin web server becomes completely unreachable from the Cloudflare edge network for over 5 minutes, it will trigger an email. 
+        * How to enable it
+          - Log in to the Cloudflare Dashboard.
+          - Select your account and go to Notifications on the left menu.
+          - Click Add and look for Passive Origin Monitoring.
+          - Enter your email address and click Create. 
+      - Cloudflare Incident Alerts (For Cloudflare outages)
+        * Sometimes your server is fine, but Cloudflare itself is experiencing a regional or global network issue. 
+        * You can set up alerts to know if a Cloudflare outage is affecting your visitors.
+        * How to enable it
+          - Go to Notifications in your dashboard
+          - Click Add and select Incident Alerts
+          - Name the alert, leave the component filters blank to monitor everything, add your email address, and click Save. 
