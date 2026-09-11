@@ -28,7 +28,7 @@
           - temporarily change your environment flag (e.g., NODE_ENV) from staging to production 
             * (or delete it if you want it to pull directly from your shared Production Env Group).
 
-    ## Downtime/Incident Alerting
+  ## Downtime/Incident Alerting
       - Passive Origin Monitoring (For your server downtime)Cloudflare automatically watches the traffic flowing to your server. 
         * If your origin web server becomes completely unreachable from the Cloudflare edge network for over 5 minutes, it will trigger an email. 
         * How to enable it
