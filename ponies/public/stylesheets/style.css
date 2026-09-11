@@ -1,11 +1,3 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100dvh;
-  background-color: #B7CCC0  /* #B4CBBE #B5CBBD */;
-}
-
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   width: 100%;
@@ -14,6 +6,8 @@ body {
   flex-direction: column;
   align-items: center; /* Optional: centers the main element itself */
   margin: 0;
+  padding: 0;
+  background-color: #B7CCC0  /* #B4CBBE #B5CBBD */;
 }
 
 /* child of body */
@@ -23,6 +17,7 @@ body {
   align-items: center;
   margin-top: 25px;
   width: 90%;
+  min-height: 100dvh;
 }
 
 /* child of .page-container */
@@ -211,7 +206,7 @@ body {
   align-items: center;
   margin-top: 20px;
   padding: 5px;
-  width: 100%;
+  width: 90%;
   background-color: #222;
   color: #d3d4d6;
   bottom: 0;
@@ -580,7 +575,7 @@ label {
   font-weight: bold;
 }
 
-hr {
+hr.layout-hr {
   border: none;             /* Removes the default 3D border */
   height: 1px;              /* Sets the thickness of your line */
   background-color: rgba(0, 0, 0, 0.3); /* Changes the actual color */
@@ -985,7 +980,7 @@ padding-right: 15px;
 }
 
 .alt-login-container hr {
-  margin-top: 20px;
+  margin: 25px 0px 25px 0px;
   background-color: #a8a7a7;
 }
 
