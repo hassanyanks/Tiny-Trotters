@@ -74,13 +74,13 @@ app.use(session({
     return uuid() // use UUIDs for session IDs
   },
     store: new RedisStore({ client: redisClient }),
-    secret: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? process.cookieSecret : 'keyboard cat',
+    secret: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? process.env.SESSION_SECRET : 'keyboard cat',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        //httpOnly: true, // Prevents client-side JS from reading the cookie
+        secure: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging', // Use secure cookies in production
+        sameSite: process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging' ? 'none' : 'lax',
+        httpOnly: true, // Prevents client-side JS from reading the cookie
         maxAge: 1000 * 60 * 60 * 24 // Cookie expiration time (e.g., 1 day)
     },
 },));
