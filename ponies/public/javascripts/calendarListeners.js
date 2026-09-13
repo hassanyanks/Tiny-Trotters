@@ -51,6 +51,7 @@ async function renderScheduledEventsCalendar() {
             throw new Error(`Error-server returned: ${res.status}`); // Check for 500 errors
         }
         eventsData = await res.json();
+        console.log(`events data fetched:  ${JSON.stringify(eventsData)}`);
     } catch(e) { console.error("Error fetching calendar elements", e); }
 
     while (runner <= endOfGrid) {
