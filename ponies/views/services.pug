@@ -2,21 +2,13 @@ extends layout
 
 block content
     div.resources-container 
-        if featuredPackages.length && featuredPackages.length > 0
-            div.resource-container
-                h2.standard-underline Event Types & Services
-                ul.centered-list
-                    each package in featuredPackages
-                        li  #{package.name}
-                            ul 
-                                li
-        if eventTypes.length && eventTypes.length > 0
+       if eventTypes && eventTypes.length > 0
             div.resource-container
                 h2.standard-underline Event Types & Services
                 ul.centered-list
                     each eventType in eventTypes
                         li  #{eventType.name}
-        if accessories.length && accessories.length > 0
+        if accessories && accessories.length > 0
             div.resource-container  
                 h2.standard-underline Pony Accessories
                 ul.centered-list
