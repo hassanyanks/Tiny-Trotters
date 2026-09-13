@@ -1,7 +1,33 @@
 #! /usr/bin/env node
+import dotenv from 'dotenv';
+import path from 'path';
 import {MongoClient} from 'mongodb';
-import 'dotenv/config';
 import ScheduledEvent from '../models/scheduled_event.js';
+import readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+
+var nodeEnv = process.argv[2];
+
+if( !nodeEnv ) {
+    console.error("USAGE:  node --env-file=../.env populateDb.mjs dev|prod" );
+    process.exit(1);
+}
+if( nodeEnv !== 'prod' && nodeEnv !== 'dev' ) {
+    console.error("USAGE:  environment must be one of these:  dev|prod" );
+    process.exit(1);
+}
+if( nodeEnv === 'prod' ) {
+  const rl = readline.createInterface({ input, output });
+  // Use await to pause execution for user input
+  const answer = await rl.question("Are you sure you want to run this on the prod env? (yes|no)");
+  if( answer === 'no') {
+    console.log('you have chosen to exit.');
+    process.exit(0);
+  }
+  rl.close(); // Crucial: Closes the stream so the CLI can exit
+}
+
 
 var ponies = [];
 var accessories = [];
@@ -9,8 +35,11 @@ var eventTypes = [];
 var scheduledEvents = [];
 var states = [];
 var cities = [];
+console.log(`nodeEnv:  ${nodeEnv}, pswd: ${process.env.MONGODB_PASSWORD_DEV}, db str:  ${process.env.MONGODB_DB_STR_DEV}`);
+const pswd = nodeEnv === 'dev' ? process.env.MONGODB_PASSWORD_DEV : process.env.MONGODB_PASSWORD;
+const dbStr = nodeEnv === 'dev' ? process.env.MONGODB_DB_STR_DEV : process.env.MONGODB_DB_STR;
+const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${pswd}${dbStr}/${process.env.DB_NAME}`;
 
-const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}${process.env.MONGODB_DB_STR}`;
 console.log(`mongodb url:  ${mongoDB}`)
 main().catch((err) => console.log(err));
 
@@ -37,11 +66,44 @@ async function main() {
     await createPictures(picturesCollection);
     const usersCollection = db.collection('users');
     await createUsers(usersCollection);
-*/
+    const scheduledEventsCollection = db.collection('scheduledevents');
     const scheduledEventsCollection = db.collection('scheduledevents');
     await insertScheduledEvent(scheduledEventsCollection);
+*/
+
+    const ponyRolesCollection = db.collection('ponyroles');
+    await createPonyRoles(ponyRolesCollection);
     console.log("Debug: Closing MongoClient");
     client.close();
+}
+
+async function createPonyRoles(collection) {
+  console.log(`Adding pony roles`);
+  await Promise.all([
+    ponyRoleCreate(collection, 0, "Birthday Star", "Our most confident lead pony who carries the birthday kid for their big moment. Slow, steady, and totally unfazed by singing and cameras."),
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+    ponyRoleCreate(collection, , ,);
+  ]);
+}
+
+async function ponyRoleCreate( collection, id, name, description) {
+    const ponyRoleRecord = await collection.findOneAndUpdate(
+        { id: id},
+        { $set: 
+            {
+                name,
+                description
+            }
+         },
+        { upsert: true, returnDocument: 'after' }
+    );
 }
 
 async function insertScheduledEvent(collection) {

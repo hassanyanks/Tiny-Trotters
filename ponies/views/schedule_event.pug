@@ -49,10 +49,15 @@ block content
                             div.checkbox-group
                                 input(name=`Pony ${pony.name}` id=`pony-checkbox-${pony.name}` type="checkbox")
                                 label(for=`pony-checkbox-${pony.name}` id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;" title="Click the box to invite me") #{pony.name}
-                                div.input-group(id=`${pony.name}` style="display: none;")
+                                div.input-group(id=`input-group-${pony.name}` style="display: none;")
                                     div.input-group
-                                        label(for=`role-input-${pony.name}`) Role
-                                        input.full-width(name=`Pony Role ${pony.name}` id=`role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
+                                        label(for=`role-select-${pony.name}`) Role
+                                        select.responsive-input.custom-select(required name="Event-Type" id=`role-select-${pony.name}`)
+                                            if ponyRoles && ponyRoles.length > 0
+                                                option(value="" disabled selected id="event-type-placeholder") Choose an option...
+                                                each role in ponyRoles
+                                                    option(value=role.name)= role.name
+                                        //input.full-width(name=`Pony Role ${pony.name}` id=`role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
                                     div.input-group
                                         label(for=`accessories-select-${pony.name}`) Accessories
                                         select.responsive-input(title="Ctrl + Click adds/removes additional options" id=`accessories-select-${pony.name}` name=`Pony Accessories ${pony.name}` multiple size="5")
@@ -90,7 +95,7 @@ block content
                     div.checkbox-group
                         input(name="Your-Active-Military/Veteran" type="checkbox")
                         label(style="margin-left: 5px;") I am Active Military/Veteran
-                    div.input-group(style="display: none;")
+                    //div.input-group(style="display: none;")
                 div.fields-parent-container#venue-details-container
                     div.fields-container-item
                         h3(style="text-align: center;").standard-underline Venue Details

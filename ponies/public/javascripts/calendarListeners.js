@@ -78,7 +78,6 @@ async function renderScheduledEventsCalendar() {
             //RESERVED FOR FUTURE USE - Display only up to MAX_EVENTS: const visibleEvents = dayEvents.slice(0, MAX_EVENTS);
             dayEvents.forEach(evt => {
                 const li = document.createElement("li");
-                console.log(`setting li data-event-id to ${evt._id}...`)
                 li.setAttribute('data-event-id', evt._id );
                 li.classList.add("event-badge");
                 li.innerText = getLocalTime(evt.eventDetails['Event-Start']);
@@ -215,6 +214,11 @@ document.getElementById('next-month-button').addEventListener('click', () => {
     changeMonth(1);
 });
 
+
+
+// Client-side calendar script engine
+// Pass the initial server date via payload string interpolation safely
+/*
       document.addEventListener("DOMContentLoaded", function () {
         var calendarEl = document.getElementById("calendar");
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -224,10 +228,6 @@ document.getElementById('next-month-button').addEventListener('click', () => {
       });
 
 
-
-// Client-side calendar script engine
-// Pass the initial server date via payload string interpolation safely
-/*
 function hidePopover() {
     document.getElementById("event-popover").style.display = "none";
 }
