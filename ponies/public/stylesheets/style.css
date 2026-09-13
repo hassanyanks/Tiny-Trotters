@@ -311,6 +311,9 @@ a {
   margin: 5px 20px 10px 20px;
 }
 
+[class^="clear-div-accessories-"], [class*=" clear-div-accessories-"] {
+  display: flex;
+}
 
 .clear-div {
   display: flex;

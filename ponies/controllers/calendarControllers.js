@@ -52,7 +52,6 @@ export const getScheduledEvents = asyncHandler(async (req, res, next) => {
         const { start, end } = req.query; // Ensure these are ISO strings or Date objects
 
         const scheduledEvents = await getEventsInRange(start, end);
-        console.log(`scheduled events being returned: ${JSON.stringify(scheduledEvents)}`);
 
         //const matchPattern = `${process.env.REDIS_EVENT_HASH_KEY}:${start}*`;
         //const scheduledEvents = [];

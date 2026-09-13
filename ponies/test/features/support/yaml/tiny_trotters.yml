@@ -21,7 +21,7 @@
 
 #4  
 - action: "has_css?"
-  locator: "#role-input-Prince"
+  locator: "#role-select-Prince"
 
 #5
 - action: "has_css?"
@@ -148,7 +148,7 @@
 
 #32
 - action: "has_css?"
-  locator: "#role-input-Prince"
+  locator: "#role-select-Prince"
   options: { visible: true }
 
 #33

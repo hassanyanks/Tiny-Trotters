@@ -17,9 +17,6 @@ const eventLocationField = document.getElementById('event-location-select');
 const yourDetailsDiv = document.getElementById('your-details-container');
 const venueDetailsDiv = document.getElementById('venue-details-container');
 
-//const homeCityInput = document.getElementById('home-city');
-//const homeStateInput = document.getElementById('home-state');
-
 let ponyDiv = {};
 let allCurrentlySelected = {};
 let otherAccessoryDiv = {};
@@ -28,7 +25,7 @@ let otherAccessoryInput = {};
 let otherAccessoryResetBox = {};
 let selectField = {};
 let selectFieldOtherOption = {};
-let ponyRoleInput = {};
+let ponyRoleSelect = {};
 let allAccessoriesClearDiv = {};
 let otherAccessoryClearDiv = {};
 
@@ -64,41 +61,26 @@ if( zipcodeInput && cityInput && stateInput ) {
 */
 function activateAllPonyAccessoryElements(pony) {
     ponyDiv[pony].style.display = 'block';
-    selectField[pony].style.display = 'block';
-    allAccessoriesClearDiv[pony].style.display = 'flex';
-    ponyRoleInput[pony].setAttribute('required', '');
+    ponyRoleSelect[pony].setAttribute('required', '');
+    ponyRoleSelect[pony].selectedIndex = -1;
     selectField[pony].setAttribute('required', '');
     selectField[pony].selectedIndex = -1;
-    deactivateOtherAccessoryElements(pony)
 }
 
 function clearAllPonyAccessoryElements(pony) {
     selectField[pony].selectedIndex = -1;
-    deactivateOtherAccessoryElements(pony)
+    ponyRoleSelect[pony].selectedIndex = -1;
 }
-
-/*
-function deactivateAllPonyAccessoryElements(pony) {
-    selectField[pony].style.display = 'none';
-    allAccessoriesClearDiv[pony].style.display = 'none';
-    ponyRoleInput[pony].removeAttribute('required');
-    selectField[pony].removeAttribute('required');
-    selectField[pony].selectedIndex = -1;
-    deactivateOtherAccessoryElements(pony)
-}
-*/
 
 function activateAllPonyElements(pony) {
     activateAllPonyAccessoryElements(pony);
-    ponyRoleInput[pony].style.display = 'block';
-    ponyRoleInput[pony].value = '';
+    deactivateOtherAccessoryElements(pony)
 }
 
 function deactivateAllPonyElements(pony) {
-    clearAllPonyAccessoryElements(pony);
     ponyDiv[pony].style.display = 'none';
-    ponyRoleInput[pony].style.display = 'none';
-    ponyRoleInput[pony].value = '';
+    clearAllPonyAccessoryElements(pony);
+    deactivateOtherAccessoryElements(pony)
 }
 
 function deactivateOtherAccessoryElements(pony) {
@@ -153,7 +135,7 @@ clearOtherAccessoriesCheckboxes.forEach(field => {
 ponyCheckboxes.forEach((checkbox) => {
     let pony = checkbox.id.split('-').pop();
     allCurrentlySelected[pony] = [];
-    ponyDiv[pony] = document.querySelector(`.input-group[id="${pony}"]`);
+    ponyDiv[pony] = document.getElementById(`input-group-${pony}`);
     allAccessoriesClearDiv[pony] = document.getElementById(`clear-div-accessories-${pony}`);
     otherAccessoryClearDiv[pony] = document.getElementById(`clear-div-other-accessory-${pony}`); 
     otherAccessoryDiv[pony] = document.getElementById(`other-accessory-${pony}`);
@@ -162,7 +144,7 @@ ponyCheckboxes.forEach((checkbox) => {
     otherAccessoryResetBox[pony] = document.getElementById(`other-accessory-reset-box-input-${pony}`);
     selectField[pony] = document.querySelector(`#accessories-select-${pony}`);
     selectFieldOtherOption[pony] = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
-    ponyRoleInput[pony] = document.getElementById(`role-input-${pony}`);
+    ponyRoleSelect[pony] = document.getElementById(`role-select-${pony}`);
 });
 
 ponyCheckboxes.forEach(field => {

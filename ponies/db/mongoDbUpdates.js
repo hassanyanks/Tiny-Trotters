@@ -1,15 +1,23 @@
+import dotenv from 'dotenv';
+import path from 'path';
 import {MongoClient} from 'mongodb';
 import { mongoose } from 'mongoose';
-import 'dotenv/config';
 import User from '../models/user.js';
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 if( !process.argv[2] ) {
-    console.error("USAGE:  node --env-file=../.env mongoDbUpdates.js dev|prod" );
+    console.error("USAGE:  node --env-file=../.env populateDb.mjs dev|prod" );
+    process.exit(1);
+}
+if( process.argv[2] !== 'prod' && process.argv[2] !== 'dev' ) {
+    console.error("USAGE:  environment must be one of these:  dev|prod" );
     process.exit(1);
 }
 
 const pswd = process.argv[2] === 'dev' ? process.env.MONGODB_PASSWORD_DEV : process.env.MONGODB_PASSWORD;
 const dbStr = process.argv[2] === 'dev' ? process.env.MONGODB_DB_STR_DEV : process.env.MONGODB_DB_STR;
+console.log(`nodeEnv:  ${process.argv[2]}, pswd: ${process.env.MONGODB_PASSWORD_DEV}, db str:  ${process.env.MONGODB_DB_STR_DEV}`);
+process.exit(0);
 
 const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${pswd}${dbStr}/${process.env.DB_NAME}`;
 console.log(`mongodb url:  ${mongoDB}`)
