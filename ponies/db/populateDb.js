@@ -66,17 +66,17 @@ async function main() {
     await createPictures(picturesCollection);
     const usersCollection = db.collection('users');
     await createUsers(usersCollection);
-    const scheduledEventsCollection = db.collection('scheduledevents');
-    const scheduledEventsCollection = db.collection('scheduledevents');
-    await insertScheduledEvent(scheduledEventsCollection);
 */
 
-    const ponyRolesCollection = db.collection('ponyroles');
-    await createPonyRoles(ponyRolesCollection);
+    //const ponyRolesCollection = db.collection('ponyroles');
+    //await createPonyRoles(ponyRolesCollection);
+    const scheduledEventsCollection = db.collection('scheduledevents');
+    await insertScheduledEvent(scheduledEventsCollection);
     console.log("Debug: Closing MongoClient");
     client.close();
 }
 
+/*
 async function createPonyRoles(collection) {
   console.log(`Adding pony roles`);
   await Promise.all([
@@ -92,7 +92,7 @@ async function createPonyRoles(collection) {
     ponyRoleCreate(collection, , ,);
   ]);
 }
-
+*/
 async function ponyRoleCreate( collection, id, name, description) {
     const ponyRoleRecord = await collection.findOneAndUpdate(
         { id: id},
@@ -110,10 +110,10 @@ async function insertScheduledEvent(collection) {
   try {
     // Construct data respecting the nested structures and hyphenated keys
     const eventData = {
-      details: { 'Event-Type': 'Birthday' },
+      eventDetails: { 'Event-Type': 'Wedding' },
       ponies: [
         {
-          name: "Starlight",
+          name: "Rooster",
           role: "Grand Marshal",
           accessories: ["Golden Tiara", "Silk Cape"]
         },
