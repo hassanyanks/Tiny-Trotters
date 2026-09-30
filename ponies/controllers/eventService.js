@@ -72,6 +72,11 @@ export async function createScheduledEvent(eventDetails, yourDetails, venueDetai
 
   try {
 
+    console.log(`eventDetails:  ${JSON.stringify(eventDetails)}`);
+    console.log(`yourDetails:  ${JSON.stringify(yourDetails)}`);
+    console.log(`venueDetails:  ${JSON.stringify(venueDetails)}`);
+    console.log(`poniesData:  ${JSON.stringify(poniesData)}`);
+
     const newEvent = await ScheduledEvent.create({
         eventDetails,
         yourDetails,
