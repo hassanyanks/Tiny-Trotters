@@ -51,13 +51,13 @@ block content
                                 label(for=`pony-checkbox-${pony.name}` id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;" title="Click the box to invite me") #{pony.name}
                                 div.input-group(id=`input-group-${pony.name}` style="display: none;")
                                     div.input-group
-                                        label(for=`role-select-${pony.name}`) Role
-                                        select.responsive-input.custom-select(required name="Event-Type" id=`role-select-${pony.name}`)
+                                        label(for=`role-select-${pony.name}` style="display: none;") Role
+                                        select.responsive-input.custom-select(name=`Pony Selected Role ${pony.name}` id=`role-select-${pony.name}` style="display: none;")
                                             if ponyRoles && ponyRoles.length > 0
-                                                option(value="" disabled selected id="event-type-placeholder") Choose an option...
+                                                option(value="" disabled selected id="pony-role-placeholder") Choose an option...
                                                 each role in ponyRoles
                                                     option(value=role.name)= role.name
-                                        //input.full-width(name=`Pony Role ${pony.name}` id=`role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
+                                        input.full-width(name=`Pony Role ${pony.name}` id=`role-input-${pony.name}` placeholder="Bride/Groom entrance, Ring Bearer, Flower Girl, Christmas Elf, Easter Bunny, etc." type="text")
                                     div.input-group
                                         label(for=`accessories-select-${pony.name}`) Accessories
                                         select.responsive-input(title="Ctrl + Click adds/removes additional options" id=`accessories-select-${pony.name}` name=`Pony Accessories ${pony.name}` multiple size="5")

@@ -62,14 +62,16 @@ if( zipcodeInput && cityInput && stateInput ) {
 function activateAllPonyAccessoryElements(pony) {
     ponyDiv[pony].style.display = 'block';
     ponyRoleSelect[pony].setAttribute('required', '');
-    ponyRoleSelect[pony].selectedIndex = -1;
+    //ponyRoleSelect[pony].selectedIndex = -1;
     selectField[pony].setAttribute('required', '');
     selectField[pony].selectedIndex = -1;
 }
 
 function clearAllPonyAccessoryElements(pony) {
     selectField[pony].selectedIndex = -1;
-    ponyRoleSelect[pony].selectedIndex = -1;
+    ponyRoleSelect[pony].value = ''; //.selectedIndex = -1;
+    ponyRoleSelect[pony].removeAttribute('required');
+    selectField[pony].removeAttribute('required');
 }
 
 function activateAllPonyElements(pony) {
@@ -144,7 +146,7 @@ ponyCheckboxes.forEach((checkbox) => {
     otherAccessoryResetBox[pony] = document.getElementById(`other-accessory-reset-box-input-${pony}`);
     selectField[pony] = document.querySelector(`#accessories-select-${pony}`);
     selectFieldOtherOption[pony] = Array.from(document.querySelectorAll(`#accessories-select-${pony} option`)).find(opt => opt.textContent.trim() === 'Other');
-    ponyRoleSelect[pony] = document.getElementById(`role-select-${pony}`);
+    ponyRoleSelect[pony] = document.getElementById(`role-input-${pony}`); //document.getElementById(`role-select-${pony}`);
 });
 
 ponyCheckboxes.forEach(field => {

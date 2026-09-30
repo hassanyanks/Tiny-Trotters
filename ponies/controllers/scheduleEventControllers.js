@@ -81,6 +81,7 @@ export const eventSchedulePost = async(req, res, next) => {
     const poniesData = await getPoniesData(req.body);
  
     const result = await createScheduledEvent(eventDetails, yourDetails, venueDetails, poniesData);
+    console.log(`scheduled event is ${JSON.stringify(result)}`);
     const eventId = result._id;
 
     // Redis

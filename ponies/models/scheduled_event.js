@@ -1,7 +1,4 @@
 import mongoose from 'mongoose';
-import Pony from './pony.js';
-import User from './user.js';
-import EventType from './event_type.js';
 
 const Schema = mongoose.Schema;
 
