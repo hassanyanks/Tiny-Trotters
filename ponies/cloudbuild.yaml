@@ -1,0 +1,19 @@
+steps:
+  # Build the container image using your Dockerfile
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-t', 'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA', 
+      '.'
+    ]
+
+  # Push the container image to your Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push', 
+      'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA'
+    ]
+
+# Force Google Cloud to use Cloud Logging Only and skip the bucket requirement
+options:
+  logging: CLOUD_LOGGING_ONLY
