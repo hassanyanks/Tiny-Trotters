@@ -6,6 +6,7 @@ steps:
 
   # 2. Build the container image using Google's built-in cloud buildpack
   - name: 'gcr.io/k8s-skaffold/pack'
+    dir: 'ponies'
     args: [
       'build', 
       'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA',
