@@ -2,6 +2,7 @@ steps:
   # 1. Install your project dependencies using npm
   - name: 'node:20'
     entrypoint: 'npm'
+    dir: 'ponies'
     args: ['install', '--only=production']
 
   # 2. Build the container image using Google's built-in cloud buildpack
