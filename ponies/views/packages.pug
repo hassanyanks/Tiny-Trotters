@@ -1,0 +1,22 @@
+extends layout 
+
+block content
+    div.resources-container 
+        if eventTypes && eventTypes.length > 0
+                div.resource-container
+                    h2.standard-underline Event Types & Services
+                    ul.centered-list
+                        each eventType in eventTypes
+                            li  #{eventType.name}
+        if accessories && accessories.length > 0
+            div.resource-container  
+                h2.standard-underline Pony Accessories
+                ul.centered-list
+                    each accessory in accessories
+                        li  #{accessory.name}
+        div.resource-container  
+            h2.standard-underline Other  
+            ul.centered-list 
+                li Discounts
+                    ul
+                        li Active Military/Veteran: 10%

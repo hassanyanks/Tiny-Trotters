@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
 import {MongoClient} from 'mongodb';
-import { mongoose } from 'mongoose';
 import User from '../models/user.js';
+
 dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 if( !process.argv[2] ) {
@@ -17,10 +17,11 @@ if( process.argv[2] !== 'prod' && process.argv[2] !== 'dev' ) {
 const pswd = process.argv[2] === 'dev' ? process.env.MONGODB_PASSWORD_DEV : process.env.MONGODB_PASSWORD;
 const dbStr = process.argv[2] === 'dev' ? process.env.MONGODB_DB_STR_DEV : process.env.MONGODB_DB_STR;
 console.log(`nodeEnv:  ${process.argv[2]}, pswd: ${process.env.MONGODB_PASSWORD_DEV}, db str:  ${process.env.MONGODB_DB_STR_DEV}`);
-process.exit(0);
 
-const mongoDB = `mongodb+srv://${process.env.MONGODB_USERNAME}:${pswd}${dbStr}/${process.env.DB_NAME}`;
-console.log(`mongodb url:  ${mongoDB}`)
+const mongoURL = `mongodb+srv://${process.env.MONGODB_USERNAME}:${pswd}${dbStr}`;
+console.log(`mongodb url:  ${mongoURL}`)
+
+main(mongoURL).catch((err) => console.log(err));
 
 async function createUser() {
     const newUser = new User({
@@ -63,18 +64,54 @@ async function syncCollectionIndexes(connection, modelName) {
     }
 }
 
-async function main() {
-    try {
-        const connection = await mongoose.connect(mongoDB);
-        console.log('Successfully connected to MongoDB.');
-        await syncCollectionIndexes(connection, 'User')
+async function setPrices(collection) {
 
+    let birthdayAndHoliday = 750.00;
+    let gardenAndDerby = 850.00;
+    let weddingAndQuince = 950.00;
+
+    let servicesAndBasePrices = { "Anniversary": weddingAndQuince,
+                                    "Birthday": birthdayAndHoliday,
+                                    "Christmas": birthdayAndHoliday,
+                                    "Easter": birthdayAndHoliday,
+                                    "Garden Party": gardenAndDerby,
+                                    "Graduation": birthdayAndHoliday,
+                                    "Halloween": birthdayAndHoliday,
+                                    "July 4th": birthdayAndHoliday,
+                                    "Photo Shoot": gardenAndDerby,
+                                    "Quinceañera": weddingAndQuince,
+                                    "St. Patricks": birthdayAndHoliday,
+                                    "Wedding": weddingAndQuince
+    }
+
+    const bulkOperations = Object.entries(servicesAndBasePrices).map(([eventType, price]) => ({
+        updateOne: {
+            filter: { name: eventType },
+            update: { $set: { price } },
+            upsert: false
+        }
+    }));
+
+    if (bulkOperations.length > 0) {
+        const result = await collection.bulkWrite(bulkOperations);
+        console.log(`Successfully updated ${result.modifiedCount} event prices.`);
+    }
+
+}
+
+async function main(mongoURL) {
+    try {
+        const client = new MongoClient(mongoURL);
+        await client.connect();
+        const db = client.db(process.env.DB_NAME);
+        const eventCategoriesCollection = db.collection('eventcategories');
+        const eventPricesCollection = db.collection('eventprices');
+        const eventTypesCollection = db.collection('eventtypes');
+        await setPrices(collection); 
     } catch(error) {
-        console.error('Error creating user:', error.message);
+        console.error('Error in main:', error.message);
     } finally {
-        // Disconnect from the database when done
-        await mongoose.disconnect();
-        console.log('Disconnected from MongoDB.');
+        process.exit(0);
   }
 
 /*
@@ -92,8 +129,7 @@ async function main() {
     //    { $set: { role: "user" } }   // Action: set default value
     //)
 
-    console.log( `result:  ${JSON.stringify(result)}`);
+    //console.log( `result:  ${JSON.stringify(result)}`);
     //process.exit(0);
 }
 
-main().catch((err) => console.log(err));
