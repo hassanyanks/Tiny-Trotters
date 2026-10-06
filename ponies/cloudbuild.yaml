@@ -14,6 +14,10 @@ steps:
       '--env', 'GOOGLE_ENTRYPOINT="npm start"'
     ]
 
+# CRUCIAL ADDITION: Tells Cloud Build to push the compiled image to your registry
+images:
+  - 'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA'
+
 # Forces Google Cloud to use Cloud Logging Only and skip the bucket requirement
 options:
   logging: CLOUD_LOGGING_ONLY
