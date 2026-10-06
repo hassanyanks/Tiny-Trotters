@@ -1,12 +1,12 @@
 steps:
   # 1. Install your project dependencies using Google's official Node builder
   - name: 'gcr.io/cloud-builders/npm'
-    dir: 'YOUR_SUBFOLDER_NAME' # <-- Keep your subfolder name here
+    dir: 'ponies' # <-- Keep your subfolder name here
     args: ['install', '--production']
 
   # 2. Build the container image using the cloud buildpack wrapper
   - name: 'gcr.io/k8s-skaffold/pack'
-    dir: 'YOUR_SUBFOLDER_NAME' # <-- Keep your subfolder name here
+    dir: 'ponies' # <-- Keep your subfolder name here
     args: [
       'build', 
       'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA',
