@@ -1,20 +1,21 @@
 steps:
-  # 1. Install your project dependencies using Google's official Node builder
-  - name: 'gcr.io/cloud-builders/npm'
-    dir: 'ponies' # <-- Keep your subfolder name here
-    args: ['install', '--production']
+  # Build a rock-solid, flat Docker container using Google's native Docker builder
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'ponies' # <-- Keep your subfolder name here (e.g., 'backend' or 'server')
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "FROM node:20-slim" > Dockerfile
+        echo "WORKDIR /usr/src/app" >> Dockerfile
+        echo "COPY package*.json ./" >> Dockerfile
+        echo "RUN npm install --only=production" >> Dockerfile
+        echo "COPY . ." >> Dockerfile
+        echo "EXPOSE 8080" >> Dockerfile
+        echo "CMD [\"npm\", \"start\"]" >> Dockerfile
+        docker build -t us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA .
 
-  # 2. Build the container image using the cloud buildpack wrapper
-  - name: 'gcr.io/k8s-skaffold/pack'
-    dir: 'ponies' # <-- Keep your subfolder name here
-    args: [
-      'build', 
-      'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA',
-      '--builder', 'gcr.io/buildpacks/builder:v1',
-      '--env', 'GOOGLE_ENTRYPOINT="npm start"'
-    ]
-
-# CRUCIAL ADDITION: Tells Cloud Build to push the compiled image to your registry
+# Explicitly push the uncorrupted Docker image to your registry
 images:
   - 'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA'
 
