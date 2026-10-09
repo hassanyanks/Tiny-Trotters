@@ -53,7 +53,7 @@ block content
                                     div.input-group
                                         label(for=`role-select-${pony.name}` style="display: none;") Role
                                         select.responsive-input.custom-select(name=`Pony Selected Role ${pony.name}` id=`role-select-${pony.name}` style="display: none;")
-                                            if ponyRoles && ponyRoles.length > 0
+                                            //if ponyRoles && ponyRoles.length > 0
                                                 option(value="" disabled selected id="pony-role-placeholder") Choose an option...
                                                 each role in ponyRoles
                                                     option(value=role.name)= role.name
