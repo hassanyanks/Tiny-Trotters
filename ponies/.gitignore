@@ -40,7 +40,7 @@ node_modules/
 jspm_packages/
 
 # irrelevant directories
-stored_waivers/
+signable_waivers/
 
 # Typescript v1 declaration files
 typings/

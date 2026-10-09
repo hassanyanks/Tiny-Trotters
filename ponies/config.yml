@@ -1,0 +1,10 @@
+tunnel: YOUR_TUNNEL_ID_HERE
+credentials-file: /path/to/your/tunnel/json
+
+ingress:
+  # This routes public internet traffic to your Node.js app
+  - hostname: ://yourdomain.com
+    service: http://localhost:3000
+    
+  # This catches all other unmapped traffic
+  - service: http_status:404

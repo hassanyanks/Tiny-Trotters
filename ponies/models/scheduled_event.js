@@ -16,7 +16,8 @@ const EventDetailsSchema = new Schema({
     required: true 
   },
   'Event-Type': { 
-    type: String, 
+    type: Schema.Types.ObjectId, 
+    ref: "EventType", 
     required: true 
   },
   'Event-Theme': { 

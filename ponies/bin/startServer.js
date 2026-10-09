@@ -4,8 +4,9 @@ import { readFileSync } from 'node:fs';
 import path from 'path';
 import 'dotenv/config';
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.DEFAULT_PORT : process.env.DEV_PORT;
-const HOST = process.env.NODE_ENV === 'production' ? process.env.PROD_HOST : process.env.DEV_HOST;
+const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : process.env.DEV_PORT;
+//const PORT = process.env.PORT;
+const HOST = process.env.HOST;
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });
@@ -18,7 +19,8 @@ export async function startServer() {
                                               cert: readFileSync(path.join(__dirname, '../samsCertificate.crt')),
                                               rejectUnauthorized: false,
                                             } : {};
-    const serverObj = process.env.NODE_ENV === 'dev' ? await import ('node:https') : await import ('node:http');
+    const serverObj = await import ('node:http');
+    //const serverObj = process.env.NODE_ENV === 'dev' ? await import ('node:https') : await import ('node:http');
     console.log('starting server...')
     serverObj.createServer(options, app, (req, res) => {
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");

@@ -1,0 +1,24 @@
+steps:
+  # Build a rock-solid, flat Docker container using Google's native Docker builder
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'ponies' # <-- Keep your subfolder name here (e.g., 'backend' or 'server')
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "FROM node:20-slim" > Dockerfile
+        echo "WORKDIR /usr/src/app" >> Dockerfile
+        echo "COPY package*.json ./" >> Dockerfile
+        echo "RUN npm install --only=production" >> Dockerfile
+        echo "COPY . ." >> Dockerfile
+        echo "EXPOSE 8080" >> Dockerfile
+        echo "CMD [\"npm\", \"start\"]" >> Dockerfile
+        docker build -t us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA .
+
+# Explicitly push the uncorrupted Docker image to your registry
+images:
+  - 'us-central1-docker.pkg.dev/tiny-trotters-pony-parties/tiny-trotters-app/app:$SHORT_SHA'
+
+# Forces Google Cloud to use Cloud Logging Only and skip the bucket requirement
+options:
+  logging: CLOUD_LOGGING_ONLY
