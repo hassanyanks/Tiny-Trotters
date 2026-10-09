@@ -9,7 +9,7 @@ Import-Module -Name ThreadJob
 
 
 # Configuration - Update these paths and names for your project
-$ProjectDir = 'C:\Users\Public\tiny_trotters\ponies\bin'
+$ProjectDir = 'C:\Users\Public\tiny-trotters\ponies\bin'
 $TunnelNameOrId = "tiny-trotters-pony-parties-tunnel"
 
 # 1. Navigate to your project directory
