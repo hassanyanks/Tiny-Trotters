@@ -2,7 +2,8 @@
 ## Overview
   ###  Docker in Windows running node.js, Redis, Cloudflare Tunnel containers
     - Docker spins up at system startup with auto-user login set in Windows registry
-    - node.js backend connects to MongoDB
+    - database:  MongoDB
+    - email support:  Mailgun by Sinch free tier
   ###  Production Environment
     - tiny-trotters:  startup/config files
       - ponies:  node.js code
