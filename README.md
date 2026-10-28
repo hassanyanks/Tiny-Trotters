@@ -4,14 +4,14 @@
       -- spins up at system startup with auto-user login set in Windows registry
     - database:  MongoDB
     - email support:  Mailgun by Sinch free tier
+  ## Deployment Special Notes
+    - manually update .env if it is changed in development environment
   ##  Production Environment
     - tiny-trotters:  startup/config files
       - ponies:  node.js code
       - bin:  miscellaneous utility scripts, virtually all deprecated at this writing but kept for prosperity
     - DockerComposeOnBoot Windows Scheduled Task
       -- runs tiny-trotters/start-docker.bat
-    - Deployment Special Notes
-      -- manually update .env if it is changed in development environment
   ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
