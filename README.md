@@ -5,8 +5,9 @@
     - database:  MongoDB
     - email support:  Mailgun by Sinch free tier
   ## Deployment Special Notes
+    - copy updated .env from development environment to production environment project root (ponies directory) 
+      if it is changed in development environment
     - ALWAYS ensure NODE_ENV value in .env (project root directory ponies) is set to 'production'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    - copy updated .env from development environment to production environment project root (ponies directory) if it is changed in development environment
   ##  Production Environment
     - tiny-trotters:  startup/config files
       - ponies:  node.js code
