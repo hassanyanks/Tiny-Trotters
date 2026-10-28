@@ -14,7 +14,7 @@
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
   ## Testing
-    - parent directory:  ponies/test
+    - Parent Directory:  ponies/test
       -- start test:  dynamicTestRunner.rb
         -- dependencies
           --- DynamicTestRunner.rb
