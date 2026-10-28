@@ -10,7 +10,7 @@
       - bin:  miscellaneous utility scripts, virtually all deprecated at this writing but kept for prosperity
     - DockerComposeOnBoot Windows Scheduled Task
       -- runs tiny-trotters/start-docker.bat
-  ##  Development Environment:
+  ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
   ## Testing
