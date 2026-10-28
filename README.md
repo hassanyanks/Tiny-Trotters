@@ -13,4 +13,9 @@
   ##  Development Environment:
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
-
+  ## Testing
+    - parent directory:  ponies/test
+      -- start test:  dynamicTestRunner.rb
+        -- dependencies
+          --- DynamicTestRunner.rb
+          --- yaml files in features/support/yaml directory
