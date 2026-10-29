@@ -13,7 +13,7 @@ export async function initMongoDB() {
                                    `${NODE_ENV === 'production' ? process.env.MONGODB_DB_STR : process.env.MONGODB_DB_STR_DEV}/` +
                                    `${DB_NAME}`;
 
-    dbInstance = await mongoose.connect(mongoDB);
+    dbInstance = await mongoose.connect(mongoDB, {family: 4}); //family: 4 is forcing ip4 use
 
     if (dbInstance.connection.name !== 'tiny-trotters') {
       throw new Error('Could not connect to Mongo DB instance');

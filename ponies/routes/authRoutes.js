@@ -7,9 +7,10 @@ import dotenv from 'dotenv';
 import { signupPost, loginPost, logoutPost, forgotPasswordEmailSend, resetPasswordGet, resetPasswordPost } from '../controllers/authControllers.js';
 import { cachedCitiesStr } from '../utils/cityService.js';
 import { ensureAuthenticated, forwardAuthenticated, ensureAdmin } from '../bin/authMiddleware.js';
+import { fileURLToPath } from 'url';
 
-const __dirname = import.meta.dirname
-dotenv.config({ path: path.join(__dirname, '../.env') });
+const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 console.log('starting auth routes init...');
 
@@ -19,16 +20,12 @@ router.use(express.json());
 router.use(passport.initialize());
 router.use(passport.session()); // This uses the express-session middleware
 
-//router.get('/index'), (req, res) => {
-//    res.render('index');
-//}
-
-
 router.get('/signup', forwardAuthenticated, (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render("signup");
 } );
 router.post('/signup', forwardAuthenticated, signupPost);
+console.log('/signup...');
 
 router.post('/login', forwardAuthenticated, loginPost, (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
@@ -38,13 +35,16 @@ router.get('/login', forwardAuthenticated, (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render('login');
 } );
+console.log('/login...');
 
 router.get('/index', ensureAuthenticated, (req, res) => res.render('index'));
+console.log('/index...');
 
 //SAVING FOR FUTURE USE
 //router.get('/admin/panel', ensureAdmin, (req, res) => res.render('adminPanel'));
 
 router.post('/logout', logoutPost);
+console.log('/logout...');
 
 router.post('/forgot-password-email-send', forgotPasswordEmailSend );
 router.post('/reset-password', resetPasswordPost);
@@ -57,11 +57,13 @@ router.get('/password-reset-form', async (req, res) => {
     res.locals.citiesServed = cachedCitiesStr;
     res.render('reset_password', { token, error });
 });
+console.log('passwords...');
 
 router.get('/uploaded', (req, res) => {
     const error_msg = req.flash('error');
     const success_msg = req.flash('success');
     res.render('index', { user: req.user, success_msg: success_msg.toString().trim(), error_msg: error_msg.toString().trim()});
 } );
+console.log('/uploaded...');
 
 export default router;

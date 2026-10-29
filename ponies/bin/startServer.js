@@ -1,33 +1,74 @@
-#!/usr/bin/env node
-import app from '../app.js';
-import { readFileSync } from 'node:fs';
-import path from 'path';
-import 'dotenv/config';
+//DESIGN NOTES:
+//  1.  In production, Cloudflare tunnel handles https and is expecting http from our server
+//  2.  In dev, want to ensure our server uses https without the tunnel and with communicatin to external mongodb
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : process.env.DEV_PORT;
-//const PORT = process.env.PORT;
-const HOST = process.env.HOST;
+
+import redisClient from './redis.js';
+import { initMongoDB } from './mongodb.js';
+import { initializeRedisCache } from './mongodb.js';
+import path from 'path';
+import 'dotenv/config'; // This automatically runs dotenv.config() for your root .env file
+import app, { initSessions } from '../app.js';
+import http from 'node:http';
+import https from 'node:https';
+import { fileURLToPath } from 'url';
+import { readFileSync } from 'node:fs';
+
+const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
+
+const isProduction = process.env.NODE_ENV === 'production';
+const PORT = isProduction ? (process.env.PORT || '3001') : '3001';
+const HOST = isProduction ? (process.env.HOST || 'localhost') : 'localhost';
+
+const networkOptions = {
+  port: PORT,
+  host: HOST
+};
+
+// FIX 1: Lazily initialize cert options only in development so production doesn't crash trying to read missing files
+const getCertConfigOptions = () => {
+  if (isProduction) return {};
+  return {
+    key: readFileSync(path.join(__dirname, '../samsKey.key')),
+    cert: readFileSync(path.join(__dirname, '../samsCertificate.crt')),
+    rejectUnauthorized: false,
+  };
+};
+
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
+  process.exit(1);
 });
 
-export async function startServer() {
+async function startServer() {
   try {
-    const __dirname = import.meta.dirname;
-    const options = process.env.NODE_ENV === 'dev' ? {
-                                              key: readFileSync(path.join(__dirname, '../samsKey.key')),
-                                              cert: readFileSync(path.join(__dirname, '../samsCertificate.crt')),
-                                              rejectUnauthorized: false,
-                                            } : {};
-    const serverObj = await import ('node:http');
-    //const serverObj = process.env.NODE_ENV === 'dev' ? await import ('node:https') : await import ('node:http');
-    console.log('starting server...')
-    serverObj.createServer(options, app, (req, res) => {
-      res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
-      res.writeHead(200);
-    }).listen(PORT, HOST, () => { console.log(`host ${HOST} listening on port ${PORT}`); });
+
+    const [mongoDbInstance, redisReady] = await Promise.all([initMongoDB(), redisClient.isOpen]);
+    if( mongoDbInstance === 'tiny-trotters' && redisReady ) {
+      initializeRedisCache();
+    } else {
+      console.error(`Not starting server: mongodb connection: ${mongoDbInstance}`);
+    }
+
+    initSessions(redisClient);
+
+    const server = isProduction 
+      ? http.createServer(app) 
+      : https.createServer(getCertConfigOptions(), app);
+      
+    console.log('starting server...');
+    server.listen(networkOptions, () => { 
+      console.log(`host ${HOST} listening on port ${PORT}`); 
+    });
+
   } catch(err) {
-    console.error(`protocol is disabled!!:  ${err}`);
+    console.error(`failed to start server:  ${err}`);
   }
 }
 
+try {
+} catch (error) {
+    console.error('Failed to start server:', error);
+}
+
+startServer();

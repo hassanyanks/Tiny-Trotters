@@ -3,18 +3,20 @@ import { updateScheduledEvent } from './eventService.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { emailDocument } from '../bin/emails.js';
 import path from 'path';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import {PDFDocument, rgb} from 'pdf-lib';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 
-const __dirname = import.meta.dirname
+const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const STORAGE_DIR = path.join(__dirname, '../public/signable_waivers');
+const STORAGE_DIR = path.join(__dirname, '..', 'public', 'signable_waivers');
+const FILE_PATH = path.join(__dirname, '..', 'public', 'templates');
+
 if (!fs.existsSync(STORAGE_DIR)) {
     fs.mkdirSync(STORAGE_DIR, { recursive: true });
 }
-
-const FILE_PATH = path.join(__dirname, '../public/templates');
 
 export const waiverPost = asyncHandler(async(req, res, next) => {
   try { 

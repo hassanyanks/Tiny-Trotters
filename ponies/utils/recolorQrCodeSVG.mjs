@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const __dirname = import.meta.dirname
+const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
 const INPUT_SVG = path.join(__dirname, '../public/images/qr.svg');
 const OUTPUT_SVG = path.join(__dirname, '../public/images/recolored_qr.svg');
 

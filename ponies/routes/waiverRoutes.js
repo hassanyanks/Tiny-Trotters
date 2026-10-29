@@ -1,9 +1,6 @@
 import express from 'express';
-import path from 'path';
 import 'dotenv/config';
 import bodyParser from 'body-parser';
-//import {PDFDocument, rgb} from 'pdf-lib';
-import fs from 'fs';
 import { waiverGet, waiverPost } from '../controllers/waiverControllers.js';
 
 var router = express.Router();
