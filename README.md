@@ -5,7 +5,7 @@
     - database:  MongoDB
     - email support:  Mailgun by Sinch free tier
   ##  Production Environment
-    - tiny-trotters:  startup/config files
+    - tiny-trotters
       -- ponies:  node.js code
         --- deploy
           ---- docker-compose.yml
