@@ -7,12 +7,14 @@
   ## Deployment Special Notes
     - if it is changed in development environment, copy updated .env from development environment to 
       production environment project root (ponies directory) 
-    - ALWAYS ensure NODE_ENV is in the production enviornment .env file (project root directory ponies) and its value
+    - ALWAYS ensure NODE_ENV is in the production environment .env file (project root directory ponies) and its value
       is set to 'production'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   ##  Production Environment
     - tiny-trotters:  startup/config files
       - ponies:  node.js code
-      - bin:  miscellaneous utility scripts, virtually all deprecated at this writing but kept for prosperity
+      - bin:
+        - start_docker.bat
+        - miscellaneous utility scripts, virtually all deprecated at this writing but kept for prosperity
     - DockerComposeOnBoot Windows Scheduled Task
       -- runs tiny-trotters/start-docker.bat
   ##  Development Environment
