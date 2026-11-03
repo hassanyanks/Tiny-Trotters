@@ -1,0 +1,46 @@
+
+services:
+  web:
+    build: .
+    container_name: node_app
+    restart: unless-stopped
+    environment:
+      # Injecting the exact port variable your code expects
+      - REDIS_PORT=6379 
+    networks:
+      - app-network
+    depends_on:
+      - redis # Tells Docker to wait for the redis service to boot first
+
+  # CRITICAL: Changed service name from 'cache' to 'redis' to match your code's host string
+  redis: 
+    image: redis:7-alpine
+    container_name: redis_cache
+    restart: unless-stopped
+    # Removed password protection since your string doesn't include a password
+    ports:
+      - "127.0.0.1:6379:6379" 
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare_tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+        - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+        networks:
+      - app-network
+    depends_on:
+      - web
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local

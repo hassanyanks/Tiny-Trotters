@@ -29,12 +29,7 @@ const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.
 EventEmitter.defaultMaxListeners = 15;
 
 const app = express();
-app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
-  next();
-});
-
-const sessionDir = path.join(__dirname, 'sessions');
+//const sessionDir = path.join(__dirname, 'sessions');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -66,23 +61,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 
-app.use((req, res, next) => {
-  res.locals.citiesServed = req.session.citiesServed;
-  next();
-});
-
-// app.js / server.js
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Expose login state globally to all SSR templates
-app.use((req, res, next) => {
-    // res.locals makes variables automatically available to your views (EJS, Pug, Handlebars)
-    res.locals.isAuthenticated = req.isAuthenticated();
-    res.locals.currentUser = req.user || null; 
-    next();
-});
-
 export function initSessions(redisClient) {
   const isSecure = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 
@@ -99,6 +77,17 @@ export function initSessions(redisClient) {
       maxAge: 1000 * 60 * 60 * 24 
     },
   }));
+
+  app.use((req, res, next) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self';");
+    next();
+  });
+
+  app.use((req, res, next) => {
+    // Check if helmet added a nonce to the request, make it available to Pug
+    res.locals.cspNonce = res.cryptoNonce || res.locals.nonce; 
+    next();
+  });
 
   app.use('/', indexRouter);
   app.use('/index', indexRouter);
@@ -128,22 +117,39 @@ export function initSessions(redisClient) {
   app.use('/password-reset-form', authRouter);
   app.use('/pswd-reset-usermatch', authRouter);
 
+  app.use((req, res, next) => {
+    res.locals.citiesServed = req.session.citiesServed;
+    next();
+  });
+
+    // app.js / server.js
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+    // Expose login state globally to all SSR templates
+  app.use((req, res, next) => {
+      // res.locals makes variables automatically available to your views (EJS, Pug, Handlebars)
+      res.locals.isAuthenticated = req.isAuthenticated();
+      res.locals.currentUser = req.user || null; 
+      next();
+  });
+
+  // catch 404 and forward to error handler
+  app.use(function(req, res, next) {
+    next(createError(404));
+  });
+
+  // error handler
+  app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'production' ? {} : err;
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  });
+
 }
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 export default app;

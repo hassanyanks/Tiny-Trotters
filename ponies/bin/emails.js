@@ -13,6 +13,9 @@ import { fileURLToPath } from 'url';
 const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
+const isProduction = process.env.NODE_ENV === 'production';
+const STAFF_EMAIL = isProduction ? process.env.STAFF_EMAIL : process.env.STAFF_EMAIL_DEV;
+
 const auth = {
   auth: {
     api_key: process.env.MAILGUN_API_KEY,
@@ -22,6 +25,16 @@ const auth = {
 
 // 3. Finally, pass the defined auth object to initialize the transporter
 const transporter = nodemailer.createTransport(mg(auth));
+
+function send( mailOptions ) {
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error('Error sending email:', err);
+    } else {
+      console.log('Email sent successfully!', info);
+    }
+  });
+}
 
 export async function emailDocument( documentBuffer, senderEmail, recipientsEmail ) {
 
@@ -150,7 +163,7 @@ function setHtmlContent(redisEventParsed) {
 
 export async function sendEmailWithToken(user) {
 
-  const SENDER_EMAIL = `${process.env.STAFF_EMAIL.split(',')[0]}`;
+  const SENDER_EMAIL = `${STAFF_EMAIL.split(',')[0] || ''}`;
   const RECIPIENT_EMAIL = user.email;
   const resetUrl = `https://localhost:443/password-reset-form/?token=${user.resetPasswordToken}`;
 
@@ -168,7 +181,7 @@ export async function sendEmailWithToken(user) {
 export async function sendScheduledEventEmail( redisEventParsed ) {
 
   const SENDER_EMAIL = redisEventParsed.yourDetails['Your-Email'];
-  const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
+  const RECIPIENTS = STAFF_EMAIL;
   const htmlContent = setHtmlContent(redisEventParsed);
 
   const mailOptions = {

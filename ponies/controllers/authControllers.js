@@ -1,11 +1,13 @@
-import { cachedCitiesStr } from '../utils/cityService.js';
 import passport from 'passport';
 import bcrypt from 'bcrypt';
 import User from "../models/user.js";
 import { updateUserWithToken } from '../bin/credentials.js';
 import { generateHashedToken, sendEmailWithToken } from '../bin/emails.js'
+import 'dotenv/config'; // This automatically runs dotenv.config() for your root .env file
 
 const { Strategy: LocalStrategy } = await import('passport-local');
+const isProduction = process.env.NODE_ENV === 'production';
+const STAFF_EMAIL = isProduction ? process.env.STAFF_EMAIL : process.env.STAFF_EMAIL_DEV;
 
 // 1. Core Authentication Strategy
 passport.use(new LocalStrategy(
@@ -134,7 +136,7 @@ export const signupPost = async (req, res, next) => {
         const hash = await bcrypt.hash(password, saltRounds);
 
         // 3. Admin Role Resolution
-        const staffEmailsEnv = process.env.STAFF_EMAIL || '';
+        const staffEmailsEnv = STAFF_EMAIL || '';
         const staffEmails = staffEmailsEnv.split(',').map(e => e.trim().toLowerCase());
         const userRole = staffEmails.includes(normalizedEmail) ? 'admin' : 'user';
 

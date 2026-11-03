@@ -110,6 +110,7 @@ body {
   height: 100%;
   box-sizing: border-box; 
   background-color: #B7CCC0;
+  margin-bottom: 20px;
 }
 
 .resources-container {
@@ -319,6 +320,28 @@ a {
   display: flex;
 }
 
+label[for*="role-select"] {
+   font-size: 14px; 
+   margin-right: 10px;
+}
+label[for="other-accessory-reset-box-input"], label[for="clear-accessories-input"] {
+   font-size: 14px; 
+   margin-bottom: 10px;
+}
+
+.checkbox-group > label {
+  font-size: 22px; 
+  margin-left: 5px;
+}
+
+.fields-parent-container span {
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: center; 
+  font-size: 20px; 
+  font-style: italic;
+}
+
 .clear-div {
   display: flex;
   flex-direction: column;
@@ -328,6 +351,7 @@ a {
 
 .clear-div label {
   margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .clear-div label, .clear-div input {
@@ -392,6 +416,18 @@ a {
   margin-bottom: 10px;
 }
 
+#waiver-form {
+  align-self: center;
+}
+
+#waiver-form-iframe {
+  margin-top: 25px;
+}
+
+.waiver-container textarea {
+  width: 50%;
+}
+
 .waiver-container {
   display: flex;
   flex-direction: column;
@@ -403,11 +439,25 @@ a {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   font-size: clamp(0.875rem, 1.2vw + 0.5rem, 1.25rem); 
-  width:50%; 
+  width:100%; 
+}
+
+.important {
+  color: red;
+}
+
+.waiver-info {
+  font-style: italic; 
+  margin-top: 5px; 
+  margin-bottom: 5px;
 }
 
 .fields-container h3 {
   align-self: center;
+}
+
+.field span {
+  display: inline-block;
 }
 
 /* Actual Form Controls (Inputs, Selects, etc.) */
@@ -493,6 +543,13 @@ outline: none;
 
 .standard-underline {
   text-decoration: underline;
+  align-self: center; 
+  margin-bottom: 20px;
+}
+
+.standard-underline h1,h2,h3 {
+  margin-bottom: 10px; 
+  text-align: center;
 }
 
 /* used with canvas */
@@ -557,6 +614,19 @@ button a {
 }
 a.cancel-button, button a {
   text-decoration: none;
+}
+
+#waiver-button.submit-button {
+  align-self: center;
+}
+
+.field.styled-border.full-width .field-name {
+  font-weight: bold; 
+  margin: 10px;
+}
+
+.field.styled-border.full-width .field-value {
+  margin: 10px 10px 10px 3px;
 }
 
 .submit-button {
@@ -869,6 +939,26 @@ padding-right: 15px;
   overflow-y: auto;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-centered {
+  align-items: center;
 }
 
 .suggestions-hidden {

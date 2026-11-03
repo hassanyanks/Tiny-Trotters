@@ -13,6 +13,8 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const STORAGE_DIR = path.join(__dirname, '..', 'public', 'signable_waivers');
 const FILE_PATH = path.join(__dirname, '..', 'public', 'templates');
+const isProduction = process.env.NODE_ENV === 'production';
+const STAFF_EMAIL = isProduction ? process.env.STAFF_EMAIL : process.env.STAFF_EMAIL_DEV;
 
 if (!fs.existsSync(STORAGE_DIR)) {
     fs.mkdirSync(STORAGE_DIR, { recursive: true });
@@ -106,7 +108,7 @@ export const waiverPost = asyncHandler(async(req, res, next) => {
 
       let setBody = { waiverForm: pdfBuffer };
       let result = await updateScheduledEvent( mongoDbId, setBody );
-      emailDocument( Buffer.from(pdfBytes), customerEmail, process.env.STAFF_EMAIL );
+      emailDocument( Buffer.from(pdfBytes), customerEmail, STAFF_EMAIL );
 
       res.redirect( 303, '/index' );
 
