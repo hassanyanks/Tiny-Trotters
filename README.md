@@ -4,6 +4,20 @@
       -- spins up at system startup with auto-user login set in Windows registry
     - database:  MongoDB
     - email support:  Mailgun by Sinch free tier
+  ##  Production Environment
+    - tiny-trotters:  startup/config files
+      -- ponies:  node.js code
+        --- deploy
+          ---- docker-compose.yml
+          ---- Dockerfile
+          ---- start-docker.bat
+      -- backup:  
+        --- copy of .env
+    - DockerComposeOnBoot Windows Scheduled Task
+      -- runs tiny-trotters/ponies/deploy/start-docker.bat
+  ##  Development Environment
+    - Parent Directory:  JavaScriptApps/sydney_ponies
+    - Application: Visual Studio Code
   ## Deployment Special Notes
     - if it is changed in development environment, copy updated .env from development environment to 
       production environment project root (ponies directory) AND backup directory (see below) 
@@ -14,22 +28,8 @@
       -- create GitHub release and download release zip file
       -- copy currently running release source files to C:\tiny-trotters\previous, 
          replacing any and all contents if that directory exists
-      -- extract all zip file contents into c:\tiny-trotters\next folder (overwrite any existing content)
-      -- copy c:\tiny-trotters\next\ponies\deploy contents to c:\tiny-trotters\de
-  ##  Production Environment
-    - tiny-trotters:  startup/config files
-      -- ponies:  node.js code
-      -- backup:  
-        --- copy of .env
-      -- deploy
-        --- docker-compose.yml
-        --- Dockerfile
-        --- start-docker.bat
-    - DockerComposeOnBoot Windows Scheduled Task
-      -- runs tiny-trotters/start-docker.bat
-  ##  Development Environment
-    - Parent Directory:  JavaScriptApps/sydney_ponies
-    - Application: Visual Studio Code
+      -- extract all zip file contents into c:\tiny-trotters\current folder
+      -- copy c:\tiny-trotters\current\ponies (recursive) to c:\tiny-trotters, forcing to replace current ponies directory and contents
   ## Testing
     - Parent Directory:  ponies/test
       -- start test:  dynamicTestRunner.rb
