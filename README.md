@@ -12,9 +12,10 @@
   ##  Production Environment
     - tiny-trotters:  startup/config files
       - ponies:  node.js code
-      - bin:
+      - deploy:
         - start_docker.bat
-        - miscellaneous utility scripts, virtually all deprecated at this writing but kept for prosperity
+        - docker-compose.yml
+        - Dockerfile
     - DockerComposeOnBoot Windows Scheduled Task
       -- runs tiny-trotters/start-docker.bat
   ##  Development Environment
