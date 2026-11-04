@@ -29,7 +29,7 @@
          replacing any and all contents if that directory exists
       -- replace current copy of c:\tiny-trotters\backup\.env with c:\tiny-trotters\ponies\.env
       -- extract zip file contents to c:\tiny-trotters\current folder
-      -- copy c:\tiny-trotters\current\ponies (recursive) to c:\tiny-trotters, forcing to replace current ponies directory and contents
+      -- replace c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
       -- !!!!!!!!!!!ALWAYS ensure  c:\\tiny-trotters\ponies\.env has this entry:  NODE_ENV=production!!!!!!!!!!!!!
       -- FALLBACK
         --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
