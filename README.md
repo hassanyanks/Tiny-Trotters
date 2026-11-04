@@ -17,7 +17,7 @@
         -- previous
           --- previous release source files
     - DockerComposeOnBoot Windows Scheduled Task
-      -- runs c:/tiny-trotters/ponies/deploy/start-docker.bat
+      -- runs c:/tiny-trotters/ponies/deploy/start-docker.bat at system startup
   ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
