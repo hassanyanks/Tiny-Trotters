@@ -21,8 +21,8 @@
   ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
-  ## Releases/Deployments
-    - Deployment steps
+  ## Release and Deployment
+    - Steps
       -- merge GitHub branch to main
       -- create GitHub release from main and download release zip file
       -- replace C:\tiny-trotters\previous\ponies with currently running release C:\tiny-trotters\ponies 
