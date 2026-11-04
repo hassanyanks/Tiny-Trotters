@@ -31,6 +31,7 @@
       -- create GitHub release from main and download release zip file
       -- copy currently running release (C:\tiny-trotters\ponies) to C:\tiny-trotters\previous, 
          replacing any and all contents if that directory exists
+      -- replace current copy of c:\tiny-trotters\backup\.env with c:\tiny-trotters\ponies\.env
       -- extract zip file contents to c:\tiny-trotters\current folder
       -- copy c:\tiny-trotters\current\ponies (recursive) to c:\tiny-trotters, forcing to replace current ponies directory and contents
       -- FALLBACK
