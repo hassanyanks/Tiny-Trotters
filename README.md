@@ -21,17 +21,17 @@
   ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
-  ## Deployment Special Notes
+  ## Releases/Deployments
     - if it is changed in development environment, copy updated .env from development environment to 
       production environment project root (ponies directory) AND backup directory (see below) 
     - ALWAYS ensure NODE_ENV is in the production environment .env file (project root directory ponies) and its value
       is set to 'production'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     - Deployment steps
       -- merge GitHub branch to main
-      -- create GitHub release and download release zip file
-      -- copy currently running release source files to C:\tiny-trotters\previous, 
+      -- create GitHub release from main and download release zip file
+      -- copy currently running release (C:\tiny-trotters\ponies) to C:\tiny-trotters\previous, 
          replacing any and all contents if that directory exists
-      -- extract all zip file contents into c:\tiny-trotters\current folder
+      -- extract zip file contents to c:\tiny-trotters\current folder
       -- copy c:\tiny-trotters\current\ponies (recursive) to c:\tiny-trotters, forcing to replace current ponies directory and contents
   ## Testing
     - Parent Directory:  ponies/test
