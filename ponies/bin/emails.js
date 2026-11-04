@@ -1,17 +1,21 @@
 import bcrypt from 'bcrypt';
-import crypto, { hash } from 'crypto';
+import crypto from 'crypto';
 //import User from '../models/user.js';
 //import {SALT_ROUNDS} from '../config/config.js';
-import 'dotenv/config';
 import dotenv from 'dotenv';
-import { MailtrapClient } from 'mailtrap'; //for dev purposes only
 import path from 'path';
 import fs from 'fs';
 import pug from 'pug';
 import nodemailer from 'nodemailer';
 import mg from 'nodemailer-mailgun-transport';
+import { fileURLToPath } from 'url';
 
-// Configure Mailgun transport
+const __dirname = import.meta.dirname || path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+const isProduction = process.env.NODE_ENV === 'production';
+const STAFF_EMAIL = isProduction ? process.env.STAFF_EMAIL : process.env.STAFF_EMAIL_DEV;
+
 const auth = {
   auth: {
     api_key: process.env.MAILGUN_API_KEY,
@@ -19,10 +23,8 @@ const auth = {
   }
 };
 
+// 3. Finally, pass the defined auth object to initialize the transporter
 const transporter = nodemailer.createTransport(mg(auth));
-
-const __dirname = import.meta.dirname
-dotenv.config({ path: path.join(__dirname, '../.env') });
 
 function send( mailOptions ) {
   transporter.sendMail(mailOptions, (err, info) => {
@@ -131,7 +133,7 @@ function setDetails(title, details) {
           const fieldName = key;
           const fieldValue = value;
           detailsContent += `<div><span class="expander-fieldname" style="font-size: 16px; font-weight: bold;">${formatFieldName(fieldName)}</span>:  ` +
-                            `<span style="font-size: 16px; font-weight: light;">${fieldName.includes('Start') || fieldName.includes('End') ? getLocalTime(fieldValue) : fieldValue}</span></div>`;
+                            `<span style="font-size: 16px; font-weight: light;">${fieldName.includes('Start') || fieldName.includes('End') ? `${fieldValue.split(',').slice(0, 3).join('')} ${getLocalTime(fieldValue)}` : fieldValue}</span></div>`;
       }
     }
   }
@@ -161,7 +163,7 @@ function setHtmlContent(redisEventParsed) {
 
 export async function sendEmailWithToken(user) {
 
-  const SENDER_EMAIL = `${process.env.STAFF_EMAIL.split(',')[0]}`;
+  const SENDER_EMAIL = `${STAFF_EMAIL.split(',')[0] || ''}`;
   const RECIPIENT_EMAIL = user.email;
   const resetUrl = `https://localhost:443/password-reset-form/?token=${user.resetPasswordToken}`;
 
@@ -179,7 +181,7 @@ export async function sendEmailWithToken(user) {
 export async function sendScheduledEventEmail( redisEventParsed ) {
 
   const SENDER_EMAIL = redisEventParsed.yourDetails['Your-Email'];
-  const RECIPIENTS = `${process.env.STAFF_EMAIL}`;
+  const RECIPIENTS = STAFF_EMAIL;
   const htmlContent = setHtmlContent(redisEventParsed);
 
   const mailOptions = {

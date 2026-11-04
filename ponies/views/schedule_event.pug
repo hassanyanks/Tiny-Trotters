@@ -10,7 +10,7 @@ block content
             div.row-wrapper#schedule-event
                 div.fields-parent-container
                     div.fields-container-item
-                        h3(style="text-align: center;").standard-underline Event Details
+                        h3.text-center.standard-underline Event Details
                     div.input-group
                         label Event Location
                         select.responsive-input.custom-select(required name="Event-Location" id="event-location-select")
@@ -25,8 +25,8 @@ block content
                                 each eventType in eventTypes
                                     option(value=eventType.name)= eventType.name
                         input#other-event-type(type="text" name="Event-Other-Type")
-                        div.clear-div#other-event-type-clear(style="display: none")
-                            label(id="event-type-reset-label" style="font-size: 14px;") Reset
+                        div.clear-div.hidden#other-event-type-clear
+                            label(id="event-type-reset-label") Reset
                             input(id="event-type-reset-box" type="checkbox")
                     div.input-group
                         label Event Start
@@ -42,17 +42,17 @@ block content
                         input#event-color-scheme.responsive-input(name="Event-Color-Scheme" placeholder="red, white, and blue; favorite team colors, etc." required type="text" maxlength="200") 
                 div.fields-parent-container
                     div.fields-container-item
-                        h3(style="text-align: center;").standard-underline Ponies and Accessories
-                    span(style="display: flex; align-items: flex-start; justify-content: center; font-size: 20px; font-style: italic;" ) Select one or more ponies
+                        h3.text-center.standard-underline Ponies and Accessories
+                    span Select one or more ponies
                     if ponies && ponies.length > 0
                         each pony in ponies
                             div.checkbox-group
                                 input(name=`Pony ${pony.name}` id=`pony-checkbox-${pony.name}` type="checkbox")
-                                label(for=`pony-checkbox-${pony.name}` id=`label-${pony.name}` style="font-size: 22px; margin-left: 5px;" title="Click the box to invite me") #{pony.name}
-                                div.input-group(id=`input-group-${pony.name}` style="display: none;")
+                                label(for=`pony-checkbox-${pony.name}` id=`label-${pony.name}` title="Click the box to invite me") #{pony.name}
+                                div.hidden.input-group(id=`input-group-${pony.name}`)
                                     div.input-group
-                                        label(for=`role-select-${pony.name}` style="display: none;") Role
-                                        select.responsive-input.custom-select(name=`Pony Selected Role ${pony.name}` id=`role-select-${pony.name}` style="display: none;")
+                                        label.hidden(for=`role-select-${pony.name}`) Role
+                                        select.responsive-input.custom-select.hidden(name=`Pony Selected Role ${pony.name}` id=`role-select-${pony.name}`)
                                             //if ponyRoles && ponyRoles.length > 0
                                                 option(value="" disabled selected id="pony-role-placeholder") Choose an option...
                                                 each role in ponyRoles
@@ -64,19 +64,19 @@ block content
                                             if accessories && accessories.length > 0
                                                 each accessory in accessories
                                                     option(value=accessory.name)= accessory.name
-                                    div.input-group(id=`other-accessory-${pony.name}` style="display: none;")
-                                        label(for=`other-accessory-input-${pony.name}` id=`other-accessory-label-${pony.name}` style="font-size: 14px; margin-right: 10px; display: none;") Other Accessories
+                                    div.input-group.hidden(id=`other-accessory-${pony.name}`)
+                                        label.hidden(for=`other-accessory-input-${pony.name}` id=`other-accessory-label-${pony.name}`) Other Accessories
                                         input(id=`other-accessory-input-${pony.name}` name=`Pony Other Accessories ${pony.name}` type="text" )
-                                    div.clear-div(id=`clear-div-other-accessory-${pony.name}` style="display: none;")
-                                        label(for=`other-accessory-reset-box-input-${pony.name}` style="font-size: 14px; margin-bottom: 10px;") Clear Other Accessories
+                                    div.clear-div.hidden(id=`clear-div-other-accessory-${pony.name}`)
+                                        label(for=`other-accessory-reset-box-input-${pony.name}`) Clear Other Accessories
                                         input(id=`other-accessory-reset-box-input-${pony.name}` type="checkbox")
                                     div.clear-div(id=`clear-div-accessories-${pony.name}`)
-                                        label(for=`clear-accessories-input-${pony.name}` style="font-size: 14px; margin-bottom: 10px;") Clear All Accessories
+                                        label(for=`clear-accessories-input-${pony.name}`) Clear All Accessories
                                         input(id=`clear-accessories-input-${pony.name}` type="checkbox")
             div.row-wrapper
                 div.fields-parent-container#your-details-container
                     div.fields-container-item
-                        h3(style="text-align: center;").standard-underline Your Details
+                        h3.text-center.standard-underline Your Details
                     div.input-group
                         label Full Name
                         input#Event-Home-Name.responsive-input(name="Your-Name" required type="text", maxlength="100") 
@@ -94,11 +94,10 @@ block content
                         input#Event-Home-Zipcode.responsive-input(name="Your-Zipcode" placeholder=" 12345" required type="text" minlength="5" maxlength="5") 
                     div.checkbox-group
                         input(name="Your-Active-Military/Veteran" type="checkbox")
-                        label(style="margin-left: 5px;") I am Active Military/Veteran
-                    //div.input-group(style="display: none;")
+                        label I am Active Military/Veteran
                 div.fields-parent-container#venue-details-container
                     div.fields-container-item
-                        h3(style="text-align: center;").standard-underline Venue Details
+                        h3.text-center.standard-underline Venue Details
                     div.input-group
                         label Venue Name
                         input#venue-name.responsive-input(name="Venue-Name" placeholder="if known" type="text", maxlength="100") 
@@ -117,7 +116,7 @@ block content
                     div.input-group
                         label Zipcode 
                         input#Event-Venue-Zipcode.responsive-input(name="Venue-Zipcode" placeholder=" 12345" type="text" minlength="5" maxlength="5") 
-                    div.input-group(style="display: none;")
+                    div.input-group.hidden
                     div.input-group
             div.field.full-width 
             //div.autocomplete-container

@@ -60,7 +60,7 @@ if( zipcodeInput && cityInput && stateInput ) {
 }
 */
 function activateAllPonyAccessoryElements(pony) {
-    ponyDiv[pony].style.display = 'block';
+    ponyDiv[pony].classList.add('block');
     ponyRoleSelect[pony].setAttribute('required', '');
     //ponyRoleSelect[pony].selectedIndex = -1;
     selectField[pony].setAttribute('required', '');
@@ -80,30 +80,30 @@ function activateAllPonyElements(pony) {
 }
 
 function deactivateAllPonyElements(pony) {
-    ponyDiv[pony].style.display = 'none';
+    ponyDiv[pony].classList.add('hidden');
     clearAllPonyAccessoryElements(pony);
     deactivateOtherAccessoryElements(pony)
 }
 
 function deactivateOtherAccessoryElements(pony) {
-    otherAccessoryClearDiv[pony].style.display = 'none';
-    otherAccessoryDiv[pony].style.display = 'none';
-    otherAccessoryLabel[pony].style.display = 'none';
-    otherAccessoryInput[pony].style.display = 'none';
-    otherAccessoryResetBox[pony].style.display = 'none';
+    otherAccessoryClearDiv[pony].classList.add('hidden');
+    otherAccessoryDiv[pony].classList.add('hidden');
+    otherAccessoryLabel[pony].classList.add('hidden');
+    otherAccessoryInput[pony].classList.add('hidden');
+    otherAccessoryResetBox[pony].classList.add('hidden');
     otherAccessoryInput[pony].removeAttribute('required');
     otherAccessoryInput[pony].value = '';
     otherAccessoryResetBox[pony].checked = false;
 }
 
 function activateOtherAccessoryElements(pony) {
-    otherAccessoryClearDiv[pony].style.display = 'flex';
-    otherAccessoryClearDiv[pony].style.alignItems = 'center';
-    otherAccessoryDiv[pony].style.display = 'flex';
+    otherAccessoryClearDiv[pony].classList.add('flex');
+    otherAccessoryClearDiv[pony].classList.add('items-centered');
+    otherAccessoryDiv[pony].classList.add('flex');
     otherAccessoryInput[pony].focus();
-    otherAccessoryLabel[pony].style.display = 'block';
-    otherAccessoryInput[pony].style.display = 'block';
-    otherAccessoryResetBox[pony].style.display = 'block';
+    otherAccessoryLabel[pony].classList.add('block');
+    otherAccessoryInput[pony].classList.add('block');
+    otherAccessoryResetBox[pony].classList.add('block');
     otherAccessoryInput[pony].setAttribute('required', '');
     otherAccessoryInput[pony].value = '';
     otherAccessoryResetBox[pony].checked = false;
@@ -187,16 +187,16 @@ if( eventLocationField && yourDetailsDiv && venueDetailsDiv ) {
         let homeFields = document.querySelectorAll('input[id^="Event-Home-"');
         if( eventLocation === 'My Home' ) {
             console.log( 'setting state for My Home...' )
-            yourDetailsDiv.style.display = 'block';
+            yourDetailsDiv.classList.add('block');
             venueFields.forEach((field) => {
                 field.removeAttribute('required');
             });
-            venueDetailsDiv.style.display = 'none';
+            venueDetailsDiv.classList.add('hidden');
             homeFields.forEach((field) => {
                 field.setAttribute( 'required', '' );
             });
         } else if( eventLocation === 'Another Venue' ) {
-            venueDetailsDiv.style.display = 'block';
+            venueDetailsDiv.classList.add('block');
             venueFields.forEach((field) => {
                 field.setAttribute( 'required', '' );
             });
@@ -234,21 +234,20 @@ if(eventTypeSelectField && otherEventTypeTextField && resetOtherEventBox && rese
         const text = selectElement.options[selectElement.selectedIndex].text;
         console.log(`event type ${text} selected...`)
         if(text === 'Other') {
-            selectElement.style.display = 'none';
-            OtherEventDiv.style.display = 'block';
+            selectElement.classList.add('hidden');
+            OtherEventDiv.classList.add('block');
             otherEventTypeTextField.setAttribute('required', '');
-            otherEventTypeTextField.style.display = 'block';
+            otherEventTypeTextField.classList.add('block');
             otherEventTypeTextField.focus();
-            resetOtherEventLabel.style.display = 'block';
-            resetOtherEventBox.style.display = 'block';
+            resetOtherEventLabel.classList.add('block');
+            resetOtherEventBox.classList.add('block');
             resetOtherEventBox.checked = false;
         } else {
             otherEventTypeTextField.removeAttribute('required');
-            otherEventTypeTextField.style.display = 'none';
+            otherEventTypeTextField.classList.add('hidden');
         }
     });
 }
-
 
 if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
     resetOtherEventBox.addEventListener('click', function(event) {
@@ -256,11 +255,11 @@ if(resetOtherEventBox && resetOtherEventLabel && eventTypeSelectField) {
         event.stopPropagation();
         if(event.target.checked) {
             otherEventTypeTextField.removeAttribute('required');
-            otherEventTypeTextField.style.display = 'none';
+            otherEventTypeTextField.classList.add('hidden');
             otherEventTypeTextField.value = '';
-            resetOtherEventLabel.style.display = 'none';
-            resetOtherEventBox.style.display = 'none';
-            eventTypeSelectField.style.display = 'block';
+            resetOtherEventLabel.classList.add('hidden');
+            resetOtherEventBox.classList.add('hidden');
+            eventTypeSelectField.classList.add('block');
             eventTypeSelectField.selectedIndex = 0;
         }
     });
