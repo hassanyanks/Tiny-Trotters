@@ -5,16 +5,19 @@
     - database:  MongoDB
     - email support:  Mailgun by Sinch free tier
   ##  Production Environment
-    - tiny-trotters
-      -- ponies:  node.js code
-        --- deploy
-          ---- docker-compose.yml
-          ---- Dockerfile
-          ---- start-docker.bat
-      -- backup:  
-        --- copy of .env
+    - directory structure
+      - tiny-trotters
+        -- ponies:  node.js code
+          --- deploy
+            ---- docker-compose.yml
+            ---- Dockerfile
+            ---- start-docker.bat
+        -- backup:  
+          --- copy of .env
+        -- previous
+          --- previous release source files
     - DockerComposeOnBoot Windows Scheduled Task
-      -- runs tiny-trotters/ponies/deploy/start-docker.bat
+      -- runs c:/tiny-trotters/ponies/deploy/start-docker.bat
   ##  Development Environment
     - Parent Directory:  JavaScriptApps/sydney_ponies
     - Application: Visual Studio Code
