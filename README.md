@@ -28,10 +28,9 @@
       -- replace C:\tiny-trotters\previous\ponies with currently running release C:\tiny-trotters\ponies 
       -- extract zip file contents to c:\tiny-trotters\current folder
       -- replace c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
-      -- !!!!!!!!!!!ALWAYS ensure  c:\\tiny-trotters\ponies\.env has this entry:  NODE_ENV=production!!!!!!!!!!!!!
-      -- replace current copy of c:\tiny-trotters\backup\.env with c:\tiny-trotters\ponies\.env      
+      -- !!!!!!!!!!!ALWAYS ensure NODE_ENV is in c:\tiny-trotters\ponies\.env and is set to:  production    
       -- FALLBACK
-        --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
+        --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\previous\ponies
   ## Testing
     - Parent Directory:  ponies/test
       -- start test:  dynamicTestRunner.rb
