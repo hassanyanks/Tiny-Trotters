@@ -25,12 +25,11 @@
     - Deployment steps
       -- merge GitHub branch to main
       -- create GitHub release from main and download release zip file
-      -- copy currently running release (C:\tiny-trotters\ponies) to C:\tiny-trotters\previous, 
-         replacing any and all contents if that directory exists
-      -- replace current copy of c:\tiny-trotters\backup\.env with c:\tiny-trotters\ponies\.env
+      -- replace C:\tiny-trotters\previous\ponies with currently running release C:\tiny-trotters\ponies 
       -- extract zip file contents to c:\tiny-trotters\current folder
       -- replace c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
       -- !!!!!!!!!!!ALWAYS ensure  c:\\tiny-trotters\ponies\.env has this entry:  NODE_ENV=production!!!!!!!!!!!!!
+      -- replace current copy of c:\tiny-trotters\backup\.env with c:\tiny-trotters\ponies\.env      
       -- FALLBACK
         --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
   ## Testing
