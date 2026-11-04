@@ -33,6 +33,8 @@
          replacing any and all contents if that directory exists
       -- extract zip file contents to c:\tiny-trotters\current folder
       -- copy c:\tiny-trotters\current\ponies (recursive) to c:\tiny-trotters, forcing to replace current ponies directory and contents
+      -- FALLBACK
+        --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
   ## Testing
     - Parent Directory:  ponies/test
       -- start test:  dynamicTestRunner.rb
