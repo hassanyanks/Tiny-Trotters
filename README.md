@@ -28,9 +28,11 @@
       -- replace C:\tiny-trotters\previous\ponies with currently running release C:\tiny-trotters\ponies 
       -- extract zip file contents to c:\tiny-trotters\current folder
       -- replace c:\tiny-trotters\ponies with c:\tiny-trotters\current\ponies
-      -- !!!!!!!!!!!ALWAYS ensure NODE_ENV is in c:\tiny-trotters\ponies\.env and is set to:  production    
+      -- !!!!!!!!!!!ALWAYS ensure NODE_ENV is in c:\tiny-trotters\ponies\.env and is set to:  production
+      -- restart computer to trigger DockerComposeOnBoot Windows Scheduled Task 
       -- FALLBACK
         --- replace newly copied c:\tiny-trotters\ponies with c:\tiny-trotters\previous\ponies
+        --- restart computer to trigger DockerComposeOnBoot Windows Scheduled Task
   ## Testing
     - Parent Directory:  ponies/test
       -- start test:  dynamicTestRunner.rb
